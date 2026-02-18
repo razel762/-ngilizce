@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9. Sınıf İngilizce Kelime Master</title>
+    <title>9. Sınıf İngilizce Kelime Master - SINIF MODU</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
@@ -11,157 +11,178 @@
         :root {
             --primary: #6c5ce7;
             --gold: #feca57;
-            --silver: #dfe6e9;
-            --bronze: #cd7f32;
+            --success: #2ecc71;
+            --danger: #e74c3c;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1000&q=80');
+            /* Akıllı tahta için okul/sınıf temalı arka plan */
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
+                        url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
             background-size: cover; background-position: center; color: white; overflow: hidden;
         }
 
         .game-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(25px);
-            width: 92%; max-width: 400px;
-            border-radius: 40px; padding: 25px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.15);
-            display: flex; flex-direction: column; align-items: center;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            width: 95%; max-width: 450px;
+            border-radius: 30px; padding: 30px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .stats { display: flex; width: 100%; justify-content: space-between; margin-bottom: 20px; }
-        .stat-box { background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 15px; font-weight: 800; color: #00d2d3; border: 2px solid #00d2d3; font-size: 16px; }
+        .stat-box { background: rgba(0,0,0,0.6); padding: 12px 20px; border-radius: 15px; font-weight: 800; color: #00d2d3; border: 2px solid #00d2d3; font-size: 18px; }
 
-        /* Tabela Tasarımı - Daha Kompakt */
-        .sign-container { position: relative; width: 100%; margin: 15px 0 40px 0; }
-        .chains { position: absolute; top: -25px; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0 60px; }
-        .chain { width: 6px; height: 40px; background: #444; border-radius: 3px; border: 1px solid #111; }
+        /* Tabela Bölümü */
+        .sign-container { position: relative; width: 100%; margin-bottom: 50px; }
+        .chains { position: absolute; top: -30px; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0 80px; }
+        .chain { width: 7px; height: 50px; background: #666; border-radius: 4px; border: 1px solid #222; }
 
         .wood-sign {
             background: #5d4037;
             background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-            border: 6px solid #3e2723;
-            border-radius: 15px;
-            padding: 20px 10px;
-            box-shadow: 0 8px 0 #2d1b18, 0 15px 25px rgba(0,0,0,0.6);
+            border: 7px solid #3e2723;
+            border-radius: 20px;
+            padding: 25px 10px;
+            box-shadow: 0 10px 0 #2d1b18;
             width: 85%; margin: 0 auto;
         }
 
-        #word-box {
-            font-family: 'Kalam', cursive;
-            font-size: 34px; /* Mobilde yer kaplamaması için küçültüldü */
-            color: #ffecb3;
-            text-shadow: 3px 3px 0px #3e2723;
-            transition: all 0.5s ease;
-        }
+        #word-box { font-family: 'Kalam', cursive; font-size: 40px; color: #ffecb3; text-shadow: 3px 3px #3e2723; }
 
-        /* Mükemmel Yazı Yazma Alanı */
-        .input-wrapper { width: 100%; margin-bottom: 20px; }
+        /* Input ve Modern Buton */
         input {
-            width: 100%; padding: 18px; border-radius: 20px; border: 3px solid transparent;
-            font-size: 20px; text-align: center; outline: none; background: #fff;
-            color: #2d3436; box-sizing: border-box;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%; padding: 18px; border-radius: 18px; border: 3px solid transparent;
+            font-size: 22px; text-align: center; margin-bottom: 20px; outline: none;
+            background: #fff; color: #333; transition: 0.3s;
         }
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 25px rgba(108, 92, 231, 0.4);
-            transform: scale(1.02);
-        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(108,92,231,0.5); }
 
         .btn {
             background: var(--primary); color: white; border: none; width: 100%;
-            padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer;
+            padding: 18px; border-radius: 18px; font-size: 18px; font-weight: 800; cursor: pointer;
             box-shadow: 0 6px 0 #4834d4; transition: 0.2s;
         }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #4834d4; }
 
-        /* Animasyonlar */
-        .wind-exit { transform: translateX(200%) rotate(15deg); opacity: 0; }
-        .wind-enter { transform: translateX(-200%) rotate(-15deg); opacity: 0; }
-
-        /* Modals */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 100; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal { background: #1e272e; width: 85%; max-width: 380px; border-radius: 30px; padding: 25px; border: 3px solid var(--primary); text-align: center; }
-        .score-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
-        .rank-1 { color: var(--gold); font-weight: 800; background: rgba(254, 202, 87, 0.1); border-radius: 10px; }
+        /* Onay Ekranı (İpucu İçin) */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal { background: #2d3436; width: 85%; max-width: 350px; border-radius: 30px; padding: 30px; border: 4px solid var(--primary); text-align: center; }
         
-        #wrong-overlay { display: none; position: fixed; inset: 0; z-index: 200; justify-content: center; align-items: center; background: rgba(255, 0, 0, 0.15); pointer-events: none; }
-        #wrong-overlay i { font-size: 200px; color: #ff7675; }
+        .confirm-btns { display: flex; justify-content: center; gap: 30px; margin-top: 25px; }
+        .circle-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; font-size: 30px; color: white; transition: 0.2s; }
+        .btn-yes { background: var(--success); box-shadow: 0 5px 0 #219150; }
+        .btn-no { background: var(--danger); box-shadow: 0 5px 0 #a93226; }
+
+        /* Efektler */
+        .wind-exit { transform: translateX(200%) rotate(20deg); opacity: 0; }
+        .wind-enter { transform: translateX(-200%) rotate(-20deg); opacity: 0; }
     </style>
 </head>
 <body>
 
-<div id="wrong-overlay"><i class="fa-solid fa-circle-xmark"></i></div>
-
-<div class="game-card">
-    <div class="stats">
-        <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">60</span>s</div>
-        <div class="stat-box"><i class="fa-solid fa-fire"></i> <span id="score">0</span></div>
-    </div>
-    
-    <div class="sign-container">
-        <div class="chains"><div class="chain"></div><div class="chain"></div></div>
-        <div class="wood-sign">
-            <div id="word-box">BAŞLA</div>
+<div id="hint-modal" class="overlay">
+    <div class="modal">
+        <i class="fa-solid fa-lightbulb" style="font-size: 50px; color: var(--gold);"></i>
+        <h2 style="margin: 15px 0;">DİKKAT!</h2>
+        <p style="font-size: 18px;">İpucu almak için <b style="color:var(--danger)">10 saniye</b> feda edilecek. Onaylıyor musun?</p>
+        <div class="confirm-btns">
+            <button class="circle-btn btn-no" onclick="closeHint(false)"><i class="fa-solid fa-xmark"></i></button>
+            <button class="circle-btn btn-yes" onclick="closeHint(true)"><i class="fa-solid fa-check"></i></button>
         </div>
     </div>
-
-    <div class="input-wrapper">
-        <input type="text" id="ans" placeholder="İngilizcesini yaz..." autocomplete="off">
-    </div>
-    <button id="main-btn" class="btn" onclick="check()">OYUNU BAŞLAT</button>
 </div>
 
 <div id="name-modal" class="overlay">
     <div class="modal">
-        <h2 style="color:#00d2d3;">SÜRE DOLDU!</h2>
-        <p id="final-score" style="font-size:24px; font-weight:bold;"></p>
-        <input type="text" id="player-name" placeholder="Adınızı yazın...">
-        <button class="btn" onclick="save()" style="margin-top:10px;">KAYDET</button>
+        <h2 style="color:#00d2d3;">SÜRE BİTTİ!</h2>
+        <p id="final-score" style="font-size:26px; font-weight:bold;"></p>
+        <input type="text" id="player-name" placeholder="Adını yaz...">
+        <button class="btn" onclick="save()">PUANI KAYDET</button>
     </div>
 </div>
 
 <div id="leader-modal" class="overlay">
     <div class="modal">
-        <h2 style="color:var(--gold);"><i class="fa-solid fa-crown"></i> EN İYİ 10</h2>
-        <div id="leader-list"></div>
-        <button class="btn" style="margin-top:20px; background:#ff4757; box-shadow: 0 6px 0 #c0392b;" onclick="restart()">TEKRAR DENE</button>
+        <h2 style="color:var(--gold);">🏆 SINIF LİDERLERİ</h2>
+        <div id="leader-list" style="margin: 20px 0; text-align: left;"></div>
+        <button class="btn" style="background:#ff4757; box-shadow: 0 6px 0 #c0392b;" onclick="restart()">YENİDEN BAŞLA</button>
     </div>
 </div>
 
-<script>
-    const sfxCorrect = new Audio('https://www.myinstants.com/media/sounds/ding-sound-effect.mp3');
-    const sfxWrong = new Audio('https://www.myinstants.com/media/sounds/wrong-answer-sound-effect.mp3');
-    const sfxEnd = new Audio('https://www.myinstants.com/media/sounds/tada-fanfare-sound.mp3');
+<div class="game-card">
+    <div class="stats">
+        <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">60</span>s</div>
+        <div class="stat-box"><i class="fa-solid fa-star"></i> <span id="score">0</span></div>
+    </div>
+    
+    <div class="sign-container">
+        <div class="chains"><div class="chain"></div><div class="chain"></div></div>
+        <div class="wood-sign">
+            <div id="word-box">HAZIR MISIN?</div>
+        </div>
+    </div>
 
+    <input type="text" id="ans" placeholder="Cevabı buraya yaz..." autocomplete="off">
+    <button id="main-btn" class="btn" onclick="check()">OYUNU BAŞLAT</button>
+    <button id="hint-trigger" class="btn" onclick="openHint()" style="display:none; margin-top:15px; background:#fdcb6e; box-shadow: 0 5px 0 #e17055;"><i class="fa-solid fa-lightbulb"></i> İpucu Al</button>
+</div>
+
+<script>
     const wordList = [
         { tr: "Yurt dışı", en: "abroad" }, { tr: "Görünüş", en: "appearance" }, { tr: "Kişilik", en: "personality" },
         { tr: "Cüzdan", en: "wallet" }, { tr: "Sözlük", en: "dictionary" }, { tr: "Gökdelen", en: "skyscraper" },
         { tr: "Köy", en: "village" }, { tr: "Şehir", en: "city" }, { tr: "Dürüst", en: "honest" },
-        { tr: "Kibar", en: "polite" }, { tr: "İnatçı", en: "stubborn" }, { tr: "Yaratıcı", en: "creative" },
-        { tr: "Bencil", en: "selfish" }, { tr: "Macera", en: "adventure" }, { tr: "Korku", en: "horror" }
+        { tr: "Kibar", en: "polite" }, { tr: "İnatçı", en: "stubborn" }, { tr: "Yaratıcı", en: "creative" }
     ];
 
-    let currentPool = [...wordList];
-    let score = 0, timeLeft = 60, gameActive = false, timer, currentWord = {};
+    let currentPool = [...wordList], score = 0, timeLeft = 60, gameActive = false, timer, currentWord = {}, isPaused = false;
 
     function start() {
-        score = 0; timeLeft = 60; gameActive = true;
+        score = 0; timeLeft = 60; gameActive = true; isPaused = false;
         currentPool = [...wordList];
         document.getElementById('score').innerText = score;
         document.getElementById('main-btn').innerText = "KONTROL ET";
+        document.getElementById('hint-trigger').style.display = "block";
         document.getElementById('name-modal').style.display = 'none';
         document.getElementById('leader-modal').style.display = 'none';
         next();
+        runTimer();
+    }
+
+    function runTimer() {
         clearInterval(timer);
         timer = setInterval(() => {
-            timeLeft--;
-            document.getElementById('timer').innerText = timeLeft;
-            if(timeLeft <= 0) end();
+            if(!isPaused) {
+                timeLeft--;
+                document.getElementById('timer').innerText = timeLeft;
+                if(timeLeft <= 0) end();
+            }
         }, 1000);
+    }
+
+    function openHint() {
+        if(!gameActive) return;
+        isPaused = true;
+        document.getElementById('hint-modal').style.display = 'flex';
+    }
+
+    function closeHint(confirmed) {
+        document.getElementById('hint-modal').style.display = 'none';
+        if(confirmed) {
+            if(timeLeft > 10) {
+                timeLeft -= 10;
+                document.getElementById('timer').innerText = timeLeft;
+                alert("İpucu: Kelime '" + currentWord.en[0].toUpperCase() + "' harfi ile başlıyor!");
+            } else {
+                alert("Yeterli zamanın yok!");
+            }
+        }
+        isPaused = false;
+        document.getElementById('ans').focus();
     }
 
     function next() {
@@ -180,60 +201,47 @@
 
     function check() {
         if(!gameActive) { start(); return; }
+        if(isPaused) return;
         const val = document.getElementById('ans').value.toLowerCase().trim();
-        const wb = document.getElementById('word-box');
-
         if(val === currentWord.en) {
-            score += 10; timeLeft += 5;
+            score += 10; timeLeft += 3;
             document.getElementById('score').innerText = score;
-            sfxCorrect.currentTime = 0; sfxCorrect.play();
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
             currentPool = currentPool.filter(w => w.en !== currentWord.en);
-            wb.classList.add('wind-exit');
-            setTimeout(() => { wb.classList.remove('wind-exit'); next(); }, 400);
+            document.getElementById('word-box').classList.add('wind-exit');
+            setTimeout(() => { document.getElementById('word-box').classList.remove('wind-exit'); next(); }, 400);
         } else {
-            sfxWrong.currentTime = 0; sfxWrong.play();
-            const overlay = document.getElementById('wrong-overlay');
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.style.display = 'none', 500);
             document.getElementById('ans').value = "";
+            // Yanlış cevap efekti eklenebilir
         }
     }
 
     function end() {
         gameActive = false; clearInterval(timer);
-        sfxEnd.play();
-        document.getElementById('final-score').innerText = "Puanın: " + score;
+        document.getElementById('final-score').innerText = "Skor: " + score;
         document.getElementById('name-modal').style.display = 'flex';
     }
 
     function save() {
-        const name = document.getElementById('player-name').value || "Bilinmiyor";
-        let scs = JSON.parse(localStorage.getItem('top_final_v2')) || [];
+        const name = document.getElementById('player-name').value || "Öğrenci";
+        let scs = JSON.parse(localStorage.getItem('top_final_class')) || [];
         scs.push({n: name, s: score});
         scs.sort((a,b) => b.s - a.s);
-        localStorage.setItem('top_final_v2', JSON.stringify(scs.slice(0, 10)));
+        localStorage.setItem('top_final_class', JSON.stringify(scs.slice(0, 10)));
         document.getElementById('name-modal').style.display = 'none';
         showLeaders();
     }
 
     function showLeaders() {
         const list = document.getElementById('leader-list');
-        const scs = JSON.parse(localStorage.getItem('top_final_v2')) || [];
+        const scs = JSON.parse(localStorage.getItem('top_final_class')) || [];
         let html = "";
-        for(let i=0; i<10; i++) {
-            let icon = (i+1) + ". ";
-            let rankClass = "";
-            if(i === 0) { icon = "👑 "; rankClass = "rank-1"; }
-            else if(i === 1) { icon = "🥈 "; rankClass = "rank-2"; }
-            else if(i === 2) { icon = "🥉 "; rankClass = "rank-3"; }
-
-            if(scs[i]) {
-                html += `<div class="score-row ${rankClass}"><span>${icon}${scs[i].n}</span><span>${scs[i].s}</span></div>`;
-            } else {
-                html += `<div class="score-row" style="opacity:0.2;"><span>${i+1}. . . . .</span><span>-</span></div>`;
-            }
-        }
+        scs.forEach((sc, i) => {
+            let icon = (i === 0) ? "👑 " : (i === 1) ? "🥈 " : (i === 2) ? "🥉 " : (i+1) + ". ";
+            html += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #444; ${i<1 ? 'color:var(--gold); font-weight:bold;' : ''}">
+                        <span>${icon} ${sc.n}</span><span>${sc.s}</span>
+                     </div>`;
+        });
         list.innerHTML = html;
         document.getElementById('leader-modal').style.display = 'flex';
     }

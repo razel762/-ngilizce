@@ -3,156 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>İngilizce Etkinliği | Burak Developer</title>
+    <title>Oyun Lab | Burak Full Ranks</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --primary: #6c5ce7; --gold: #ffeaa7; --success: #00ffca; 
-            --neon-red: #ff0000; --diamond: #00d2ff; --iron: #bdc3c7;
+            --primary: #6c5ce7; --accent: #a29bfe; --gold: #ffeaa7; --success: #00ffca; 
+            --danger: #ff4757; --neon-red: #ff0000; --iron: #bdc3c7; --diamond: #00d2ff;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { 
             font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
-            background: #0f0c29; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color: white; padding: 20px; overflow: hidden;
+            background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(40, 10, 80, 0.9)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80'); 
+            background-size: cover; background-position: center; color: white; padding: 20px; overflow: hidden;
         }
 
-        /* --- DEVELOPER PANEL (SİYAH-KIRMIZI NEON) --- */
-        .founder-panel {
-            background: #000 !important;
-            border: 2px solid var(--neon-red);
-            padding: 20px;
-            border-radius: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
-            position: relative;
+        /* --- SOL ÜST BİLGİ BUTONU --- */
+        #info-trigger {
+            position: fixed; top: 20px; left: 20px;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+            padding: 10px 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer; font-size: 14px; font-weight: 800; color: #fff; z-index: 100;
         }
 
-        .dev-role-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        /* --- ROL MODAL --- */
+        .info-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; }
+        .info-rank { font-weight: 900; text-transform: uppercase; }
 
-        .dark-dev-role {
-            background: #000; color: var(--neon-red); border: 1px solid var(--neon-red);
-            padding: 4px 15px; border-radius: 10px; font-weight: 900; font-size: 0.8rem;
-            letter-spacing: 2px; box-shadow: 0 0 10px var(--neon-red);
-        }
+        /* --- CARD & BUTTONS --- */
+        .card-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); padding: 35px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 420px; text-align: center; }
+        input { width: 100%; padding: 18px; border-radius: 20px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: white; color: #1e1e2f; }
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        
+        #portal-screen, #game-screen { display: none; width: 100%; max-width: 1000px; text-align: center; }
 
-        /* DİSCORD TARZI TAÇ (CROWN) SİMGESİ */
-        .dev-badge {
-            color: #ffaa00; /* Altın sarısı taç */
-            font-size: 1.2rem;
-            filter: drop-shadow(0 0 5px #ffaa00);
-            animation: crownGlow 1.5s infinite alternate;
-        }
-
-        @keyframes crownGlow {
-            from { transform: scale(1); filter: drop-shadow(0 0 2px #ffaa00); }
-            to { transform: scale(1.1); filter: drop-shadow(0 0 8px #ffaa00); }
-        }
-
-        /* DALGALI NOKTALAR */
+        /* --- KURUCU PANEL & NOKTALAR --- */
+        .founder-panel { background: #000 !important; border: 2px solid var(--neon-red); padding: 20px; border-radius: 25px; margin-bottom: 25px; box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); position: relative; }
+        .dark-dev-role { background: #000; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 5px 20px; border-radius: 12px; font-weight: 900; font-size: 0.9rem; letter-spacing: 3px; box-shadow: 0 0 15px var(--neon-red); position: relative; z-index: 5; }
         .particle-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .dev-dot {
-            position: absolute; width: 3px; height: 3px; background: var(--neon-red); border-radius: 50%;
-            animation: floatParticle 2.5s infinite ease-out; opacity: 0;
-        }
-        @keyframes floatParticle {
-            0% { transform: translate(0, 0); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)); opacity: 0; }
-        }
+        .dev-dot { position: absolute; width: 4px; height: 4px; background: var(--neon-red); border-radius: 50%; box-shadow: 0 0 8px var(--neon-red); animation: floatParticle 2.5s infinite ease-out; opacity: 0; }
+        @keyframes floatParticle { 0% { transform: translate(0, 0) scale(1); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; } }
 
-        /* DİĞER STİLLER */
-        .card-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 10px; }
-        input { width: 100%; padding: 15px; border-radius: 15px; border: none; margin-bottom: 10px; text-align: center; outline: none; }
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .score-row { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; margin-bottom: 5px; text-align: left; }
+        /* --- SIRALAMA RENKLERİ --- */
+        .score-row { display: flex; flex-direction: column; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: left; }
+        .rank-tag { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
+        .rank-elit { color: #ff7675; text-shadow: 0 0 5px #ff7675; }
+        .rank-elmas { color: var(--diamond); text-shadow: 0 0 5px var(--diamond); }
+        .rank-altin { color: var(--gold); }
+        .rank-demir { color: var(--iron); }
+        .rank-caylak { color: #95a5a6; }
+
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        .modal { background: #1a1a2e; width: 100%; max-width: 440px; border-radius: 40px; padding: 30px; border: 2px solid var(--primary); }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="card-box">
-        <h2 style="margin-bottom:20px; color:var(--gold);">GİRİŞ YAP</h2>
-        <input type="text" id="username" placeholder="Kullanıcı Adı">
-        <input type="password" id="password" placeholder="Şifre">
-        <button class="btn" onclick="handleAuth()">SİSTEME GİR</button>
+    <div id="info-trigger" onclick="toggleInfo()">
+        <i class="fa-solid fa-trophy"></i> Rütbe Rehberi
     </div>
 
-    <div id="portal-screen" style="display:none;">
-        <div class="card-box" onclick="startGame()" style="cursor:pointer; border: 2px solid var(--success);">
-            <i class="fa-solid fa-graduation-cap" style="font-size:50px; color:var(--success); margin-bottom:15px;"></i>
-            <h1 style="font-size:1.4rem;">İNGİLİZCE KELİME ETKİNLİĞİ</h1>
-            <p style="margin-top:10px; opacity:0.7;">Başlamak için dokun!</p>
+    <div id="info-modal" class="overlay">
+        <div class="modal">
+            <h2 style="color: var(--accent); margin-bottom: 20px;">📜 RÜTBE LİSTESİ</h2>
+            <div class="info-row"><span class="info-rank" style="color: var(--neon-red);">DEVELOPER</span><span>KURUCU</span></div>
+            <div class="info-row"><span class="info-rank" style="color: #ff7675;">ELİT</span><span>5000+ PUAN</span></div>
+            <div class="info-row"><span class="info-rank" style="color: var(--diamond);">ELMAS</span><span>3000+ PUAN</span></div>
+            <div class="info-row"><span class="info-rank" style="color: var(--gold);">ALTIN</span><span>1500+ PUAN</span></div>
+            <div class="info-row"><span class="info-rank" style="color: var(--iron);">DEMİR</span><span>500+ PUAN</span></div>
+            <div class="info-row"><span class="info-rank" style="color: #95a5a6;">ÇAYLAK</span><span>0+ PUAN</span></div>
+            <button class="btn" style="margin-top: 20px;" onclick="toggleInfo()">KAPAT</button>
+        </div>
+    </div>
+
+    <div id="auth-screen">
+        <div class="card-box">
+            <h1 style="margin-bottom:20px;">⚡ OYUN LAB</h1>
+            <input type="text" id="username" placeholder="Kullanıcı Adı">
+            <input type="password" id="password" placeholder="Şifre">
+            <button class="btn" onclick="handleAuth()">GİRİŞ YAP</button>
+        </div>
+    </div>
+
+    <div id="portal-screen">
+        <div style="display:flex; justify-content: space-between; margin-bottom:20px;">
+            <span id="user-info" style="font-weight:800; color:var(--success);"></span>
+            <button onclick="location.reload()" style="color:var(--danger); background:none; border:none; cursor:pointer;">Çıkış</button>
+        </div>
+        <div class="card-box" style="margin:auto; border:2px solid var(--primary); cursor:pointer;" onclick="openGame()">
+            <i class="fa-solid fa-rocket" style="font-size:50px; color:var(--success)"></i>
+            <h2 style="margin-top:10px;">OYUNU BAŞLAT</h2>
+        </div>
+    </div>
+
+    <div id="game-screen">
+        <div class="card-box" style="margin:auto;">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--success)">SÜRE: <span id="timer">30</span></div>
+                <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--gold)">SKOR: <span id="score">0</span></div>
+            </div>
+            <div id="word-box" style="font-family:'Kalam'; font-size:45px; margin:20px 0; color:var(--gold);">...</div>
+            <input type="text" id="ans" placeholder="Cevapla!">
+            <button id="start-btn" class="btn" onclick="startGame()">BAŞLAT</button>
         </div>
     </div>
 
     <div id="leader-modal" class="overlay">
-        <div class="card-box" style="border: 1px solid var(--primary); max-width: 440px;">
-            
+        <div class="modal">
             <div class="founder-panel" id="f-panel">
-                <div style="color:var(--neon-red); font-size:0.7rem; font-weight:900; letter-spacing:4px;">KURUCU =</div>
-                <div style="font-size:1.2rem; font-weight:800; margin:5px 0;">Burak 9/N Sınıfı</div>
-                <div class="dev-role-wrapper">
+                <div style="color:var(--neon-red); font-weight:900; font-size:0.7rem; letter-spacing:5px;">KURUCU =</div>
+                <div style="font-size:1.2rem; font-weight:800; color:#fff;">Burak 9/N Sınıfı</div>
+                <div style="position:relative; display:inline-block; margin-top:10px;">
                     <span class="dark-dev-role">DEVELOPER</span>
-                    <i class="fa-solid fa-crown dev-badge"></i> <div class="particle-area" id="p-area"></div>
+                    <div class="particle-area" id="p-area"></div>
                 </div>
             </div>
+            <h3 style="color: var(--diamond); margin-bottom:15px; font-size:0.9rem;">🏆 TOP 10 SIRALAMA</h3>
+            <div id="leader-list" style="max-height: 250px; overflow-y: auto;"></div>
+            <button class="btn" style="margin-top:20px;" onclick="location.reload()">BAŞA DÖN</button>
+        </div>
+    </div>
 
-            <h3 style="margin-bottom:15px; font-size:0.9rem; color:var(--diamond);">🏆 TOP 10 SIRALAMA</h3>
-            <div id="leader-list" style="max-height: 200px; overflow-y: auto;"></div>
-            <button class="btn" onclick="location.reload()">TEKRAR OYNA</button>
+    <div id="end-modal" class="overlay">
+        <div class="modal">
+            <h2>SÜRE DOLDU!</h2>
+            <div id="final-score" style="font-size: 60px; margin: 20px 0; color:var(--success);">0</div>
+            <button class="btn" onclick="saveScore()">SKORU KAYDET</button>
         </div>
     </div>
 
 <script>
-    let currentUser = "";
+    const DEV_NAME = "Burak 9/N Sınıfı";
+    let currentUser = null, score = 0, timeLeft = 30, timer, currentWord, gameActive = false;
 
-    function handleAuth() {
-        const u = document.getElementById('username').value;
-        if(u) {
-            currentUser = u;
-            document.getElementById('auth-screen').style.display='none';
-            document.getElementById('portal-screen').style.display='block';
-        }
+    const words = [
+        {tr:"Kitap", en:"book"}, {tr:"Okul", en:"school"}, {tr:"Öğretmen", en:"teacher"},
+        {tr:"Öğrenci", en:"student"}, {tr:"Kalem", en:"pencil"}, {tr:"Masa", en:"table"},
+        {tr:"Bilgisayar", en:"computer"}, {tr:"Dünya", en:"world"}, {tr:"Mutlu", en:"happy"}, {tr:"Hızlı", en:"fast"}
+    ];
+
+    function toggleInfo() {
+        const modal = document.getElementById('info-modal');
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
     }
 
+    function handleAuth() {
+        const u = document.getElementById('username').value.trim();
+        const p = document.getElementById('password').value;
+        if(!u || !p) return alert("Eksik alan!");
+        let db = JSON.parse(localStorage.getItem('lab_final_db_v4') || '{}');
+        if(!db[u]) db[u] = p;
+        if(db[u] === p) {
+            currentUser = u;
+            localStorage.setItem('lab_final_db_v4', JSON.stringify(db));
+            document.getElementById('auth-screen').style.display='none';
+            document.getElementById('portal-screen').style.display='block';
+            document.getElementById('user-info').innerText = "👤 " + u;
+        } else alert("Şifre yanlış!");
+    }
+
+    function openGame() { document.getElementById('portal-screen').style.display='none'; document.getElementById('game-screen').style.display='block'; }
+
     function startGame() {
-        // Test amaçlı direkt skor ekranına geçiş
+        score = 0; timeLeft = 30; gameActive = true;
+        document.getElementById('start-btn').style.display='none';
+        nextWord();
+        timer = setInterval(() => {
+            timeLeft--; document.getElementById('timer').innerText = timeLeft;
+            if(timeLeft <= 0) { clearInterval(timer); gameActive=false; document.getElementById('final-score').innerText = score; document.getElementById('end-modal').style.display='flex'; }
+        }, 1000);
+    }
+
+    function nextWord() {
+        currentWord = words[Math.floor(Math.random()*words.length)];
+        document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
+        document.getElementById('ans').value = ""; document.getElementById('ans').focus();
+    }
+
+    document.getElementById('ans').addEventListener('keypress', e => {
+        if(e.key === 'Enter' && gameActive) {
+            if(document.getElementById('ans').value.toLowerCase().trim() === currentWord.en) {
+                score += 100; document.getElementById('score').innerText = score;
+                confetti({ particleCount: 20 });
+            }
+            nextWord();
+        }
+    });
+
+    function saveScore() {
+        let data = JSON.parse(localStorage.getItem('lab_scores_v4') || '[]');
+        let rank = getRank(score);
+        data.push({n: currentUser, s: score, t: rank.t, c: rank.c});
+        data.sort((a,b) => b.s - a.s);
+        localStorage.setItem('lab_scores_v4', JSON.stringify(data.slice(0, 10)));
         showLeaders();
     }
 
-    function startParticles() {
+    function getRank(s) {
+        if(s >= 5000) return {t:"ELİT", c:"rank-elit"};
+        if(s >= 3000) return {t:"ELMAS", c:"rank-elmas"};
+        if(s >= 1500) return {t:"ALTIN", c:"rank-altin"};
+        if(s >= 500) return {t:"DEMİR", c:"rank-demir"};
+        return {t:"ÇAYLAK", c:"rank-caylak"};
+    }
+
+    function startDevParticles() {
         const area = document.getElementById('p-area');
+        if(!area) return;
         setInterval(() => {
             const dot = document.createElement('div');
             dot.className = 'dev-dot';
+            dot.style.setProperty('--x', (Math.random() * 120 - 60) + 'px');
+            dot.style.setProperty('--y', (Math.random() * -100 - 40) + 'px');
             dot.style.left = Math.random() * 100 + '%';
             dot.style.top = '50%';
-            dot.style.setProperty('--x', (Math.random() * 100 - 50) + 'px');
-            dot.style.setProperty('--y', (Math.random() * -80 - 20) + 'px');
             area.appendChild(dot);
             setTimeout(() => dot.remove(), 2500);
-        }, 200);
+        }, 150);
     }
 
     function showLeaders() {
-        document.getElementById('portal-screen').style.display='none';
-        document.getElementById('leader-modal').style.display='flex';
-        startParticles();
-        
-        const demoData = [{n:"Ali", s:500, r:"DEMİR"}, {n:"Veli", s:200, r:"ÇAYLAK"}];
+        let data = JSON.parse(localStorage.getItem('lab_scores_v4') || '[]');
         let html = "";
-        demoData.forEach(d => {
-            html += `<div class="score-row"><b>${d.n}</b> - ${d.s} Puan <br><small>${d.r}</small></div>`;
+        data.forEach((d, i) => {
+            html += `<div class="score-row">
+                <div style="display:flex; justify-content:space-between;"><span>${i+1}. ${d.n}</span><b>${d.s}</b></div>
+                <div class="rank-tag ${d.c}">${d.t}</div>
+            </div>`;
         });
         document.getElementById('leader-list').innerHTML = html;
+        document.getElementById('end-modal').style.display='none';
+        document.getElementById('leader-modal').style.display='flex';
+        startDevParticles();
     }
 </script>
 </body>

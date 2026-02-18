@@ -10,64 +10,45 @@
     <style>
         :root { --primary: #6c5ce7; --accent: #a29bfe; --gold: #ffeaa7; --success: #00ffca; --danger: #ff4757; --neon-red: #ff0000; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        
         body { 
             font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
             background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(40, 10, 80, 0.9)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80'); 
             background-size: cover; background-position: center; color: white; padding: 20px; overflow: hidden;
         }
-
         @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+            0%, 100% { transform: translate(0,0); }
+            20% { transform: translate(-5px, 0px) rotate(1deg); }
+            40% { transform: translate(5px, -2px) rotate(-1deg); }
+            60% { transform: translate(-5px, 2px) rotate(0deg); }
+            80% { transform: translate(5px, 1px) rotate(1deg); }
         }
         .jumpscare-bg { background: maroon !important; animation: shake 0.2s infinite !important; }
-
         .card-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); padding: 35px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 420px; text-align: center; position: relative; }
         input { width: 100%; padding: 18px; border-radius: 20px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: white; color: #1e1e2f; }
         .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        
         #portal-screen, #game-screen { display: none; width: 100%; max-width: 1000px; text-align: center; }
-
-        #countdown-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.9); border-radius: 40px;
-            display: none; align-items: center; justify-content: center;
-            font-size: 120px; font-weight: 900; color: var(--gold); z-index: 100;
-        }
-
-        #ghost-trigger {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            font-size: 200px; pointer-events: none; z-index: 2000; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        #countdown-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); border-radius: 40px; display: none; align-items: center; justify-content: center; font-size: 120px; font-weight: 900; color: var(--gold); z-index: 100; }
+        #ghost-trigger { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 200px; pointer-events: none; z-index: 2000; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #ghost-trigger.show { transform: translate(-50%, -50%) scale(2); opacity: 1; }
-
-        .founder-panel { background: #000 !important; border: 2px solid var(--neon-red); padding: 20px; border-radius: 25px; margin-bottom: 25px; box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); }
-        .founder-label { color: var(--neon-red); font-weight: 900; font-size: 0.7rem; letter-spacing: 5px; margin-bottom: 5px; }
-        .founder-name { font-size: 1.2rem; font-weight: 800; color: white; }
-        .dark-dev-role { background: #000; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 5px 20px; border-radius: 12px; font-weight: 900; font-size: 0.9rem; letter-spacing: 3px; }
-
-        .troll-box { 
-            height: 60px; margin-bottom: 15px; font-weight: 900; font-size: 1.3rem; 
-            display: flex; align-items: center; justify-content: center; 
-            opacity: 0; transform: scale(0.3); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+        .founder-panel { background: #000 !important; border: 2px solid var(--neon-red); padding: 15px; border-radius: 25px; margin-bottom: 15px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
+        .founder-name { font-size: 1.1rem; font-weight: 800; color: white; }
+        .dark-dev-role { background: #000; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 3px 15px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 2px; }
+        .troll-box { height: 60px; margin-bottom: 10px; font-weight: 900; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.3); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .troll-box.pop { opacity: 1; transform: scale(1.3); }
-
-        .score-row { display: flex; flex-direction: column; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: left; border-left: 4px solid var(--primary); }
-        .rank-tag { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
-        .rank-elit { color: #ff7675; } .rank-altin { color: var(--gold); } .rank-caylak { color: #ccc; }
+        
+        /* SKOR TABLOSU TASARIMI */
+        .score-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 5px; background: rgba(255,255,255,0.05); border-radius: 12px; border-left: 3px solid var(--primary); font-size: 0.9rem; }
+        .rank-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 2px 8px; border-radius: 5px; background: rgba(0,0,0,0.3); }
+        .rank-elit { color: #ff7675; } .rank-altin { color: var(--gold); } .rank-caylak { color: #ccc; } .rank-none { color: #555; }
+        
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
-        .modal { background: #1a1a2e; width: 100%; max-width: 440px; border-radius: 40px; padding: 30px; border: 2px solid var(--primary); }
+        .modal { background: #1a1a2e; width: 100%; max-width: 440px; border-radius: 40px; padding: 25px; border: 2px solid var(--primary); }
     </style>
 </head>
 <body id="main-body">
 
-    <audio id="snd-yee" src="https://www.myinstants.com/media/sounds/fnaf-6-yee-hc.mp3"></audio>
-    <audio id="snd-fail" src="https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3"></audio>
+    <audio id="snd-yee" src="https://www.myinstants.com/media/sounds/yee-hc.mp3"></audio>
+    <audio id="snd-fail" src="https://www.myinstants.com/media/sounds/error_CD6sS96.mp3"></audio>
 
     <div id="ghost-trigger">👻</div>
 
@@ -98,27 +79,25 @@
     <div id="game-screen">
         <div class="card-box" style="margin:auto;">
             <div id="countdown-overlay">3</div>
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--success)">SÜRE: <span id="timer">30</span></div>
                 <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--gold)">SKOR: <span id="score">0</span></div>
             </div>
-            <div id="word-box" style="font-family:'Kalam'; font-size:42px; margin:15px 0; color:var(--gold);">ODAKLAN!</div>
+            <div id="word-box" style="font-family:'Kalam'; font-size:42px; margin:10px 0; color:var(--gold);">ODAKLAN!</div>
             <div id="troll-box" class="troll-box"></div>
             <input type="text" id="ans" placeholder="Kelimeyi yaz ve Enter'la">
-            <div style="height: 10px;"></div>
         </div>
     </div>
 
     <div id="leader-modal" class="overlay">
         <div class="modal">
             <div class="founder-panel">
-                <div class="founder-label">KURUCU =</div>
                 <div class="founder-name">Burak 9/N Sınıfı</div>
-                <div><span class="dark-dev-role">DEVELOPER 👑</span></div>
+                <div style="margin-top:5px;"><span class="dark-dev-role">DEVELOPER 👑</span></div>
             </div>
-            <h3>🏆 TOP 10</h3>
-            <div id="leader-list"></div>
-            <button class="btn" style="margin-top:20px;" onclick="location.reload()">TEKRAR OYNA 🏠</button>
+            <h3 style="margin-bottom:10px;">🏆 TOP 10 SIRALAMASI</h3>
+            <div id="leader-list" style="max-height: 320px; overflow-y: auto; padding-right: 5px;"></div>
+            <button class="btn" style="margin-top:15px;" onclick="location.reload()">TEKRAR DENE 🏠</button>
         </div>
     </div>
 
@@ -126,25 +105,21 @@
         <div class="modal">
             <h2>SÜRE BİTTİ!</h2>
             <div id="final-score" style="font-size: 60px; color:var(--success);">0</div>
-            <button class="btn" onclick="saveScore()">SKORU KAYDET</button>
+            <button class="btn" onclick="saveScore()">KAYDET VE SIRALAMAYA BAK</button>
         </div>
     </div>
 
 <script>
     const words = [
         {tr:"Elma",en:"apple"},{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Masa",en:"table"},{tr:"Kedi",en:"cat"},
-        {tr:"Köpek",en:"dog"},{tr:"Mutlu",en:"happy"},{tr:"Kalem",en:"pencil"},{tr:"Su",en:"water"},{tr:"Hızlı",en:"fast"},
-        {tr:"Yavaş",en:"slow"},{tr:"Sıcak",en:"hot"},{tr:"Soğuk",en:"cold"},{tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},
-        {tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"İyi",en:"good"},{tr:"Kötü",en:"bad"},{tr:"Deniz",en:"sea"},
-        {tr:"Ağaç",en:"tree"},{tr:"Çiçek",en:"flower"},{tr:"Kuş",en:"bird"},{tr:"Güneş",en:"sun"},{tr:"Araba",en:"car"},
-        {tr:"Ev",en:"house"},{tr:"Kapı",en:"door"},{tr:"Para",en:"money"},{tr:"Zeki",en:"smart"},{tr:"Cesur",en:"brave"},
-        {tr:"Sıkıcı",en:"boring"},{tr:"Komik",en:"funny"},{tr:"Mutfak",en:"kitchen"},{tr:"Gözlük",en:"glasses"},
-        {tr:"Pencere",en:"window"},{tr:"Şehir",en:"city"},{tr:"Cüzdan",en:"wallet"},{tr:"Sözlük",en:"dictionary"}
-        // ... kelime listesi
+        {tr:"Köpek",en:"dog"},{tr:"Mutlu",en:"happy"},{tr:"Su",en:"water"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},
+        {tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Deniz",en:"sea"},
+        {tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yıldız",en:"star"},{tr:"Balık",en:"fish"},{tr:"Aslan",en:"lion"},
+        {tr:"Para",en:"money"},{tr:"Zeki",en:"smart"},{tr:"Komik",en:"funny"},{tr:"Sessiz",en:"quiet"},{tr:"Yaz",en:"summer"}
     ];
 
-    const trolls = ["Cidden mi? 😂", "Klavyeye mi oturdun? ⌨️", "Bunu bilseydin şaşardım! 🤡", "Google Translate bile ağlıyor... 🤖"];
-    const praises = ["Vay be! 🌟", "FNAF tayfası gururlu! 🔥", "Hızlısın ha! 😎", "Makine misin be? 🤖"];
+    const trolls = ["Cidden mi? 😂", "Klavyeye mi oturdun? ⌨️", "Bunu bilseydin şaşardım! 🤡"];
+    const praises = ["Vay be! 🌟", "Hızlısın ha! 😎", "Makine misin be? 🤖"];
 
     let currentUser = null, score = 0, timeLeft = 30, timer, currentWord, gameActive = false;
 
@@ -152,14 +127,14 @@
         const u = document.getElementById('username').value.trim();
         const p = document.getElementById('password').value;
         if(!u || !p) return alert("Hepsini doldur!");
-        let db = JSON.parse(localStorage.getItem('lab_v6_db') || '{}');
-        if(!db[u]) { db[u] = p; localStorage.setItem('lab_v6_db', JSON.stringify(db)); }
+        let db = JSON.parse(localStorage.getItem('burak_v8_db') || '{}');
+        if(!db[u]) { db[u] = p; localStorage.setItem('burak_v8_db', JSON.stringify(db)); }
         if(db[u] === p) {
             currentUser = u;
             document.getElementById('auth-screen').style.display='none';
             document.getElementById('portal-screen').style.display='block';
             document.getElementById('user-info').innerText = "👤 " + u;
-        } else alert("Yanlış şifre!");
+        } else alert("Hatalı!");
     }
 
     function startAutoGame() {
@@ -167,8 +142,7 @@
         document.getElementById('game-screen').style.display='block';
         const cd = document.getElementById('countdown-overlay');
         cd.style.display = 'flex';
-        let count = 3;
-        cd.innerText = count;
+        let count = 3; cd.innerText = count;
         let cdTimer = setInterval(() => {
             count--;
             if(count > 0) { cd.innerText = count; }
@@ -181,19 +155,16 @@
         document.getElementById('score').innerText = "0";
         nextWord();
         timer = setInterval(() => {
-            timeLeft--; 
-            document.getElementById('timer').innerText = timeLeft;
-            if(timeLeft <= 0) {
-                clearInterval(timer);
-                gameActive = false;
-                document.getElementById('final-score').innerText = score;
-                document.getElementById('end-modal').style.display='flex';
-            }
+            timeLeft--; document.getElementById('timer').innerText = timeLeft;
+            if(timeLeft <= 0) { clearInterval(timer); gameActive = false; document.getElementById('final-score').innerText = score; document.getElementById('end-modal').style.display='flex'; }
         }, 1000);
     }
 
     function nextWord() {
-        currentWord = words[Math.floor(Math.random()*words.length)];
+        const oldWord = currentWord ? currentWord.tr : "";
+        let newWord;
+        do { newWord = words[Math.floor(Math.random()*words.length)]; } while (newWord.tr === oldWord);
+        currentWord = newWord;
         document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
         document.getElementById('ans').value = ""; document.getElementById('ans').focus();
     }
@@ -205,7 +176,7 @@
             box.innerText = txt;
             box.style.color = isSuccess ? "var(--success)" : "var(--danger)";
             box.classList.add('pop');
-            setTimeout(() => { box.classList.remove('pop'); }, 1800);
+            setTimeout(() => { box.classList.remove('pop'); }, 1500);
         }, 10);
     }
 
@@ -216,7 +187,7 @@
                 score += 100; document.getElementById('score').innerText = score;
                 document.getElementById('snd-yee').play();
                 displayStatusMsg(praises[Math.floor(Math.random()*praises.length)], true);
-                confetti({ particleCount: 40 });
+                confetti({ particleCount: 30 });
             } else {
                 document.getElementById('snd-fail').play();
                 displayStatusMsg(trolls[Math.floor(Math.random()*trolls.length)], false);
@@ -235,20 +206,38 @@
     }
 
     function saveScore() {
-        let data = JSON.parse(localStorage.getItem('lab_v6_scores') || '[]');
+        let data = JSON.parse(localStorage.getItem('burak_v8_scores') || '[]');
         let rank = score >= 2000 ? {t:"ELİT", c:"rank-elit"} : score >= 1000 ? {t:"ALTIN", c:"rank-altin"} : {t:"ÇAYLAK", c:"rank-caylak"};
         data.push({n: currentUser, s: score, t: rank.t, c: rank.c});
         data.sort((a,b) => b.s - a.s);
-        localStorage.setItem('lab_v6_scores', JSON.stringify(data.slice(0, 10)));
+        localStorage.setItem('burak_v8_scores', JSON.stringify(data.slice(0, 10)));
         showLeaders();
     }
 
+    // SABİT 10 SATIRLIK TABLO SİSTEMİ
     function showLeaders() {
-        let data = JSON.parse(localStorage.getItem('lab_v6_scores') || '[]');
+        let data = JSON.parse(localStorage.getItem('burak_v8_scores') || '[]');
         let html = "";
-        data.forEach((d, i) => {
-            html += `<div class="score-row"><span>${i+1}. ${d.n} - ${d.s}</span><span class="rank-tag ${d.c}">${d.t}</span></div>`;
-        });
+        
+        // 10 tura kadar döngü kur
+        for(let i = 0; i < 10; i++) {
+            if(data[i]) {
+                // Kayıtlı oyuncu varsa yaz
+                html += `
+                <div class="score-row">
+                    <span><b>${i+1}.</b> ${data[i].n} - ${data[i].s}</span>
+                    <span class="rank-tag ${data[i].c}">${data[i].t}</span>
+                </div>`;
+            } else {
+                // Kayıt yoksa boşluk doldur
+                html += `
+                <div class="score-row" style="opacity: 0.5; border-left: 3px solid #333;">
+                    <span><b>${i+1}.</b> Boş...</span>
+                    <span class="rank-tag rank-none">BEKLENİYOR</span>
+                </div>`;
+            }
+        }
+        
         document.getElementById('leader-list').innerHTML = html;
         document.getElementById('end-modal').style.display='none';
         document.getElementById('leader-modal').style.display='flex';

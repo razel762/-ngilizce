@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9. Sınıf Kelime Yarışı - Top 10</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p-color: #00d2d3; --s-color: #222f3e; --bg: #f5f6fa; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px; }
+        
+        /* Oyun Alanı */
+        .game-card { background: white; width: 90%; max-width: 450px; margin-top: 20px; border-radius: 25px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; border: 1px solid #eee; }
+        .score-board { display: flex; justify-content: space-between; margin-bottom: 25px; font-weight: bold; font-size: 20px; background: #f9f9f9; padding: 10px 20px; border-radius: 15px; }
+        #word-box { font-size: 32px; font-weight: 800; color: var(--s-color); margin: 25px 0; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 18px; border: 2px solid #dfe6e9; border-radius: 15px; font-size: 18px; outline: none; box-sizing: border-box; transition: 0.3s; text-align: center; }
+        input:focus { border-color: var(--p-color); box-shadow: 0 0 10px rgba(0,210,211,0.2); }
+        .btn { background: var(--p-color); color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        
+        /* Liderlik Tablosu (Top 10) */
+        .leaderboard { width: 90%; max-width: 450px; margin-top: 25px; background: var(--s-color); color: white; border-radius: 25px; padding: 25px; box-sizing: border-box; }
+        .leaderboard h3 { margin-top: 0; border-bottom: 2px solid #57606f; padding-bottom: 15px; color: #feca57; text-align: center; font-size: 22px; }
+        .score-entry { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #3d4852; font-size: 16px; }
+        .score-entry:nth-child(-n+4) span:first-child { color: #feca57; font-weight: bold; } /* İlk 3 parlak */
+        .score-entry:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+
+<div class="game-card">
+    <div class="score-board">
+        <span><i class="fa-solid fa-star" style="color:#feca57"></i> <span id="current-score">0</span></span>
+        <span><i class="fa-solid fa-heart" style="color:#ff6b6b"></i> <span id="lives">3</span></span>
+    </div>
+    
+    <div id="word-box">BAŞLIYOR...</div>
+    <input type="text" id="answer" placeholder="İngilizce karşılığını yaz..." autocomplete="off">
+    <button class="btn" onclick="checkAnswer()">KONTROL ET</button>
+    <p id="msg" style="margin-top:15px; font-weight:bold; min-height: 20px;"></p>
+</div>
+
+<div class="leaderboard">
+    <h3><i class="fa-solid fa-crown"></i> LİDERLİK TABLOSU (TOP 10)</h3>
+    <div id="leader-list">
+        </div>
+</div>
+
+<script>
+    // 9. Sınıf Müfredat Kelimeleri
+    const wordList = [
+        { tr: "Yurt dışı", en: "abroad" },
+        { tr: "Görünüş", en: "appearance" },
+        { tr: "Kişilik", en: "personality" },
+        { tr: "Zarf", en: "envelope" },
+        { tr: "Komşu", en: "neighbour" },
+        { tr: "Cüzdan", en: "wallet" },
+        { tr: "Sözlük", en: "dictionary" },
+        { tr: "Uçak", en: "plane" },
+        { tr: "Şehir", en: "city" },
+        { tr: "Köy", en: "village" },
+        { tr: "Gökdelen", en: "skyscraper" },
+        { tr: "Mekan/Yer", en: "location" }
+    ];
+
+    let score = 0;
+    let lives = 3;
+    let currentWord = {};
+
+    function startGame() {
+        nextQuestion();
+        updateLeaderboard();
+    }
+
+    function nextQuestion() {
+        currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+        document.getElementById('word-box').innerText = currentWord.tr;
+        document.getElementById('answer').value = "";
+        document.getElementById('answer').focus();
+    }
+
+    function checkAnswer() {
+        const userAns = document.getElementById('answer').value.toLowerCase().trim();
+        const msg = document.getElementById('msg');
+
+        if(userAns === currentWord.en) {
+            score += 10;
+            msg.innerText = "⭐ HARİKA! (+10)";
+            msg.style.color = "#00b894";
+            document.getElementById('current-score').innerText = score;
+            nextQuestion();
+        } else {
+            lives--;
+            msg.innerText = "❌ YANLIŞ! Doğrusu: " + currentWord.en;
+            msg.style.color = "#ff7675";
+            document.getElementById('lives').innerText = lives;
+            if(lives <= 0) {
+                setTimeout(gameOver, 500);
+            } else {
+                nextQuestion();
+            }
+        }
+    }
+
+    function gameOver() {
+        const name = prompt("OYUN BİTTİ!\nToplam Puanın: " + score + "\nLiderlik tablosu için ismini yaz:");
+        if(name && name.trim() !== "") {
+            saveScore(name.substring(0, 15), score); // İsim çok uzun olmasın
+        }
+        // Sıfırla
+        score = 0;
+        lives = 3;
+        document.getElementById('current-score').innerText = score;
+        document.getElementById('lives').innerText = lives;
+        document.getElementById('msg').innerText = "";
+        nextQuestion();
+    }
+
+    function saveScore(name, score) {
+        let scores = JSON.parse(localStorage.getItem('engTop10')) || [];
+        scores.push({name: name, score: score});
+        scores.sort((a, b) => b.score - a.score); // Büyükten küçüğe
+        scores = scores.slice(0, 10); // Sadece ilk 10
+        localStorage.setItem('engTop10', JSON.stringify(scores));
+        updateLeaderboard();
+    }
+
+    function updateLeaderboard() {
+        const list = document.getElementById('leader-list');
+        const scores = JSON.parse(localStorage.getItem('engTop10')) || [];
+        
+        if(scores.length === 0) {
+            list.innerHTML = "<p style='text-align:center; color:#636e72;'>Henüz skor yok. İlk sen ol!</p>";
+            return;
+        }
+
+        list.innerHTML = scores.map((s, i) => `
+            <div class="score-entry">
+                <span>${i+1}. ${s.name}</span>
+                <span style="color:#feca57">${s.score} Puan</span>
+            </div>
+        `).join('');
+    }
+
+    // Enter tuşuna basınca kontrol etme özelliği
+    document.getElementById('answer').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    startGame();
+</script>
+
+</body>
+</html>

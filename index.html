@@ -2,77 +2,128 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9. Sınıf İngilizce - Duygusal Maraton</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>9. Sınıf İngilizce - Modern Turnuva</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6c5ce7; --gold: #feca57; --success: #2ecc71; --danger: #ff4757; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center; color: white; overflow: hidden; }
-        
-        .game-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); width: 95%; max-width: 450px; border-radius: 40px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.6); position: relative; z-index: 10; }
-        .stats { display: flex; width: 100%; justify-content: space-between; margin-bottom: 15px; }
-        .stat-box { background: rgba(0,0,0,0.7); padding: 12px 20px; border-radius: 15px; font-weight: 800; color: #00d2d3; border: 2px solid #00d2d3; font-size: 20px; }
-        
-        /* Hırslandırma/Dalga Mesaj Kutusu */
-        #reaction-box { height: 40px; font-size: 22px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; text-shadow: 2px 2px #000; }
-        .success-msg { color: var(--success); animation: pulse 0.4s; }
-        .fail-msg { color: var(--danger); animation: shake 0.4s; }
+        :root { --primary: #a29bfe; --gold: #ffeaa7; --success: #55efc4; --danger: #ff7675; --glass: rgba(255, 255, 255, 0.1); }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; } /* Yazı seçimini engeller */
 
-        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: linear-gradient(rgba(45, 52, 54, 0.8), rgba(45, 52, 54, 0.8)), 
+                        url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80'); 
+            background-size: cover; 
+            background-position: center; 
+            color: white; 
+            overflow: hidden; 
+            padding: 15px;
+        }
+        
+        .game-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            width: 100%; 
+            max-width: 420px; 
+            border-radius: 40px; 
+            padding: 30px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
+            position: relative; 
+            z-index: 10;
+        }
 
-        /* Ghost X Animasyonu */
-        #ghost-x { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 250px; color: var(--danger); pointer-events: none; z-index: 999; opacity: 0; display: none; }
+        .stats { display: flex; width: 100%; justify-content: space-between; margin-bottom: 20px; gap: 15px; }
+        .stat-box { 
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4); 
+            padding: 12px; 
+            border-radius: 20px; 
+            font-weight: 800; 
+            color: #81ecec; 
+            border: 1px solid rgba(129, 236, 236, 0.3); 
+            font-size: 18px; 
+        }
+        
+        #reaction-box { height: 40px; font-size: 22px; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
+        .success-msg { color: var(--success); }
+        .fail-msg { color: var(--danger); }
+
+        #word-box { font-family: 'Kalam', cursive; font-size: 45px; color: #fab1a0; margin-bottom: 25px; display: block; }
+
+        input { 
+            width: 100%; padding: 20px; border-radius: 25px; border: 2px solid rgba(255, 255, 255, 0.1); 
+            font-size: 22px; text-align: center; margin-bottom: 15px; outline: none; 
+            background: rgba(255, 255, 255, 0.9); color: #2d3436; user-select: text !important;
+        }
+
+        .btn { 
+            background: var(--primary); color: white; border: none; width: 100%; padding: 20px; 
+            border-radius: 25px; font-size: 20px; font-weight: 800; cursor: pointer; 
+            text-transform: uppercase; transition: 0.3s;
+        }
+
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        .modal { background: #2d3436; width: 100%; max-width: 420px; border-radius: 40px; padding: 35px; border: 1px solid rgba(255,255,255,0.1); text-align: center; max-height: 85vh; display: flex; flex-direction: column; }
+        
+        #leader-list { overflow-y: auto; margin: 20px 0; padding-right: 10px; flex-grow: 1; }
+        .score-row { display: flex; justify-content: space-between; padding: 12px 15px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 15px; }
+
+        #ghost-x { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 250px; color: var(--danger); pointer-events: none; z-index: 999; opacity: 0; display: none; }
         .ghost-animate { display: block !important; animation: ghostPop 0.5s ease-out forwards; }
-        @keyframes ghostPop { 0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
-
-        .wood-sign { background: #5d4037; border: 8px solid #3e2723; border-radius: 20px; padding: 20px 10px; width: 85%; margin: 0 auto 30px; }
-        #word-box { font-family: 'Kalam', cursive; font-size: 42px; color: #ffecb3; text-shadow: 3px 3px #3e2723; }
-        input { width: 100%; padding: 20px; border-radius: 20px; border: none; font-size: 24px; text-align: center; margin-bottom: 20px; outline: none; }
-        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #4834d4; transition: 0.2s; }
-        
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal { background: #1e272e; width: 90%; max-width: 400px; border-radius: 35px; padding: 25px; border: 4px solid var(--primary); text-align: center; }
-        #leader-list { overflow-y: auto; max-height: 200px; margin: 15px 0; }
-        .score-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        @keyframes ghostPop { 0% { scale: 0.5; opacity: 0; } 50% { scale: 1.2; opacity: 0.8; } 100% { scale: 2; opacity: 0; } }
     </style>
 </head>
-<body>
-
-<div id="ghost-x"><i class="fa-solid fa-xmark"></i></div>
+<body oncontextmenu="return false;"> <div id="ghost-x"><i class="fa-solid fa-xmark"></i></div>
 
 <div id="name-modal" class="overlay">
     <div class="modal">
-        <h2 style="color:#00d2d3;">OYUN BİTTİ</h2>
-        <div id="final-score" style="font-size: 45px; font-weight: 800;"></div>
-        <div id="rank-msg" style="margin: 15px 0; color: var(--gold); font-weight: bold;"></div>
-        <input type="text" id="player-name" placeholder="Adını yaz..." maxlength="12">
-        <button class="btn" onclick="save()">LİSTEYE GİR</button>
+        <h2 style="color:var(--primary); margin:0;">ZAMAN TÜKENDİ!</h2>
+        <div id="final-score" style="font-size: 60px; font-weight: 800; color: #fff; margin: 10px 0;"></div>
+        <div id="rank-msg" style="margin-bottom: 25px; color: var(--gold); font-size: 18px;"></div>
+        <input type="text" id="player-name" placeholder="Efsanevi Adın..." maxlength="12">
+        <button class="btn" onclick="save()">PUANI KAYDET</button>
     </div>
 </div>
 
 <div id="leader-modal" class="overlay">
     <div class="modal">
-        <h2 style="color:var(--gold);">🏆 EN İYİLER</h2>
+        <h2 style="color:var(--gold); margin-top:0;">🏆 EN İYİ 100</h2>
         <div id="leader-list"></div>
-        <button class="view-all-btn" style="background:none; border:1px solid #fff; color:#fff; padding:5px 10px; cursor:pointer;" onclick="showLeaders(100)">TÜMÜNÜ GÖR</button>
-        <button class="btn" style="background:#ff4757; margin-top:15px;" onclick="restart()">YENİDEN DENE</button>
+        <button class="btn" style="background:var(--danger);" onclick="restart()">TEKRAR DENE 🔄</button>
     </div>
 </div>
 
 <div class="game-card">
-    <div id="reaction-box"></div> <div class="stats">
+    <div id="reaction-box"></div>
+    <div class="stats">
         <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">30</span>s</div>
         <div class="stat-box"><i class="fa-solid fa-bolt"></i> <span id="score">0</span></div>
     </div>
-    <div class="wood-sign"><div id="word-box">READY?</div></div>
-    <input type="text" id="ans" placeholder="Klavyeşörlüğünü konuştur!" autocomplete="off">
+    <div id="word-box">READY?</div>
+    <input type="text" id="ans" placeholder="Hızını konuştur! ⚡" autocomplete="off">
     <button id="main-btn" class="btn" onclick="check()">MACERAYI BAŞLAT 🚀</button>
 </div>
 
 <script>
+    // --- KORUMA SİSTEMİ ---
+    document.onkeydown = function(e) {
+        // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U engelleme
+        if(e.keyCode == 123 || (e.ctrlKey && (e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || e.keyCode == 85)) {
+            alert("Üzgünüm, kodlar gizlidir! 😉");
+            return false;
+        }
+    };
+
+    // --- OYUN MANTIĞI ---
     const wordList = [
         {tr:"Yurt dışı", en:"abroad"}, {tr:"Görünüş", en:"appearance"}, {tr:"Kişilik", en:"personality"},
         {tr:"Cüzdan", en:"wallet"}, {tr:"Sözlük", en:"dictionary"}, {tr:"Gökdelen", en:"skyscraper"},
@@ -109,21 +160,16 @@
         {tr:"Nazik", en:"kind"}, {tr:"Kaba", en:"rude"}, {tr:"Zarif", en:"elegant"}, {tr:"Harika", en:"wonderful"}
     ];
 
-    const bravoMsgs = ["ADAMSIN!", "UÇUYORSUN!", "HIZLI VE ÖFKELİ!", "DURMA!", "MUHTEŞEM!", "RAKİPSİSİN!", "BÖYLE DEVAM!", "ALEV ALDIN! 🔥"];
-    const failMsgs = ["CİDDİ MİSİN?", "KLAVYEYE Mİ OTURDUN?", "BU MUYDU?", "ŞAKA YAPIYORSUN...", "HAYIRRR!", "COPTUN GİTTİN!", "DAHA HIZLI!", "BİRAZ ODAKLAN!"];
+    const bravoMsgs = ["ADAMSIN!", "UÇUYORSUN!", "HIZLI!", "MUHTEŞEM!", "RAKİPSİZ!", "ALEV ALDIN! 🔥"];
+    const failMsgs = ["CİDDİ MİSİN?", "KLAVYEYE Mİ OTURDUN?", "BU MUYDU?", "ŞAKA GİBİ...", "DAHA HIZLI!"];
 
     let currentPool = [], score = 0, timeLeft = 30, gameActive = false, timer, currentWord = {};
 
     function start() {
         score = 0; timeLeft = 30; gameActive = true;
-        currentPool = [...wordList];
-        for (let i = currentPool.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [currentPool[i], currentPool[j]] = [currentPool[j], currentPool[i]];
-        }
+        currentPool = [...wordList].sort(() => Math.random() - 0.5);
         document.getElementById('score').innerText = score;
         document.getElementById('main-btn').innerText = "GÖNDER! 💥";
-        document.getElementById('ans').placeholder = "Hızlı yaz, süreyi kap! 🔥";
         document.getElementById('name-modal').style.display = 'none';
         document.getElementById('leader-modal').style.display = 'none';
         next(); runTimer();
@@ -136,10 +182,9 @@
 
     function showReaction(type) {
         const box = document.getElementById('reaction-box');
-        const msgs = type === 'success' ? bravoMsgs : failMsgs;
-        box.innerText = msgs[Math.floor(Math.random() * msgs.length)];
-        box.className = type === 'success' ? 'success-msg' : 'fail-msg';
-        setTimeout(() => { box.innerText = ""; }, 800);
+        box.innerText = (type === 'success' ? bravoMsgs : failMsgs)[Math.floor(Math.random() * 5)];
+        box.className = type + '-msg';
+        setTimeout(() => { if(box.innerText) box.innerText = ""; }, 2000);
     }
 
     function next() {
@@ -169,35 +214,30 @@
     function end() {
         gameActive = false; clearInterval(timer);
         document.getElementById('final-score').innerText = score;
-        let msg = "";
-        if (score < 200) msg = "Geliştir kendini!";
-        else if (score < 500) msg = "Hadi hadi idare edersin...";
-        else if (score < 1000) msg = "Anladık en iyi sensin!";
-        else if (score >= 2000) msg = "Dostum çözdün sen bu işi! 🔥";
-        else msg = "Fena değil, ama daha iyisi olur!";
+        let msg = score < 200 ? "Geliştir kendini!" : score < 500 ? "Hadi hadi idare edersin" : score < 1000 ? "Anladık en iyi sensin" : "Dostum çözdün sen bu işi! 🔥";
         document.getElementById('rank-msg').innerText = msg;
         document.getElementById('name-modal').style.display = 'flex';
     }
 
     function save() {
         const name = document.getElementById('player-name').value || "Anonim";
-        let scs = JSON.parse(localStorage.getItem('okul_final_v3')) || [];
+        let scs = JSON.parse(localStorage.getItem('okul_final_protected')) || [];
         scs.push({n: name, s: score});
         scs.sort((a,b) => b.s - a.s);
-        localStorage.setItem('okul_final_v3', JSON.stringify(scs.slice(0, 100)));
+        localStorage.setItem('okul_final_protected', JSON.stringify(scs.slice(0, 100)));
         document.getElementById('name-modal').style.display = 'none';
-        showLeaders(10);
+        showLeaders();
     }
 
-    function showLeaders(limit) {
+    function showLeaders() {
         const list = document.getElementById('leader-list');
-        const scs = JSON.parse(localStorage.getItem('okul_final_v3')) || [];
-        let html = "";
-        scs.slice(0, limit).forEach((sc, i) => {
-            let icon = (i === 0) ? "👑 " : (i === 1) ? "🥈 " : (i === 2) ? "🥉 " : (i+1) + ". ";
-            html += `<div class="score-row"><span>${icon}${sc.n}</span><span>${sc.s}</span></div>`;
-        });
-        list.innerHTML = html || "<p>Kayıt yok.</p>";
+        const scs = JSON.parse(localStorage.getItem('okul_final_protected')) || [];
+        list.innerHTML = scs.map((sc, i) => `
+            <div class="score-row">
+                <span>${i+1}. ${sc.n}</span>
+                <span style="color:var(--primary); font-weight:bold;">${sc.s}</span>
+            </div>
+        `).join('') || "<p>Henüz kayıt yok.</p>";
         document.getElementById('leader-modal').style.display = 'flex';
     }
 

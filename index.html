@@ -12,58 +12,57 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { 
             font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
-            background: #0f0c29; background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
+            background: #000; background: radial-gradient(circle, #200000 0%, #000 100%);
             color: white; padding: 20px; overflow: hidden;
         }
-        @keyframes shake {
-            0%, 100% { transform: translate(0,0); }
-            25% { transform: translate(-4px, 2px); }
-            50% { transform: translate(4px, -2px); }
-        }
-        .jumpscare-bg { background: #600 !important; animation: shake 0.1s infinite !important; }
-        .card-box { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; position: relative; }
-        input { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: white; color: #333; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-5px, 2px); } 40% { transform: translate(5px, -2px); } }
+        .jumpscare-bg { background: #400 !important; animation: shake 0.1s infinite; }
+        .card-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: #fff; color: #000; }
         .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        
-        /* DEVELOPER PANELİ */
-        .founder-panel { background: #000 !important; border: 2px solid var(--neon-red); padding: 15px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); }
-        .founder-name { font-size: 1.1rem; font-weight: 800; color: white; }
-        .dark-dev-role { background: #000; color: var(--neon-red); border: 1px solid var(--neon-red); padding: 2px 12px; border-radius: 8px; font-weight: 900; font-size: 0.75rem; letter-spacing: 2px; }
+
+        /* KIRMIZI SİYAH LOCA TABELASI */
+        .founder-panel { 
+            background: #000 !important; border: 3px solid var(--neon-red); padding: 20px; border-radius: 20px; 
+            margin-bottom: 20px; box-shadow: 0 0 25px var(--neon-red); text-align: center;
+        }
+        .founder-name { font-size: 1.3rem; font-weight: 800; color: #fff; text-shadow: 0 0 10px var(--neon-red); }
+        .dark-dev-role { background: var(--neon-red); color: #000; padding: 4px 15px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 3px; display: inline-block; margin-top: 8px; }
 
         #portal-screen, #game-screen { display: none; width: 100%; max-width: 400px; }
         #countdown-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); border-radius: 30px; display: none; align-items: center; justify-content: center; font-size: 100px; font-weight: 900; color: var(--gold); z-index: 100; }
         
-        .score-row { display: flex; justify-content: space-between; padding: 10px 15px; margin-bottom: 6px; background: rgba(0,0,0,0.4); border-radius: 12px; font-size: 14px; align-items: center; border-left: 4px solid var(--primary); }
-        .rank-tag { font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; }
-        .r-elit { background: var(--danger); color: white; box-shadow: 0 0 5px var(--danger); }
-        .r-altin { background: var(--gold); color: #000; }
-        .r-caylak { background: #999; color: white; }
-        .r-none { background: #333; color: #666; }
-        
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .modal { background: #1e1e2f; width: 100%; max-width: 380px; border-radius: 25px; padding: 20px; border: 2px solid var(--primary); }
+        /* SIRALAMA DÜZENİ */
+        .score-row { display: flex; justify-content: space-between; padding: 12px; margin-bottom: 7px; background: rgba(255,255,255,0.05); border-radius: 12px; font-size: 14px; align-items: center; border-left: 5px solid var(--neon-red); }
+        .rank-tag { font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: 6px; min-width: 80px; text-align: center;}
+        .r-elit { background: var(--neon-red); color: #fff; box-shadow: 0 0 10px var(--neon-red); }
+        .r-altin { background: #ffa502; color: #000; }
+        .r-caylak { background: #7f8c8d; color: #fff; }
+        .r-none { color: #444; background: rgba(255,255,255,0.05); }
+
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .modal { background: #111; width: 100%; max-width: 380px; border-radius: 25px; padding: 20px; border: 1px solid var(--neon-red); }
     </style>
 </head>
 <body id="main-body">
 
     <audio id="snd-yee" src="https://www.myinstants.com/media/sounds/yee-hc.mp3"></audio>
     <audio id="snd-dizt" src="https://www.myinstants.com/media/sounds/buzzer_x_D9m9FvC.mp3"></audio>
-    <audio id="snd-jumpscare" src="https://www.myinstants.com/media/sounds/fnaf-jumpscare_sc6S9S7.mp3"></audio>
+    <audio id="snd-fnaf" src="https://www.myinstants.com/media/sounds/fnaf-jumpscare_sc6S9S7.mp3"></audio>
 
     <div id="auth-screen">
         <div class="card-box">
-            <h1>⚡ OYUN LAB</h1>
-            <p style="font-size:12px; margin-bottom:15px; color:var(--success)">Burak 9/N Dev Edition</p>
-            <input type="text" id="username" placeholder="Kullanıcı Adı">
-            <input type="password" id="password" placeholder="Şifre">
-            <button class="btn" onclick="handleAuth()">GİRİŞ YAP</button>
+            <h1 style="color:var(--neon-red); font-weight:900;">⚡ OYUN LAB</h1>
+            <p style="font-size:12px; margin-bottom:15px;">Developer: Burak 9/N</p>
+            <input type="text" id="username" placeholder="İsmini Yaz">
+            <button class="btn" style="background:var(--neon-red)" onclick="handleAuth()">GİRİŞ YAP</button>
         </div>
     </div>
 
     <div id="portal-screen">
-        <div class="card-box" style="border: 2px solid var(--success); cursor: pointer;" onclick="startAutoGame()">
-            <i class="fa-solid fa-play" style="font-size:40px; color:var(--success); margin-bottom:10px;"></i>
-            <h2>TURNUVAYI BAŞLAT</h2>
+        <div class="card-box" style="border: 2px solid var(--neon-red); cursor: pointer;" onclick="startAutoGame()">
+            <i class="fa-solid fa-play" style="font-size:50px; color:var(--neon-red); margin-bottom:10px;"></i>
+            <h2>OYUNU BAŞLAT</h2>
         </div>
     </div>
 
@@ -71,11 +70,11 @@
         <div class="card-box">
             <div id="countdown-overlay">3</div>
             <div style="display:flex; justify-content: space-between; margin-bottom:15px;">
-                <span style="color:var(--success)">SÜRE: <b id="timer">30</b></span>
+                <span style="color:var(--danger)">SÜRE: <b id="timer">30</b></span>
                 <span style="color:var(--gold)">SKOR: <b id="score">0</b></span>
             </div>
-            <div id="word-box" style="font-family:'Kalam'; font-size:42px; color:var(--gold); margin:20px 0;">...</div>
-            <input type="text" id="ans" placeholder="Kelimeyi yaz ve Enter'la">
+            <div id="word-box" style="font-family:'Kalam'; font-size:42px; color:#fff; margin:20px 0;">...</div>
+            <input type="text" id="ans" placeholder="Kelimeyi Yaz ve Enter">
         </div>
     </div>
 
@@ -83,19 +82,19 @@
         <div class="modal">
             <div class="founder-panel">
                 <div class="founder-name">Burak 9/N Sınıfı</div>
-                <div style="margin-top:5px;"><span class="dark-dev-role">DEVELOPER 👑</span></div>
+                <div class="dark-dev-role">DEVELOPER 👑</div>
             </div>
-            <h3 style="text-align:center; margin-bottom:15px; color:var(--gold);">🏆 TOP 10 REKORLAR</h3>
+            <h3 style="text-align:center; margin-bottom:15px; color:#fff;">🏆 TOP 10 REKORLAR</h3>
             <div id="leader-list"></div>
-            <button class="btn" style="margin-top:15px;" onclick="backToPortal()">YENİDEN DENE 🏠</button>
+            <button class="btn" style="margin-top:15px; background:var(--neon-red)" onclick="backToPortal()">YENİDEN DENE 🏠</button>
         </div>
     </div>
 
     <div id="end-modal" class="overlay">
         <div class="modal" style="text-align:center;">
-            <h2>OYUN BİTTİ!</h2>
-            <div id="final-score" style="font-size: 60px; color:var(--success); margin:15px 0;">0</div>
-            <button class="btn" onclick="saveScore()">SIRALAMAYA KAYDET</button>
+            <h2 style="color:var(--neon-red)">OYUN BİTTİ!</h2>
+            <div id="final-score" style="font-size: 60px; color:#fff; margin:15px 0;">0</div>
+            <button class="btn" onclick="saveScore()">SKORU KAYDET</button>
         </div>
     </div>
 
@@ -129,8 +128,7 @@
         cd.style.display = 'flex';
         let c = 3; cd.innerText = c;
         let t = setInterval(() => {
-            c--;
-            if(c>0) cd.innerText = c;
+            c--; if(c>0) cd.innerText = c;
             else { clearInterval(t); cd.style.display='none'; runGame(); }
         }, 1000);
     }
@@ -164,10 +162,10 @@
             if(document.getElementById('ans').value.toLowerCase().trim() === currentWord.en) {
                 score += 100;
                 document.getElementById('score').innerText = score;
-                document.getElementById('snd-yee').play();
-                confetti({ particleCount: 40, spread: 60 });
+                document.getElementById('snd-yee').play().catch(()=>{});
+                confetti({ particleCount: 40 });
             } else {
-                document.getElementById('snd-dizt').play(); // DIZT SESİ
+                document.getElementById('snd-dizt').play().catch(()=>{}); // DITZ SESİ
                 jumpscareEffect();
             }
             newWord();
@@ -176,30 +174,31 @@
 
     function jumpscareEffect() {
         document.getElementById('main-body').classList.add('jumpscare-bg');
-        document.getElementById('snd-jumpscare').play();
-        setTimeout(() => {
-            document.getElementById('main-body').classList.remove('jumpscare-bg');
-        }, 300);
+        document.getElementById('snd-fnaf').play().catch(()=>{});
+        setTimeout(() => { document.getElementById('main-body').classList.remove('jumpscare-bg'); }, 300);
     }
 
     function saveScore() {
-        let db = JSON.parse(localStorage.getItem('burak_v12_db') || '[]');
-        let rank = score >= 2000 ? {t:"ELİT", c:"r-elit"} : score >= 1000 ? {t:"ALTIN", c:"r-altin"} : {t:"ÇAYLAK", c:"r-caylak"};
-        
-        let existingIndex = db.findIndex(item => item.n === currentUser);
-        if (existingIndex !== -1) {
-            if (score > db[existingIndex].s) db[existingIndex] = {n: currentUser, s: score, t: rank.t, c: rank.c};
+        let db = JSON.parse(localStorage.getItem('burak_final_v99')) || [];
+        // RÜTBE HESAPLAMA
+        let r_text = "ÇAYLAK"; let r_class = "r-caylak";
+        if(score >= 2000) { r_text = "ELİT"; r_class = "r-elit"; }
+        else if(score >= 1000) { r_text = "ALTIN"; r_class = "r-altin"; }
+
+        let ex = db.findIndex(i => i.n === currentUser);
+        if (ex !== -1) {
+            if (score > db[ex].s) db[ex] = {n: currentUser, s: score, t: r_text, c: r_class};
         } else {
-            db.push({n: currentUser, s: score, t: rank.t, c: rank.c});
+            db.push({n: currentUser, s: score, t: r_text, c: r_class});
         }
         
         db.sort((a,b) => b.s - a.s);
-        localStorage.setItem('burak_v12_db', JSON.stringify(db.slice(0, 10)));
+        localStorage.setItem('burak_final_v99', JSON.stringify(db.slice(0, 10)));
         showLeaders();
     }
 
     function showLeaders() {
-        let db = JSON.parse(localStorage.getItem('burak_v12_db') || '[]');
+        let db = JSON.parse(localStorage.getItem('burak_final_v99')) || [];
         let html = "";
         for(let i=0; i<10; i++) {
             if(db[i]) {
@@ -208,7 +207,7 @@
                     <span class="rank-tag ${db[i].c}">${db[i].t}</span>
                 </div>`;
             } else {
-                html += `<div class="score-row" style="opacity:0.3;">
+                html += `<div class="score-row" style="opacity:0.2;">
                     <span><b>${i+1}.</b> Boş...</span>
                     <span class="rank-tag r-none">YOK</span>
                 </div>`;

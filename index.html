@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Oyun Laboratuvarı | 9. Sınıf Pro</title>
+    <title>Oyun Laboratuvarı | Auth System</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
@@ -16,125 +16,195 @@
             background-size: cover; background-position: center; color: white; padding: 20px; overflow: hidden;
         }
 
-        /* --- PORTAL --- */
-        #portal-screen { text-align: center; width: 100%; max-width: 1000px; }
-        .portal-title { font-size: 2.5rem; margin-bottom: 40px; text-shadow: 0 0 20px var(--primary); font-weight: 800; }
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .game-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 25px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-        .game-card:hover { transform: translateY(-10px); border-color: var(--success); box-shadow: 0 10px 40px rgba(0, 255, 202, 0.3); }
-        .game-img { width: 100%; height: 150px; border-radius: 20px; background: linear-gradient(45deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 15px; }
-        .coming-soon { opacity: 0.5; cursor: default; filter: grayscale(1); }
-
-        /* --- OYUN --- */
-        #game-screen { display: none; width: 100%; max-width: 440px; position: relative; }
-        .game-card-main { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border-radius: 40px; padding: 35px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 40px rgba(108, 92, 231, 0.4); }
-        .stats { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 15px; }
-        .stat-box { flex: 1; background: rgba(0, 0, 0, 0.6); padding: 15px; border-radius: 20px; font-weight: 800; color: var(--success); border: 1px solid var(--success); font-size: 20px; }
-        #word-box { font-family: 'Kalam', cursive; font-size: 50px; color: var(--gold); margin-bottom: 30px; text-shadow: 0 0 20px rgba(255, 234, 167, 0.5); }
-        input { width: 100%; padding: 22px; border-radius: 25px; border: none; font-size: 24px; text-align: center; margin-bottom: 20px; background: white; color: #1e1e2f; outline: none; }
-        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 22px; border-radius: 25px; font-size: 22px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-
-        /* --- DEV "GHOST" REAKSİYON EFEKTİ --- */
-        #ghost-msg { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-size: 50px; font-weight: 900; pointer-events: none; z-index: 1000; 
-            text-align: center; width: 100%; display: none; text-transform: uppercase;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .ghost-animate { display: block !important; animation: ghostPop 0.8s ease-out forwards; }
+        /* --- AUTH SCREEN (GİRİŞ) --- */
+        #auth-screen { width: 100%; max-width: 400px; text-align: center; z-index: 10; }
+        .auth-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .auth-tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: 15px; border: none; background: rgba(0,0,0,0.3); color: white; cursor: pointer; font-weight: 600; }
+        .tab-btn.active { background: var(--primary); box-shadow: 0 0 15px var(--primary); }
         
-        /* Küçükten büyüğe havaya fırlama animasyonu */
-        @keyframes ghostPop { 
-            0% { transform: translate(-50%, 0%) scale(0.2); opacity: 0; } 
-            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; } 
-            100% { transform: translate(-50%, -150%) scale(2.5); opacity: 0; } 
-        }
+        input { width: 100%; padding: 18px; border-radius: 20px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; background: white; color: #1e1e2f; outline: none; }
 
-        /* --- MODALLAR --- */
+        /* --- PORTAL & GAME --- */
+        #portal-screen, #game-screen { display: none; text-align: center; width: 100%; max-width: 1000px; }
+        .portal-title { font-size: 2.5rem; margin-bottom: 30px; text-shadow: 0 0 20px var(--primary); font-weight: 800; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .game-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); border-radius: 30px; padding: 25px; border: 2px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; }
+        .game-card:hover { transform: translateY(-10px); border-color: var(--success); }
+        
+        .stat-box { background: rgba(0, 0, 0, 0.6); padding: 15px; border-radius: 20px; font-weight: 800; color: var(--success); border: 1px solid var(--success); font-size: 20px; flex: 1; }
+        #word-box { font-family: 'Kalam', cursive; font-size: 50px; color: var(--gold); margin: 20px 0; }
+
+        /* --- DEVELOPER & RANKS --- */
+        .rank-tag { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
+        .rank-caylak { color: #cd7f32; }
+        .rank-demir { color: #dfe6e9; }
+        .rank-altin { color: #fdcb6e; }
+        .rank-elmas { color: #00cec9; }
+        .rank-elit { color: #ff7675; }
+        .rank-developer { 
+            color: #a29bfe; font-weight: 900; 
+            text-shadow: 0 0 15px #6c5ce7; 
+            animation: devGlow 1s infinite alternate; 
+        }
+        @keyframes devGlow { from { opacity: 0.7; transform: scale(0.95); } to { opacity: 1; transform: scale(1.05); } }
+
+        /* --- UI ELEMENTS --- */
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 20px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn:hover { transform: scale(1.02); filter: brightness(1.2); }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
         .modal { background: #1e1e2f; width: 100%; max-width: 420px; border-radius: 40px; padding: 35px; border: 2px solid var(--primary); text-align: center; }
-        .score-row { display: flex; justify-content: space-between; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 15px; }
+        #ghost-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 55px; font-weight: 900; pointer-events: none; z-index: 1000; text-align: center; display: none; text-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .ghost-animate { display: block !important; animation: ghostPop 1.5s forwards; }
+        @keyframes ghostPop { 0% { opacity: 0; transform: translate(-50%, 0%) scale(0.5); } 30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -200%) scale(2); } }
+        .score-row { display: flex; flex-direction: column; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: left; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="ghost-msg"></div>
 
+    <div id="auth-screen">
+        <h1 style="margin-bottom:20px; font-weight:800;">🚀 HOŞ GELDİN</h1>
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button id="login-tab" class="tab-btn active" onclick="switchAuth('login')">Giriş</button>
+                <button id="register-tab" class="tab-btn" onclick="switchAuth('register')">Kayıt Ol</button>
+            </div>
+            <input type="text" id="username" placeholder="Kullanıcı Adı">
+            <input type="password" id="password" placeholder="Şifre">
+            <button class="btn" onclick="handleAuth()">DEVAM ET</button>
+        </div>
+    </div>
+
     <div id="portal-screen">
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:20px;">
+            <div id="user-info"></div>
+            <button onclick="logout()" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
+        </div>
         <h1 class="portal-title">🎮 OYUN LABORATUVARI</h1>
         <div class="game-grid">
             <div class="game-card" onclick="openGame()">
-                <div class="game-img"><i class="fa-solid fa-graduation-cap"></i></div>
-                <h3>9. Sınıf İngilizce</h3>
-                <p>Turnuva Modu: EFSANE ⚡</p>
+                <div style="font-size:50px; margin-bottom:15px; color:var(--success)"><i class="fa-solid fa-brain"></i></div>
+                <h3>9. Sınıf Ünvan Avı</h3>
+                <p>Developer Yolunda İlk Adım!</p>
             </div>
-            <div class="game-card coming-soon">
-                <div class="game-img" style="background: #2d3436;"><i class="fa-solid fa-lock"></i></div>
+            <div class="game-card" style="opacity:0.5;">
+                <div style="font-size:50px; margin-bottom:15px; color:var(--accent)"><i class="fa-solid fa-lock"></i></div>
                 <h3>Yeni oyun berki gelebilir</h3>
-                <p>Yakında buralar şenlenecek... ⏳</p>
+                <p>Yakında...</p>
             </div>
         </div>
     </div>
 
     <div id="game-screen">
-        <div class="game-card-main">
-            <div class="stats">
-                <div class="stat-box"><i class="fa-solid fa-hourglass-half"></i> <span id="timer">30</span></div>
+        <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 40px; max-width: 450px; margin: auto;">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">30</span></div>
                 <div class="stat-box"><i class="fa-solid fa-fire"></i> <span id="score">0</span></div>
             </div>
             <div id="word-box">HAZIR MISIN?</div>
-            <input type="text" id="ans" placeholder="Kelimeyi yapıştır..." autocomplete="off">
-            <button id="main-btn" class="btn" onclick="startGame()">OYUNU BAŞLAT 🚀</button>
+            <input type="text" id="ans" placeholder="Buraya yaz ve Enter'a bas!">
+            <button id="main-btn" class="btn" onclick="startGame()">OYUNA BAŞLA 🚀</button>
         </div>
     </div>
 
     <div id="name-modal" class="overlay">
         <div class="modal">
-            <h2 style="color:var(--accent);">OYUN BİTTİ!</h2>
-            <div id="final-score" style="font-size: 60px; font-weight: 800; margin: 15px 0;"></div>
-            <input type="text" id="player-name" placeholder="İsmini yaz şampiyon..." maxlength="12">
-            <button class="btn" onclick="saveScore()">PUANI KAYDET 💾</button>
+            <h2>OYUN BİTTİ!</h2>
+            <div id="final-score" style="font-size: 50px; margin: 20px 0;"></div>
+            <div id="final-rank-box" style="margin-bottom: 20px;"></div>
+            <button class="btn" onclick="saveScore()">SKORU KAYDET 💾</button>
         </div>
     </div>
 
     <div id="leader-modal" class="overlay">
         <div class="modal">
-            <h2 style="color:var(--gold);">🏆 TOP 10 SIRALAMA</h2>
-            <div id="leader-list"></div>
-            <button class="btn" onclick="location.reload()">BAŞA DÖN 🏠</button>
+            <h2 style="color: var(--gold);">🏆 İLK 10 SIRALAMA</h2>
+            <div id="leader-list" style="margin: 20px 0;"></div>
+            <button class="btn" onclick="location.reload()">TEKRAR DENE 🏠</button>
         </div>
     </div>
 
 <script>
-    // Övücü ve Dalga Geçici Kelime Havuzu
-    const praise = ["HARİKASIN! ✨", "BEYİN BEDAVA! 😎", "CANAVAR! 🦁", "EFSANE GİDİYORSUN! 🔥", "PRO PLAYER! 💎"];
-    const roasts = ["BU NE? 😂", "ŞAKA MI YAPIYORSUN? 💀", "ELİN Mİ KAYDI? 🤡", "BİRAZ HIZLAN! 🐢", "PATLADIN! 💥", "ÇALIŞ DA GEL! 📚"];
+    // --- DEVELOPER AYARI ---
+    const MY_NAME = "SeninAdın"; // BURAYA KENDİ İSMİNİ YAZ (Giriş yaparken bunu kullanırsan Developer olursun)
 
-    let score = 0, timeLeft = 30, timer, currentWord, gameActive = false, pool = [];
+    let currentUser = null;
+    let authMode = 'login';
+    let score = 0, timeLeft = 30, timer, currentWord, gameActive = false;
+
     const words = [
         {tr:"Yurt dışı", en:"abroad"}, {tr:"Görünüş", en:"appearance"}, {tr:"Kişilik", en:"personality"},
         {tr:"Cüzdan", en:"wallet"}, {tr:"Sözlük", en:"dictionary"}, {tr:"Gökdelen", en:"skyscraper"},
         {tr:"Köy", en:"village"}, {tr:"Şehir", en:"city"}, {tr:"Dürüst", en:"honest"}, {tr:"Kibar", en:"polite"}
     ];
 
-    // Ghost yazı animasyonu tetikleyici
-    function showReaction(text, isCorrect) {
-        const msg = document.getElementById('ghost-msg');
-        msg.innerText = text;
-        msg.style.color = isCorrect ? 'var(--success)' : 'var(--danger)';
-        msg.classList.remove('ghost-animate');
-        void msg.offsetWidth; // Animasyonu sıfırlamak için
-        msg.classList.add('ghost-animate');
+    // ÜNVAN SİSTEMİ
+    function getRankInfo(s, name) {
+        if(name === MY_NAME) return { title: "👑 MASTER DEVELOPER", class: "rank-developer" };
+        if(s >= 3000) return { title: "ELİT ÜYE", class: "rank-elit" };
+        if(s >= 2000) return { title: "ELMAS ÜYE", class: "rank-elmas" };
+        if(s >= 1000) return { title: "ALTIN ÜYE", class: "rank-altin" };
+        if(s >= 200)  return { title: "DEMİR ÜYE", class: "rank-demir" };
+        return { title: "ÇAYLAK ÜYE", class: "rank-caylak" };
     }
 
+    // AUTH İŞLEMLERİ
+    function switchAuth(mode) {
+        authMode = mode;
+        document.getElementById('login-tab').classList.toggle('active', mode === 'login');
+        document.getElementById('register-tab').classList.toggle('active', mode === 'register');
+    }
+
+    function handleAuth() {
+        const u = document.getElementById('username').value.trim();
+        const p = document.getElementById('password').value;
+        if(!u || !p) return alert("Alanları doldur!");
+
+        let users = JSON.parse(localStorage.getItem('game_users') || '{}');
+
+        if(authMode === 'register') {
+            if(users[u]) return alert("Bu kullanıcı zaten var!");
+            users[u] = p;
+            localStorage.setItem('game_users', JSON.stringify(users));
+            alert("Kayıt başarılı! Giriş yapabilirsin.");
+            switchAuth('login');
+        } else {
+            if(users[u] === p) {
+                currentUser = u;
+                showPortal();
+            } else {
+                alert("Hatalı kullanıcı adı veya şifre!");
+            }
+        }
+    }
+
+    function showPortal() {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('portal-screen').style.display = 'block';
+        document.getElementById('user-info').innerHTML = `Hoş geldin, <b>${currentUser}</b>`;
+    }
+
+    function logout() { location.reload(); }
+
+    // OYUN MANTIĞI
     function openGame() {
         document.getElementById('portal-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
     }
 
+    function showReaction(text, isCorrect) {
+        const msg = document.getElementById('ghost-msg');
+        msg.innerText = text;
+        msg.style.color = isCorrect ? 'var(--success)' : 'var(--danger)';
+        msg.classList.remove('ghost-animate');
+        void msg.offsetWidth;
+        msg.classList.add('ghost-animate');
+    }
+
     function startGame() {
         score = 0; timeLeft = 30; gameActive = true;
-        pool = [...words].sort(() => Math.random() - 0.5);
         document.getElementById('main-btn').style.display = 'none';
         nextWord();
         timer = setInterval(() => {
@@ -145,8 +215,7 @@
     }
 
     function nextWord() {
-        if(pool.length == 0) pool = [...words].sort(() => Math.random() - 0.5);
-        currentWord = pool.pop();
+        currentWord = words[Math.floor(Math.random()*words.length)];
         document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
         document.getElementById('ans').value = ""; document.getElementById('ans').focus();
     }
@@ -157,38 +226,43 @@
         if(val === currentWord.en) {
             score += 100; timeLeft += 1;
             document.getElementById('score').innerText = score;
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-            
-            // Övücü yazı göster
-            showReaction(praise[Math.floor(Math.random()*praise.length)], true);
-            nextWord();
+            confetti({ particleCount: 50 });
+            showReaction("ADAMSIN! 🔥", true);
         } else {
-            // Dalga geçici yazı göster
-            showReaction(roasts[Math.floor(Math.random()*roasts.length)], false);
+            showReaction("Puhaha! 💀", false);
         }
+        nextWord();
     }
 
     function endGame() {
         gameActive = false; clearInterval(timer);
+        let rank = getRankInfo(score, currentUser);
         document.getElementById('final-score').innerText = score;
+        document.getElementById('final-rank-box').innerHTML = `<span class="${rank.class}">${rank.title}</span>`;
         document.getElementById('name-modal').style.display = 'flex';
     }
 
     function saveScore() {
-        let name = document.getElementById('player-name').value || "Anonim";
-        let data = JSON.parse(localStorage.getItem('portal_scores_v4') || '[]');
-        data.push({n: name, s: score});
+        let data = JSON.parse(localStorage.getItem('final_scores_v10') || '[]');
+        let rank = getRankInfo(score, currentUser);
+        data.push({n: currentUser, s: score, t: rank.title, c: rank.class});
         data.sort((a,b) => b.s - a.s);
-        localStorage.setItem('portal_scores_v4', JSON.stringify(data.slice(0, 10)));
+        localStorage.setItem('final_scores_v10', JSON.stringify(data.slice(0, 10)));
         showLeaders();
     }
 
     function showLeaders() {
-        let data = JSON.parse(localStorage.getItem('portal_scores_v4') || '[]');
+        let data = JSON.parse(localStorage.getItem('final_scores_v10') || '[]');
         let listHTML = "";
         for (let i = 0; i < 10; i++) {
-            if (data[i]) listHTML += `<div class="score-row"><span>${i+1}. ${data[i].n}</span><b>${data[i].s}</b></div>`;
-            else listHTML += `<div class="score-row" style="opacity: 0.3;"><span>${i+1}. ---</span><b>0</b></div>`;
+            if (data[i]) {
+                listHTML += `<div class="score-row">
+                    <div style="display:flex; justify-content:space-between;"><span>${i+1}. ${data[i].n}</span><b>${data[i].s}</b></div>
+                    <div class="rank-tag ${data[i].c}">${data[i].t}</div>
+                </div>`;
+            } else {
+                listHTML += `<div class="score-row" style="opacity:0.2;"><span>${i+1}. ---</span></div>`;
+            }
         }
         document.getElementById('leader-list').innerHTML = listHTML;
         document.getElementById('name-modal').style.display = 'none';

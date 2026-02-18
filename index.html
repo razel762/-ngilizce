@@ -3,154 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9. Sınıf Kelime Yarışı - Top 10</title>
+    <title>9. Sınıf İngilizce Kelime Master</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p-color: #00d2d3; --s-color: #222f3e; --bg: #f5f6fa; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            width: 90%;
+            max-width: 400px;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stats { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .stat-box { background: rgba(0,0,0,0.4); padding: 10px 15px; border-radius: 15px; font-weight: bold; font-size: 18px; color: #00d2d3; }
+
+        #word-box { font-size: 38px; font-weight: 800; margin: 30px 0; text-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         
-        /* Oyun Alanı */
-        .game-card { background: white; width: 90%; max-width: 450px; margin-top: 20px; border-radius: 25px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; border: 1px solid #eee; }
-        .score-board { display: flex; justify-content: space-between; margin-bottom: 25px; font-weight: bold; font-size: 20px; background: #f9f9f9; padding: 10px 20px; border-radius: 15px; }
-        #word-box { font-size: 32px; font-weight: 800; color: var(--s-color); margin: 25px 0; text-transform: uppercase; letter-spacing: 1px; }
-        input { width: 100%; padding: 18px; border: 2px solid #dfe6e9; border-radius: 15px; font-size: 18px; outline: none; box-sizing: border-box; transition: 0.3s; text-align: center; }
-        input:focus { border-color: var(--p-color); box-shadow: 0 0 10px rgba(0,210,211,0.2); }
-        .btn { background: var(--p-color); color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
-        
-        /* Liderlik Tablosu (Top 10) */
-        .leaderboard { width: 90%; max-width: 450px; margin-top: 25px; background: var(--s-color); color: white; border-radius: 25px; padding: 25px; box-sizing: border-box; }
-        .leaderboard h3 { margin-top: 0; border-bottom: 2px solid #57606f; padding-bottom: 15px; color: #feca57; text-align: center; font-size: 22px; }
-        .score-entry { display: flex; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #3d4852; font-size: 16px; }
-        .score-entry:nth-child(-n+4) span:first-child { color: #feca57; font-weight: bold; } /* İlk 3 parlak */
-        .score-entry:last-child { border-bottom: none; }
+        input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 15px;
+            border: none;
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+
+        .btn {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Şık Giriş ve Liderlik Paneli (Overlay) */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal {
+            background: #1e272e;
+            width: 85%;
+            max-width: 350px;
+            border-radius: 25px;
+            padding: 25px;
+            border: 2px solid #6c5ce7;
+            transform: scale(0.8);
+            animation: popIn 0.3s forwards;
+        }
+
+        @keyframes popIn { to { transform: scale(1); } }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 5px;
+            border-bottom: 1px solid #3d4852;
+        }
+
+        .gold { color: #feca57; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="game-card">
-    <div class="score-board">
-        <span><i class="fa-solid fa-star" style="color:#feca57"></i> <span id="current-score">0</span></span>
-        <span><i class="fa-solid fa-heart" style="color:#ff6b6b"></i> <span id="lives">3</span></span>
+<div class="game-card" id="game-ui">
+    <div class="stats">
+        <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">60</span>s</div>
+        <div class="stat-box"><i class="fa-solid fa-fire"></i> <span id="score">0</span></div>
     </div>
-    
-    <div id="word-box">BAŞLIYOR...</div>
-    <input type="text" id="answer" placeholder="İngilizce karşılığını yaz..." autocomplete="off">
-    <button class="btn" onclick="checkAnswer()">KONTROL ET</button>
-    <p id="msg" style="margin-top:15px; font-weight:bold; min-height: 20px;"></p>
+    <div id="word-box">BAŞLA!</div>
+    <input type="text" id="ans" placeholder="İngilizcesini yaz..." autocomplete="off">
+    <button class="btn" onclick="check()">CEVAPLA</button>
 </div>
 
-<div class="leaderboard">
-    <h3><i class="fa-solid fa-crown"></i> LİDERLİK TABLOSU (TOP 10)</h3>
-    <div id="leader-list">
-        </div>
+<div id="name-modal" class="overlay">
+    <div class="modal">
+        <h2 style="margin-top:0; color:#00d2d3;">OYUN BİTTİ!</h2>
+        <p id="final-score-text" style="font-size:20px;"></p>
+        <input type="text" id="player-name" placeholder="Adınızı girin..." style="background: white;">
+        <button class="btn" onclick="saveAndShow()">KAYDET</button>
+    </div>
+</div>
+
+<div id="leader-modal" class="overlay">
+    <div class="modal">
+        <h2 style="margin-top:0; color:#feca57;"><i class="fa-solid fa-crown"></i> EN İYİ 10</h2>
+        <div id="leader-list"></div>
+        <button class="btn" style="margin-top:20px; background:#ff4757;" onclick="restart()">YENİDEN DENE</button>
+    </div>
 </div>
 
 <script>
-    // 9. Sınıf Müfredat Kelimeleri
     const wordList = [
-        { tr: "Yurt dışı", en: "abroad" },
-        { tr: "Görünüş", en: "appearance" },
-        { tr: "Kişilik", en: "personality" },
-        { tr: "Zarf", en: "envelope" },
-        { tr: "Komşu", en: "neighbour" },
-        { tr: "Cüzdan", en: "wallet" },
-        { tr: "Sözlük", en: "dictionary" },
-        { tr: "Uçak", en: "plane" },
-        { tr: "Şehir", en: "city" },
-        { tr: "Köy", en: "village" },
-        { tr: "Gökdelen", en: "skyscraper" },
-        { tr: "Mekan/Yer", en: "location" }
+        { tr: "Yurt dışı", en: "abroad" }, { tr: "Görünüş", en: "appearance" }, { tr: "Kişilik", en: "personality" },
+        { tr: "Komşu", en: "neighbour" }, { tr: "Cüzdan", en: "wallet" }, { tr: "Sözlük", en: "dictionary" },
+        { tr: "Şehir", en: "city" }, { tr: "Gökdelen", en: "skyscraper" }, { tr: "Dürüst", en: "honest" },
+        { tr: "Cömert", en: "generous" }, { tr: "İnatçı", en: "stubborn" }, { tr: "Kibar", en: "polite" },
+        { tr: "Bencil", en: "selfish" }, { tr: "Yaratıcı", en: "creative" }, { tr: "Zarf", en: "envelope" },
+        { tr: "Dakik", en: "punctual" }, { tr: "Macera", en: "adventure" }, { tr: "Korku", en: "horror" }
     ];
 
-    let score = 0;
-    let lives = 3;
-    let currentWord = {};
+    let score = 0, timeLeft = 60, gameActive = false, timer, currentWord = {};
 
-    function startGame() {
-        nextQuestion();
-        updateLeaderboard();
+    function start() {
+        score = 0; timeLeft = 60; gameActive = true;
+        document.getElementById('score').innerText = score;
+        document.getElementById('timer').innerText = timeLeft;
+        document.getElementById('name-modal').style.display = 'none';
+        document.getElementById('leader-modal').style.display = 'none';
+        next();
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = timeLeft;
+            if(timeLeft <= 0) end();
+        }, 1000);
     }
 
-    function nextQuestion() {
+    function next() {
         currentWord = wordList[Math.floor(Math.random() * wordList.length)];
         document.getElementById('word-box').innerText = currentWord.tr;
-        document.getElementById('answer').value = "";
-        document.getElementById('answer').focus();
+        document.getElementById('ans').value = "";
+        document.getElementById('ans').focus();
     }
 
-    function checkAnswer() {
-        const userAns = document.getElementById('answer').value.toLowerCase().trim();
-        const msg = document.getElementById('msg');
-
-        if(userAns === currentWord.en) {
-            score += 10;
-            msg.innerText = "⭐ HARİKA! (+10)";
-            msg.style.color = "#00b894";
-            document.getElementById('current-score').innerText = score;
-            nextQuestion();
-        } else {
-            lives--;
-            msg.innerText = "❌ YANLIŞ! Doğrusu: " + currentWord.en;
-            msg.style.color = "#ff7675";
-            document.getElementById('lives').innerText = lives;
-            if(lives <= 0) {
-                setTimeout(gameOver, 500);
-            } else {
-                nextQuestion();
-            }
-        }
+    function check() {
+        if(!gameActive) { start(); return; }
+        const val = document.getElementById('ans').value.toLowerCase().trim();
+        if(val === currentWord.en) {
+            score += 10; timeLeft += 5;
+            document.getElementById('score').innerText = score;
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            next();
+        } else { next(); }
     }
 
-    function gameOver() {
-        const name = prompt("OYUN BİTTİ!\nToplam Puanın: " + score + "\nLiderlik tablosu için ismini yaz:");
-        if(name && name.trim() !== "") {
-            saveScore(name.substring(0, 15), score); // İsim çok uzun olmasın
-        }
-        // Sıfırla
-        score = 0;
-        lives = 3;
-        document.getElementById('current-score').innerText = score;
-        document.getElementById('lives').innerText = lives;
-        document.getElementById('msg').innerText = "";
-        nextQuestion();
+    function end() {
+        gameActive = false;
+        clearInterval(timer);
+        document.getElementById('final-score-text').innerText = "Toplam Puan: " + score;
+        document.getElementById('name-modal').style.display = 'flex';
+        document.getElementById('player-name').focus();
     }
 
-    function saveScore(name, score) {
-        let scores = JSON.parse(localStorage.getItem('engTop10')) || [];
-        scores.push({name: name, score: score});
-        scores.sort((a, b) => b.score - a.score); // Büyükten küçüğe
-        scores = scores.slice(0, 10); // Sadece ilk 10
-        localStorage.setItem('engTop10', JSON.stringify(scores));
-        updateLeaderboard();
-    }
-
-    function updateLeaderboard() {
-        const list = document.getElementById('leader-list');
-        const scores = JSON.parse(localStorage.getItem('engTop10')) || [];
+    function saveAndShow() {
+        const name = document.getElementById('player-name').value || "İsimsiz";
+        let scs = JSON.parse(localStorage.getItem('top10')) || [];
+        scs.push({n: name.substring(0,12), s: score});
+        scs.sort((a,b) => b.s - a.s);
+        localStorage.setItem('top10', JSON.stringify(scs.slice(0, 10)));
         
-        if(scores.length === 0) {
-            list.innerHTML = "<p style='text-align:center; color:#636e72;'>Henüz skor yok. İlk sen ol!</p>";
-            return;
-        }
+        document.getElementById('name-modal').style.display = 'none';
+        showLeaders();
+    }
 
-        list.innerHTML = scores.map((s, i) => `
-            <div class="score-entry">
-                <span>${i+1}. ${s.name}</span>
-                <span style="color:#feca57">${s.score} Puan</span>
+    function showLeaders() {
+        const list = document.getElementById('leader-list');
+        const scs = JSON.parse(localStorage.getItem('top10')) || [];
+        list.innerHTML = scs.map((x, i) => `
+            <div class="score-row ${i < 3 ? 'gold' : ''}">
+                <span>${i+1}. ${x.n}</span>
+                <span>${x.s}</span>
             </div>
         `).join('');
+        document.getElementById('leader-modal').style.display = 'flex';
     }
 
-    // Enter tuşuna basınca kontrol etme özelliği
-    document.getElementById('answer').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            checkAnswer();
-        }
-    });
-
-    startGame();
+    function restart() { start(); }
+    document.getElementById('ans').addEventListener('keypress', e => e.key === 'Enter' && check());
+    document.getElementById('player-name').addEventListener('keypress', e => e.key === 'Enter' && saveAndShow());
 </script>
-
 </body>
 </html>

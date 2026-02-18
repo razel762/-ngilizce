@@ -10,63 +10,67 @@
     <style>
         :root { --primary: #6c5ce7; --accent: #a29bfe; --gold: #ffeaa7; --success: #00ffca; --danger: #ff4757; --neon-red: #ff0000; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        
         body { 
             font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
             background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(40, 10, 80, 0.9)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80'); 
             background-size: cover; background-position: center; color: white; padding: 20px; overflow: hidden;
+            transition: background 0.1s ease;
         }
 
-        /* --- AUTH & CARDS --- */
+        /* JUMPSCARE SARSINTI */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .jumpscare-bg { background: maroon !important; animation: shake 0.2s infinite !important; }
+
         .card-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); padding: 35px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 420px; text-align: center; }
         input { width: 100%; padding: 18px; border-radius: 20px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: white; color: #1e1e2f; }
         .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         
         #portal-screen, #game-screen { display: none; width: 100%; max-width: 1000px; text-align: center; }
 
-        /* --- BURAK'IN ÖZEL SİYAH-KIRMIZI KURUCU ALANI --- */
-        .founder-panel {
-            background: #000 !important;
-            border: 2px solid var(--neon-red);
-            padding: 20px;
-            border-radius: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
-            position: relative;
+        #ghost-trigger {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            font-size: 200px; pointer-events: none; z-index: 2000; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        #ghost-trigger.show { transform: translate(-50%, -50%) scale(2); opacity: 1; }
+
+        .founder-panel { background: #000 !important; border: 2px solid var(--neon-red); padding: 20px; border-radius: 25px; margin-bottom: 25px; box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); position: relative; }
         .founder-label { color: var(--neon-red); font-weight: 900; font-size: 0.7rem; letter-spacing: 5px; margin-bottom: 5px; }
         .founder-name { font-size: 1.2rem; font-weight: 800; color: white; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
-        
-        .dev-role-container { position: relative; display: inline-block; margin-top: 10px; }
-        .dark-dev-role { 
-            background: #000; color: var(--neon-red); border: 2px solid var(--neon-red);
-            padding: 5px 20px; border-radius: 12px; font-weight: 900; font-size: 0.9rem;
-            letter-spacing: 3px; box-shadow: 0 0 15px var(--neon-red); z-index: 5; position: relative;
-        }
+        .dark-dev-role { background: #000; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 5px 20px; border-radius: 12px; font-weight: 900; font-size: 0.9rem; letter-spacing: 3px; box-shadow: 0 0 15px var(--neon-red); position: relative; }
 
-        /* --- UÇUŞAN NOKTALAR --- */
-        .particle-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .dev-dot {
-            position: absolute; width: 4px; height: 4px; background: var(--neon-red); border-radius: 50%;
-            box-shadow: 0 0 8px var(--neon-red); animation: floatParticle 2.5s infinite ease-out; opacity: 0;
+        .troll-box { 
+            height: 60px; margin-bottom: 15px; font-weight: 900; font-size: 1.3rem; 
+            display: flex; align-items: center; justify-content: center; 
+            opacity: 0; transform: scale(0.3); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes floatParticle {
-            0% { transform: translate(0, 0) scale(1); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
-        }
+        .troll-box.pop { opacity: 1; transform: scale(1.3); }
 
-        /* --- SIRALAMA LİSTESİ --- */
         .score-row { display: flex; flex-direction: column; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: left; border-left: 4px solid var(--primary); }
         .rank-tag { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
         .rank-elit { color: #ff7675; } .rank-altin { color: var(--gold); } .rank-caylak { color: #ccc; }
-
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
         .modal { background: #1a1a2e; width: 100%; max-width: 440px; border-radius: 40px; padding: 30px; border: 2px solid var(--primary); }
     </style>
 </head>
-<body>
+<body id="main-body">
 
-    <div id="ghost-msg" style="position:fixed; top:40%; left:50%; transform:translate(-50%,-50%); font-size:60px; font-weight:900; display:none; z-index:2000;"></div>
+    <audio id="snd-yee" src="https://www.myinstants.com/media/sounds/fnaf-6-yee-hc.mp3"></audio>
+    <audio id="snd-fail" src="https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3"></audio>
+
+    <div id="ghost-trigger">👻</div>
 
     <div id="auth-screen">
         <div class="card-box">
@@ -74,7 +78,6 @@
             <input type="text" id="username" placeholder="Kullanıcı Adı">
             <input type="password" id="password" placeholder="Şifre">
             <button class="btn" onclick="handleAuth()">GİRİŞ / KAYIT</button>
-            <p style="margin-top:15px; font-size:12px; opacity:0.6;">Aynı bilgilerle giriş yapabilir veya kayıt olabilirsiniz.</p>
         </div>
     </div>
 
@@ -87,6 +90,10 @@
             <i class="fa-solid fa-play" style="font-size:50px; color:var(--success)"></i>
             <h2 style="margin-top:10px;">TURNUVAYI BAŞLAT</h2>
         </div>
+        <div style="margin-top: 25px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 25px; border: 1px dashed var(--success); max-width: 420px; margin-left: auto; margin-right: auto;">
+            <h4 style="color: white;">Yeni oyun gelebilir...</h4>
+            <p style="font-size: 11px; opacity: 0.6;">Yapımcı: Burak</p>
+        </div>
     </div>
 
     <div id="game-screen">
@@ -95,61 +102,77 @@
                 <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--success)">SÜRE: <span id="timer">30</span></div>
                 <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--gold)">SKOR: <span id="score">0</span></div>
             </div>
-            <div id="word-box" style="font-family:'Kalam'; font-size:45px; margin:20px 0; color:var(--gold);">YÜKLENİYOR...</div>
-            <input type="text" id="ans" placeholder="Cevabı yaz!">
-            <button id="start-btn" class="btn" onclick="startGame()">BAŞLAT</button>
+            <div id="word-box" style="font-family:'Kalam'; font-size:42px; margin:15px 0; color:var(--gold);">...</div>
+            <div id="troll-box" class="troll-box"></div>
+            <input type="text" id="ans" placeholder="Cevabı yaz ve Enter'la">
+            <button id="start-btn" class="btn" onclick="startGame()">OYUNU BAŞLAT</button>
         </div>
     </div>
 
     <div id="leader-modal" class="overlay">
         <div class="modal">
-            <div class="founder-panel" id="f-panel">
+            <div class="founder-panel">
                 <div class="founder-label">KURUCU =</div>
                 <div class="founder-name">Burak 9/N Sınıfı</div>
-                <div class="dev-role-container">
-                    <span class="dark-dev-role">DEVELOPER</span>
-                    <div class="particle-area" id="p-area"></div>
-                </div>
+                <div style="margin-top:10px;"><span class="dark-dev-role">DEVELOPER 👑</span></div>
             </div>
-
-            <h3 style="color: var(--gold); margin-bottom:15px; font-size:0.9rem;">🏆 TOP 10 LİSTESİ</h3>
-            <div id="leader-list" style="max-height: 250px; overflow-y: auto;"></div>
-            <button class="btn" style="margin-top:20px;" onclick="location.reload()">TEKRAR OYNA 🏠</button>
+            <h3 style="color: var(--gold); margin-bottom:15px;">🏆 TOP 10 LİSTESİ</h3>
+            <div id="leader-list" style="max-height: 200px; overflow-y: auto;"></div>
+            <button class="btn" style="margin-top:20px;" onclick="location.reload()">TEKRAR DENE 🏠</button>
         </div>
     </div>
 
     <div id="end-modal" class="overlay">
         <div class="modal">
-            <h2>BİTTİ!</h2>
+            <h2>SÜRE DOLDU!</h2>
             <div id="final-score" style="font-size: 60px; margin: 20px 0; color:var(--success);">0</div>
-            <button class="btn" onclick="saveScore()">LİSTEYE KAYDET</button>
+            <button class="btn" onclick="saveScore()">SIRALAMAYA GİR</button>
         </div>
     </div>
 
 <script>
-    const DEV_NAME = "Burak 9/N Sınıfı";
-    let currentUser = null, score = 0, timeLeft = 30, timer, currentWord, gameActive = false;
-
+    // 100 KELİMELİK HAVUZ (GÜNCELLENDİ)
     const words = [
-        {tr:"Yurt dışı", en:"abroad"}, {tr:"Görünüş", en:"appearance"}, {tr:"Kişilik", en:"personality"},
-        {tr:"Cüzdan", en:"wallet"}, {tr:"Sözlük", en:"dictionary"}, {tr:"Gökdelen", en:"skyscraper"},
-        {tr:"Köy", en:"village"}, {tr:"Şehir", en:"city"}, {tr:"Dürüst", en:"honest"}, {tr:"Kibar", en:"polite"}
+        {tr:"Elma",en:"apple"},{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Masa",en:"table"},{tr:"Kedi",en:"cat"},
+        {tr:"Köpek",en:"dog"},{tr:"Mutlu",en:"happy"},{tr:"Kalem",en:"pencil"},{tr:"Su",en:"water"},{tr:"Hızlı",en:"fast"},
+        {tr:"Yavaş",en:"slow"},{tr:"Sıcak",en:"hot"},{tr:"Soğuk",en:"cold"},{tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},
+        {tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"İyi",en:"good"},{tr:"Kötü",en:"bad"},{tr:"Güzel",en:"beautiful"},
+        {tr:"Çirkin",en:"ugly"},{tr:"Uzun",en:"long"},{tr:"Kısa",en:"short"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"},
+        {tr:"Genç",en:"young"},{tr:"Temiz",en:"clean"},{tr:"Kirli",en:"dirty"},{tr:"Kolay",en:"easy"},{tr:"Zor",en:"hard"},
+        {tr:"Açık",en:"open"},{tr:"Kapalı",en:"close"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"},{tr:"Ağır",en:"heavy"},
+        {tr:"Hafif",en:"light"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yıldız",en:"star"},{tr:"Gökyüzü",en:"sky"},
+        {tr:"Deniz",en:"sea"},{tr:"Ağaç",en:"tree"},{tr:"Çiçek",en:"flower"},{tr:"Kuş",en:"bird"},{tr:"Balık",en:"fish"},
+        {tr:"Aslan",en:"lion"},{tr:"Kaplan",en:"tiger"},{tr:"Fil",en:"elephant"},{tr:"Yılan",en:"snake"},{tr:"Fare",en:"mouse"},
+        {tr:"At",en:"horse"},{tr:"Araba",en:"car"},{tr:"Otobüs",en:"bus"},{tr:"Uçak",en:"plane"},{tr:"Gemi",en:"ship"},
+        {tr:"Ev",en:"house"},{tr:"Kapı",en:"door"},{tr:"Yatak",en:"bed"},{tr:"Sandalye",en:"chair"},{tr:"Telefon",en:"phone"},
+        {tr:"Para",en:"money"},{tr:"Ekmek",en:"bread"},{tr:"Süt",en:"milk"},{tr:"Yumurta",en:"egg"},{tr:"Et",en:"meat"},
+        {tr:"Kırmızı",en:"red"},{tr:"Mavi",en:"blue"},{tr:"Yeşil",en:"green"},{tr:"Sarı",en:"yellow"},{tr:"Siyah",en:"black"},
+        {tr:"Pazartesi",en:"monday"},{tr:"Salı",en:"tuesday"},{tr:"Cuma",en:"friday"},{tr:"Yaz",en:"summer"},{tr:"Kış",en:"winter"},
+        {tr:"Yurt dışı", en:"abroad"}, {tr:"Görünüş", en:"appearance"}, {tr:"Cüzdan", en:"wallet"}, {tr:"Sözlük", en:"dictionary"},
+        {tr:"Dürüst", en:"honest"}, {tr:"Kibar", en:"polite"}, {tr:"Zeki", en:"smart"}, {tr:"Cesur", en:"brave"},
+        {tr:"Tehlikeli", en:"dangerous"}, {tr:"Önemli", en:"important"}, {tr:"Pahalı", en:"expensive"}, {tr:"Ucuz", en:"cheap"},
+        {tr:"Sıkıcı", en:"boring"}, {tr:"Yorgun", en:"tired"}, {tr:"Aç", en:"hungry"}, {tr:"Susuz", en:"thirsty"},
+        {tr:"Komik", en:"funny"}, {tr:"Sessiz", en:"quiet"}, {tr:"Gürültülü", en:"noisy"}, {tr:"Mutfak", en:"kitchen"},
+        {tr:"Bahçe",en:"garden"},{tr:"Gözlük",en:"glasses"},{tr:"Pencere",en:"window"},{tr:"Duvar",en:"wall"},{tr:"Zemin",en:"floor"}
     ];
+
+    const trolls = ["Cidden mi? 😂", "Klavyeye mi oturdun? ⌨️", "Bunu bilseydin şaşardım! 🤡", "Google Translate bile ağlıyor... 🤖", "Yazık... Gerçekten yazık... 🤦‍♂️", "Derslerine çalış Burak görmesin!"];
+    const praises = ["Vay be! 🌟", "FNAF tayfası gururlu! 🔥", "Hızlısın ha! 😎", "Makine misin be? 🤖", "Hoca görse 100 verir! 👍", "Efsane gidiyorsun! 🚀"];
+
+    let currentUser = null, score = 0, timeLeft = 30, timer, currentWord, gameActive = false, msgTimeout;
 
     function handleAuth() {
         const u = document.getElementById('username').value.trim();
         const p = document.getElementById('password').value;
-        if(!u || !p) return alert("Bilgileri girin!");
-        
-        let db = JSON.parse(localStorage.getItem('lab_db_final') || '{}');
-        if(!db[u]) { db[u] = p; localStorage.setItem('lab_db_final', JSON.stringify(db)); alert("Kayıt oluşturuldu!"); }
-        
+        if(!u || !p) return alert("Hepsini doldur!");
+        let db = JSON.parse(localStorage.getItem('lab_final_v4') || '{}');
+        if(!db[u]) { db[u] = p; localStorage.setItem('lab_final_v4', JSON.stringify(db)); }
         if(db[u] === p) {
             currentUser = u;
             document.getElementById('auth-screen').style.display='none';
             document.getElementById('portal-screen').style.display='block';
             document.getElementById('user-info').innerText = "👤 " + u;
-        } else { alert("Hatalı şifre!"); }
+        } else alert("Yanlış şifre!");
     }
 
     function openGame() { document.getElementById('portal-screen').style.display='none'; document.getElementById('game-screen').style.display='block'; }
@@ -170,59 +193,64 @@
         document.getElementById('ans').value = ""; document.getElementById('ans').focus();
     }
 
+    function displayStatusMsg(txt, isSuccess) {
+        const box = document.getElementById('troll-box');
+        clearTimeout(msgTimeout);
+        box.classList.remove('pop');
+        setTimeout(() => {
+            box.innerText = txt;
+            box.style.color = isSuccess ? "var(--success)" : "var(--danger)";
+            box.classList.add('pop');
+            msgTimeout = setTimeout(() => { box.classList.remove('pop'); }, 1800);
+        }, 10);
+    }
+
     document.getElementById('ans').addEventListener('keypress', e => {
         if(e.key === 'Enter' && gameActive) {
-            if(document.getElementById('ans').value.toLowerCase().trim() === currentWord.en) {
+            let userAns = document.getElementById('ans').value.toLowerCase().trim();
+            if(userAns === currentWord.en) {
                 score += 100; document.getElementById('score').innerText = score;
-                confetti({ particleCount: 30 });
+                document.getElementById('snd-yee').play();
+                displayStatusMsg(praises[Math.floor(Math.random()*praises.length)], true);
+                confetti({ particleCount: 40 });
+            } else {
+                document.getElementById('snd-fail').play();
+                displayStatusMsg(trolls[Math.floor(Math.random()*trolls.length)], false);
+                jumpscareEffect();
             }
             nextWord();
         }
     });
 
+    function jumpscareEffect() {
+        const b = document.getElementById('main-body');
+        const g = document.getElementById('ghost-trigger');
+        b.classList.add('jumpscare-bg');
+        g.classList.add('show');
+        setTimeout(() => {
+            b.classList.remove('jumpscare-bg');
+            g.classList.remove('show');
+        }, 500);
+    }
+
     function saveScore() {
-        let data = JSON.parse(localStorage.getItem('lab_scores_v100') || '[]');
-        let rank = getRank(score);
+        let data = JSON.parse(localStorage.getItem('lab_scores_v4') || '[]');
+        let rank = score >= 2000 ? {t:"ELİT", c:"rank-elit"} : score >= 1000 ? {t:"ALTIN", c:"rank-altin"} : {t:"ÇAYLAK", c:"rank-caylak"};
         data.push({n: currentUser, s: score, t: rank.t, c: rank.c});
         data.sort((a,b) => b.s - a.s);
-        localStorage.setItem('lab_scores_v100', JSON.stringify(data.slice(0, 10)));
+        localStorage.setItem('lab_scores_v4', JSON.stringify(data.slice(0, 10)));
         showLeaders();
     }
 
-    function getRank(s) {
-        if(s >= 2000) return {t:"ELİT ÜYE", c:"rank-elit"};
-        if(s >= 1000) return {t:"ALTIN ÜYE", c:"rank-altin"};
-        return {t:"ÇAYLAK", c:"rank-caylak"};
-    }
-
-    function startDevParticles() {
-        const area = document.getElementById('p-area');
-        if(!area) return;
-        setInterval(() => {
-            const dot = document.createElement('div');
-            dot.className = 'dev-dot';
-            dot.style.setProperty('--x', (Math.random() * 120 - 60) + 'px');
-            dot.style.setProperty('--y', (Math.random() * -100 - 40) + 'px');
-            dot.style.left = Math.random() * 100 + '%';
-            dot.style.top = '50%';
-            area.appendChild(dot);
-            setTimeout(() => dot.remove(), 2500);
-        }, 150);
-    }
-
     function showLeaders() {
-        let data = JSON.parse(localStorage.getItem('lab_scores_v100') || '[]');
+        let data = JSON.parse(localStorage.getItem('lab_scores_v4') || '[]');
         let html = "";
         data.forEach((d, i) => {
-            html += `<div class="score-row">
-                <div style="display:flex; justify-content:space-between;"><span>${i+1}. ${d.n}</span><b>${d.s}</b></div>
-                <div class="rank-tag ${d.c}">${d.t}</div>
-            </div>`;
+            html += `<div class="score-row"><span>${i+1}. ${d.n} - ${d.s}</span><span class="rank-tag ${d.c}">${d.t}</span></div>`;
         });
         document.getElementById('leader-list').innerHTML = html;
         document.getElementById('end-modal').style.display='none';
         document.getElementById('leader-modal').style.display='flex';
-        startDevParticles();
     }
 </script>
 </body>

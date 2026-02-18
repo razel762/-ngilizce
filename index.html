@@ -8,53 +8,48 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6c5ce7; --accent: #a29bfe; --gold: #ffeaa7; --success: #00ffca; --danger: #ff4757; --neon-red: #ff0000; }
+        :root { --primary: #6c5ce7; --gold: #ffeaa7; --success: #00ffca; --danger: #ff4757; --neon-red: #ff0000; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { 
             font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
-            background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(40, 10, 80, 0.9)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1920&q=80'); 
-            background-size: cover; background-position: center; color: white; padding: 20px; overflow: hidden;
+            background: #0f0c29; background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
+            color: white; padding: 20px; overflow: hidden;
         }
         @keyframes shake {
             0%, 100% { transform: translate(0,0); }
-            20% { transform: translate(-5px, 0px) rotate(1deg); }
-            40% { transform: translate(5px, -2px) rotate(-1deg); }
-            60% { transform: translate(-5px, 2px) rotate(0deg); }
-            80% { transform: translate(5px, 1px) rotate(1deg); }
+            25% { transform: translate(-4px, 2px); }
+            50% { transform: translate(4px, -2px); }
+            75% { transform: translate(-4px, -2px); }
         }
-        .jumpscare-bg { background: maroon !important; animation: shake 0.2s infinite !important; }
-        .card-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); padding: 35px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 420px; text-align: center; position: relative; }
-        input { width: 100%; padding: 18px; border-radius: 20px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: white; color: #1e1e2f; }
-        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        #portal-screen, #game-screen { display: none; width: 100%; max-width: 1000px; text-align: center; }
-        #countdown-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); border-radius: 40px; display: none; align-items: center; justify-content: center; font-size: 120px; font-weight: 900; color: var(--gold); z-index: 100; }
-        #ghost-trigger { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 200px; pointer-events: none; z-index: 2000; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        #ghost-trigger.show { transform: translate(-50%, -50%) scale(2); opacity: 1; }
-        .founder-panel { background: #000 !important; border: 2px solid var(--neon-red); padding: 15px; border-radius: 25px; margin-bottom: 15px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
-        .founder-name { font-size: 1.1rem; font-weight: 800; color: white; }
-        .dark-dev-role { background: #000; color: var(--neon-red); border: 2px solid var(--neon-red); padding: 3px 15px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 2px; }
-        .troll-box { height: 60px; margin-bottom: 10px; font-weight: 900; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.3); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .troll-box.pop { opacity: 1; transform: scale(1.3); }
-        
-        /* SKOR TABLOSU TASARIMI */
-        .score-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; margin-bottom: 5px; background: rgba(255,255,255,0.05); border-radius: 12px; border-left: 3px solid var(--primary); font-size: 0.9rem; }
-        .rank-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 2px 8px; border-radius: 5px; background: rgba(0,0,0,0.3); }
-        .rank-elit { color: #ff7675; } .rank-altin { color: var(--gold); } .rank-caylak { color: #ccc; } .rank-none { color: #555; }
-        
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
-        .modal { background: #1a1a2e; width: 100%; max-width: 440px; border-radius: 40px; padding: 25px; border: 2px solid var(--primary); }
+        .jumpscare-bg { background: #600 !important; animation: shake 0.1s infinite !important; }
+        .card-box { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; position: relative; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: white; color: #333; }
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); }
+        #portal-screen, #game-screen { display: none; width: 100%; max-width: 400px; }
+        #countdown-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.9); border-radius: 30px; display: none; align-items: center; justify-content: center; font-size: 100px; font-weight: 900; color: var(--gold); z-index: 100; }
+        #ghost-trigger { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 180px; z-index: 2000; opacity: 0; transition: 0.3s; pointer-events: none; }
+        #ghost-trigger.show { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+        .score-row { display: flex; justify-content: space-between; padding: 10px 15px; margin-bottom: 6px; background: rgba(0,0,0,0.3); border-radius: 12px; font-size: 14px; align-items: center; border-left: 4px solid var(--primary); }
+        .rank-tag { font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 5px; text-transform: uppercase; }
+        .r-elit { background: var(--danger); color: white; box-shadow: 0 0 10px var(--danger); }
+        .r-altin { background: var(--gold); color: #000; }
+        .r-caylak { background: #999; color: white; }
+        .r-none { background: #333; color: #666; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .modal { background: #1e1e2f; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px; border: 2px solid var(--primary); }
     </style>
 </head>
 <body id="main-body">
 
     <audio id="snd-yee" src="https://www.myinstants.com/media/sounds/yee-hc.mp3"></audio>
-    <audio id="snd-fail" src="https://www.myinstants.com/media/sounds/error_CD6sS96.mp3"></audio>
+    <audio id="snd-fail" src="https://www.myinstants.com/media/sounds/fnaf-jumpscare_sc6S9S7.mp3"></audio>
 
     <div id="ghost-trigger">👻</div>
 
     <div id="auth-screen">
         <div class="card-box">
-            <h1>⚡ OYUN LAB</h1>
+            <h1 style="margin-bottom:20px;">⚡ OYUN LAB</h1>
             <input type="text" id="username" placeholder="Kullanıcı Adı">
             <input type="password" id="password" placeholder="Şifre">
             <button class="btn" onclick="handleAuth()">GİRİŞ / KAYIT</button>
@@ -62,79 +57,74 @@
     </div>
 
     <div id="portal-screen">
-        <div style="display:flex; justify-content: space-between; margin-bottom:20px;">
-            <span id="user-info" style="font-weight:800; color:var(--success);"></span>
-            <button onclick="location.reload()" style="color:var(--danger); background:none; border:none; cursor:pointer;">Çıkış</button>
-        </div>
-        <div class="card-box" style="margin:auto; border:2px solid var(--primary); cursor:pointer;" onclick="startAutoGame()">
-            <i class="fa-solid fa-play" style="font-size:50px; color:var(--success)"></i>
+        <div class="card-box" style="border: 2px solid var(--success); cursor: pointer;" onclick="startAutoGame()">
+            <i class="fa-solid fa-play" style="font-size:40px; color:var(--success); margin-bottom:10px;"></i>
             <h2>TURNUVAYI BAŞLAT</h2>
+            <p style="font-size:12px; opacity:0.7; margin-top:5px;">3-2-1 Sayımı Başlar!</p>
         </div>
-        <div style="margin-top: 25px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 25px; border: 1px dashed var(--success); max-width: 420px; margin-left: auto; margin-right: auto;">
-            <h4>Yeni oyun gelebilir...</h4>
-            <p style="font-size: 11px; opacity: 0.8; font-weight: 600;">Yapımcı: 9/N sınıfındaki Burak</p>
+        <div style="margin-top:20px; text-align:center; background:rgba(0,0,0,0.3); padding:15px; border-radius:20px;">
+            <p>Yeni oyun gelebilir...</p>
+            <p style="font-size: 12px; color: var(--success); font-weight: 800; margin-top:5px;">Yapımcı: 9/N sınıfındaki Burak</p>
         </div>
     </div>
 
     <div id="game-screen">
-        <div class="card-box" style="margin:auto;">
+        <div class="card-box">
             <div id="countdown-overlay">3</div>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--success)">SÜRE: <span id="timer">30</span></div>
-                <div style="flex:1; background:black; padding:10px; border-radius:15px; color:var(--gold)">SKOR: <span id="score">0</span></div>
+            <div style="display:flex; justify-content: space-between; margin-bottom:15px;">
+                <span style="color:var(--success)">SÜRE: <b id="timer">30</b></span>
+                <span style="color:var(--gold)">SKOR: <b id="score">0</b></span>
             </div>
-            <div id="word-box" style="font-family:'Kalam'; font-size:42px; margin:10px 0; color:var(--gold);">ODAKLAN!</div>
-            <div id="troll-box" class="troll-box"></div>
+            <div id="word-box" style="font-family:'Kalam'; font-size:42px; color:var(--gold); margin:20px 0;">HAZIR?</div>
             <input type="text" id="ans" placeholder="Kelimeyi yaz ve Enter'la">
         </div>
     </div>
 
     <div id="leader-modal" class="overlay">
         <div class="modal">
-            <div class="founder-panel">
-                <div class="founder-name">Burak 9/N Sınıfı</div>
-                <div style="margin-top:5px;"><span class="dark-dev-role">DEVELOPER 👑</span></div>
-            </div>
-            <h3 style="margin-bottom:10px;">🏆 TOP 10 SIRALAMASI</h3>
-            <div id="leader-list" style="max-height: 320px; overflow-y: auto; padding-right: 5px;"></div>
-            <button class="btn" style="margin-top:15px;" onclick="location.reload()">TEKRAR DENE 🏠</button>
+            <h3 style="text-align:center; margin-bottom:15px; color:var(--gold); letter-spacing: 2px;">🏆 TOP 10 REKORLAR</h3>
+            <div id="leader-list"></div>
+            <button class="btn" style="margin-top:15px;" onclick="backToPortal()">YENİDEN DENE 🏠</button>
         </div>
     </div>
 
     <div id="end-modal" class="overlay">
-        <div class="modal">
-            <h2>SÜRE BİTTİ!</h2>
-            <div id="final-score" style="font-size: 60px; color:var(--success);">0</div>
-            <button class="btn" onclick="saveScore()">KAYDET VE SIRALAMAYA BAK</button>
+        <div class="modal" style="text-align:center;">
+            <h2>OYUN BİTTİ!</h2>
+            <div id="final-score" style="font-size: 60px; color:var(--success); margin:15px 0;">0</div>
+            <button class="btn" onclick="saveScore()">SKORU KAYDET</button>
         </div>
     </div>
 
 <script>
+    // GENİŞLETİLMİŞ KELİME LİSTESİ
     const words = [
         {tr:"Elma",en:"apple"},{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Masa",en:"table"},{tr:"Kedi",en:"cat"},
-        {tr:"Köpek",en:"dog"},{tr:"Mutlu",en:"happy"},{tr:"Su",en:"water"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},
-        {tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Deniz",en:"sea"},
-        {tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yıldız",en:"star"},{tr:"Balık",en:"fish"},{tr:"Aslan",en:"lion"},
-        {tr:"Para",en:"money"},{tr:"Zeki",en:"smart"},{tr:"Komik",en:"funny"},{tr:"Sessiz",en:"quiet"},{tr:"Yaz",en:"summer"}
+        {tr:"Köpek",en:"dog"},{tr:"Su",en:"water"},{tr:"Hızlı",en:"fast"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},
+        {tr:"Zeki",en:"smart"},{tr:"Cesur",en:"brave"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Deniz",en:"sea"},
+        {tr:"Yıldız",en:"star"},{tr:"Çiçek",en:"flower"},{tr:"Ağaç",en:"tree"},{tr:"Kalem",en:"pencil"},{tr:"Kuş",en:"bird"},
+        {tr:"Araba",en:"car"},{tr:"Ev",en:"house"},{tr:"Kapı",en:"door"},{tr:"Süt",en:"milk"},{tr:"Ekmek",en:"bread"},
+        {tr:"Sarı",en:"yellow"},{tr:"Mavi",en:"blue"},{tr:"Kırmızı",en:"red"},{tr:"Yeşil",en:"green"},{tr:"Siyah",en:"black"},
+        {tr:"Beyaz",en:"white"},{tr:"Küçük",en:"small"},{tr:"Büyük",en:"big"},{tr:"Sıcak",en:"hot"},{tr:"Soğuk",en:"cold"},
+        {tr:"Yavaş",en:"slow"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"},{tr:"Genç",en:"young"},{tr:"Yaşlı",en:"old"},
+        {tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},{tr:"Güzel",en:"beautiful"},{tr:"Çirkin",en:"ugly"},{tr:"Doğru",en:"true"},
+        {tr:"Yanlış",en:"false"},{tr:"Zor",en:"difficult"},{tr:"Kolay",en:"easy"},{tr:"Temiz",en:"clean"},{tr:"Kirli",en:"dirty"}
     ];
-
-    const trolls = ["Cidden mi? 😂", "Klavyeye mi oturdun? ⌨️", "Bunu bilseydin şaşardım! 🤡"];
-    const praises = ["Vay be! 🌟", "Hızlısın ha! 😎", "Makine misin be? 🤖"];
 
     let currentUser = null, score = 0, timeLeft = 30, timer, currentWord, gameActive = false;
 
     function handleAuth() {
         const u = document.getElementById('username').value.trim();
         const p = document.getElementById('password').value;
-        if(!u || !p) return alert("Hepsini doldur!");
-        let db = JSON.parse(localStorage.getItem('burak_v8_db') || '{}');
-        if(!db[u]) { db[u] = p; localStorage.setItem('burak_v8_db', JSON.stringify(db)); }
-        if(db[u] === p) {
-            currentUser = u;
-            document.getElementById('auth-screen').style.display='none';
-            document.getElementById('portal-screen').style.display='block';
-            document.getElementById('user-info').innerText = "👤 " + u;
-        } else alert("Hatalı!");
+        if(!u || !p) return alert("Alanları doldur!");
+        currentUser = u;
+        document.getElementById('auth-screen').style.display='none';
+        document.getElementById('portal-screen').style.display='block';
+    }
+
+    function backToPortal() {
+        document.getElementById('leader-modal').style.display='none';
+        document.getElementById('portal-screen').style.display='block';
     }
 
     function startAutoGame() {
@@ -142,102 +132,98 @@
         document.getElementById('game-screen').style.display='block';
         const cd = document.getElementById('countdown-overlay');
         cd.style.display = 'flex';
-        let count = 3; cd.innerText = count;
-        let cdTimer = setInterval(() => {
-            count--;
-            if(count > 0) { cd.innerText = count; }
-            else { clearInterval(cdTimer); cd.style.display = 'none'; runGameCore(); }
+        let c = 3; cd.innerText = c;
+        let t = setInterval(() => {
+            c--;
+            if(c>0) cd.innerText = c;
+            else { clearInterval(t); cd.style.display='none'; runGame(); }
         }, 1000);
     }
 
-    function runGameCore() {
+    function runGame() {
         score = 0; timeLeft = 30; gameActive = true;
         document.getElementById('score').innerText = "0";
-        nextWord();
+        document.getElementById('timer').innerText = "30";
+        newWord();
         timer = setInterval(() => {
-            timeLeft--; document.getElementById('timer').innerText = timeLeft;
-            if(timeLeft <= 0) { clearInterval(timer); gameActive = false; document.getElementById('final-score').innerText = score; document.getElementById('end-modal').style.display='flex'; }
+            timeLeft--;
+            document.getElementById('timer').innerText = timeLeft;
+            if(timeLeft <= 0) {
+                clearInterval(timer);
+                gameActive = false;
+                document.getElementById('final-score').innerText = score;
+                document.getElementById('end-modal').style.display='flex';
+            }
         }, 1000);
     }
 
-    function nextWord() {
-        const oldWord = currentWord ? currentWord.tr : "";
-        let newWord;
-        do { newWord = words[Math.floor(Math.random()*words.length)]; } while (newWord.tr === oldWord);
-        currentWord = newWord;
+    function newWord() {
+        let n;
+        do { n = words[Math.floor(Math.random()*words.length)]; } while(n === currentWord);
+        currentWord = n;
         document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
         document.getElementById('ans').value = ""; document.getElementById('ans').focus();
     }
 
-    function displayStatusMsg(txt, isSuccess) {
-        const box = document.getElementById('troll-box');
-        box.classList.remove('pop');
-        setTimeout(() => {
-            box.innerText = txt;
-            box.style.color = isSuccess ? "var(--success)" : "var(--danger)";
-            box.classList.add('pop');
-            setTimeout(() => { box.classList.remove('pop'); }, 1500);
-        }, 10);
-    }
-
     document.getElementById('ans').addEventListener('keypress', e => {
         if(e.key === 'Enter' && gameActive) {
-            let userAns = document.getElementById('ans').value.toLowerCase().trim();
-            if(userAns === currentWord.en) {
-                score += 100; document.getElementById('score').innerText = score;
+            if(document.getElementById('ans').value.toLowerCase().trim() === currentWord.en) {
+                score += 100;
+                document.getElementById('score').innerText = score;
                 document.getElementById('snd-yee').play();
-                displayStatusMsg(praises[Math.floor(Math.random()*praises.length)], true);
-                confetti({ particleCount: 30 });
+                confetti({ particleCount: 40, spread: 60 });
             } else {
                 document.getElementById('snd-fail').play();
-                displayStatusMsg(trolls[Math.floor(Math.random()*trolls.length)], false);
-                jumpscareEffect();
+                jumpscare();
             }
-            nextWord();
+            newWord();
         }
     });
 
-    function jumpscareEffect() {
-        const b = document.getElementById('main-body');
-        const g = document.getElementById('ghost-trigger');
-        b.classList.add('jumpscare-bg');
-        g.classList.add('show');
-        setTimeout(() => { b.classList.remove('jumpscare-bg'); g.classList.remove('show'); }, 500);
+    function jumpscare() {
+        document.getElementById('main-body').classList.add('jumpscare-bg');
+        document.getElementById('ghost-trigger').classList.add('show');
+        setTimeout(() => {
+            document.getElementById('main-body').classList.remove('jumpscare-bg');
+            document.getElementById('ghost-trigger').classList.remove('show');
+        }, 400);
     }
 
     function saveScore() {
-        let data = JSON.parse(localStorage.getItem('burak_v8_scores') || '[]');
-        let rank = score >= 2000 ? {t:"ELİT", c:"rank-elit"} : score >= 1000 ? {t:"ALTIN", c:"rank-altin"} : {t:"ÇAYLAK", c:"rank-caylak"};
-        data.push({n: currentUser, s: score, t: rank.t, c: rank.c});
-        data.sort((a,b) => b.s - a.s);
-        localStorage.setItem('burak_v8_scores', JSON.stringify(data.slice(0, 10)));
+        let db = JSON.parse(localStorage.getItem('burak_v10_final') || '[]');
+        let rank = score >= 2000 ? {t:"ELİT", c:"r-elit"} : score >= 1000 ? {t:"ALTIN", c:"r-altin"} : {t:"ÇAYLAK", c:"r-caylak"};
+        
+        let existingIndex = db.findIndex(item => item.n === currentUser);
+        
+        if (existingIndex !== -1) {
+            if (score > db[existingIndex].s) {
+                db[existingIndex] = {n: currentUser, s: score, t: rank.t, c: rank.c};
+            }
+        } else {
+            db.push({n: currentUser, s: score, t: rank.t, c: rank.c});
+        }
+        
+        db.sort((a,b) => b.s - a.s);
+        localStorage.setItem('burak_v10_final', JSON.stringify(db.slice(0, 10)));
         showLeaders();
     }
 
-    // SABİT 10 SATIRLIK TABLO SİSTEMİ
     function showLeaders() {
-        let data = JSON.parse(localStorage.getItem('burak_v8_scores') || '[]');
+        let db = JSON.parse(localStorage.getItem('burak_v10_final') || '[]');
         let html = "";
-        
-        // 10 tura kadar döngü kur
-        for(let i = 0; i < 10; i++) {
-            if(data[i]) {
-                // Kayıtlı oyuncu varsa yaz
-                html += `
-                <div class="score-row">
-                    <span><b>${i+1}.</b> ${data[i].n} - ${data[i].s}</span>
-                    <span class="rank-tag ${data[i].c}">${data[i].t}</span>
+        for(let i=0; i<10; i++) {
+            if(db[i]) {
+                html += `<div class="score-row">
+                    <span><b>${i+1}.</b> ${db[i].n} - ${db[i].s}</span>
+                    <span class="rank-tag ${db[i].c}">${db[i].t}</span>
                 </div>`;
             } else {
-                // Kayıt yoksa boşluk doldur
-                html += `
-                <div class="score-row" style="opacity: 0.5; border-left: 3px solid #333;">
+                html += `<div class="score-row" style="opacity:0.3; border-left-color: #444;">
                     <span><b>${i+1}.</b> Boş...</span>
-                    <span class="rank-tag rank-none">BEKLENİYOR</span>
+                    <span class="rank-tag r-none">BEKLENİYOR</span>
                 </div>`;
             }
         }
-        
         document.getElementById('leader-list').innerHTML = html;
         document.getElementById('end-modal').style.display='none';
         document.getElementById('leader-modal').style.display='flex';

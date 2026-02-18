@@ -3,246 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9. Sınıf İngilizce Kelime Master - SINIF MODU</title>
+    <title>9. Sınıf İngilizce - Duygusal Maraton</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --gold: #feca57;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-            /* Akıllı tahta için okul/sınıf temalı arka plan */
-            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), 
-                        url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover; background-position: center; color: white; overflow: hidden;
-        }
-
-        .game-card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            width: 95%; max-width: 450px;
-            border-radius: 30px; padding: 30px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .stats { display: flex; width: 100%; justify-content: space-between; margin-bottom: 20px; }
-        .stat-box { background: rgba(0,0,0,0.6); padding: 12px 20px; border-radius: 15px; font-weight: 800; color: #00d2d3; border: 2px solid #00d2d3; font-size: 18px; }
-
-        /* Tabela Bölümü */
-        .sign-container { position: relative; width: 100%; margin-bottom: 50px; }
-        .chains { position: absolute; top: -30px; left: 0; right: 0; display: flex; justify-content: space-around; padding: 0 80px; }
-        .chain { width: 7px; height: 50px; background: #666; border-radius: 4px; border: 1px solid #222; }
-
-        .wood-sign {
-            background: #5d4037;
-            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-            border: 7px solid #3e2723;
-            border-radius: 20px;
-            padding: 25px 10px;
-            box-shadow: 0 10px 0 #2d1b18;
-            width: 85%; margin: 0 auto;
-        }
-
-        #word-box { font-family: 'Kalam', cursive; font-size: 40px; color: #ffecb3; text-shadow: 3px 3px #3e2723; }
-
-        /* Input ve Modern Buton */
-        input {
-            width: 100%; padding: 18px; border-radius: 18px; border: 3px solid transparent;
-            font-size: 22px; text-align: center; margin-bottom: 20px; outline: none;
-            background: #fff; color: #333; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(108,92,231,0.5); }
-
-        .btn {
-            background: var(--primary); color: white; border: none; width: 100%;
-            padding: 18px; border-radius: 18px; font-size: 18px; font-weight: 800; cursor: pointer;
-            box-shadow: 0 6px 0 #4834d4; transition: 0.2s;
-        }
-        .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #4834d4; }
-
-        /* Onay Ekranı (İpucu İçin) */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
-        .modal { background: #2d3436; width: 85%; max-width: 350px; border-radius: 30px; padding: 30px; border: 4px solid var(--primary); text-align: center; }
+        :root { --primary: #6c5ce7; --gold: #feca57; --success: #2ecc71; --danger: #ff4757; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center; color: white; overflow: hidden; }
         
-        .confirm-btns { display: flex; justify-content: center; gap: 30px; margin-top: 25px; }
-        .circle-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; font-size: 30px; color: white; transition: 0.2s; }
-        .btn-yes { background: var(--success); box-shadow: 0 5px 0 #219150; }
-        .btn-no { background: var(--danger); box-shadow: 0 5px 0 #a93226; }
+        .game-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); width: 95%; max-width: 450px; border-radius: 40px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.6); position: relative; z-index: 10; }
+        .stats { display: flex; width: 100%; justify-content: space-between; margin-bottom: 15px; }
+        .stat-box { background: rgba(0,0,0,0.7); padding: 12px 20px; border-radius: 15px; font-weight: 800; color: #00d2d3; border: 2px solid #00d2d3; font-size: 20px; }
+        
+        /* Hırslandırma/Dalga Mesaj Kutusu */
+        #reaction-box { height: 40px; font-size: 22px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; text-shadow: 2px 2px #000; }
+        .success-msg { color: var(--success); animation: pulse 0.4s; }
+        .fail-msg { color: var(--danger); animation: shake 0.4s; }
 
-        /* Efektler */
-        .wind-exit { transform: translateX(200%) rotate(20deg); opacity: 0; }
-        .wind-enter { transform: translateX(-200%) rotate(-20deg); opacity: 0; }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }
+
+        /* Ghost X Animasyonu */
+        #ghost-x { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 250px; color: var(--danger); pointer-events: none; z-index: 999; opacity: 0; display: none; }
+        .ghost-animate { display: block !important; animation: ghostPop 0.5s ease-out forwards; }
+        @keyframes ghostPop { 0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } }
+
+        .wood-sign { background: #5d4037; border: 8px solid #3e2723; border-radius: 20px; padding: 20px 10px; width: 85%; margin: 0 auto 30px; }
+        #word-box { font-family: 'Kalam', cursive; font-size: 42px; color: #ffecb3; text-shadow: 3px 3px #3e2723; }
+        input { width: 100%; padding: 20px; border-radius: 20px; border: none; font-size: 24px; text-align: center; margin-bottom: 20px; outline: none; }
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 0 #4834d4; transition: 0.2s; }
+        
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal { background: #1e272e; width: 90%; max-width: 400px; border-radius: 35px; padding: 25px; border: 4px solid var(--primary); text-align: center; }
+        #leader-list { overflow-y: auto; max-height: 200px; margin: 15px 0; }
+        .score-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
-<div id="hint-modal" class="overlay">
-    <div class="modal">
-        <i class="fa-solid fa-lightbulb" style="font-size: 50px; color: var(--gold);"></i>
-        <h2 style="margin: 15px 0;">DİKKAT!</h2>
-        <p style="font-size: 18px;">İpucu almak için <b style="color:var(--danger)">10 saniye</b> feda edilecek. Onaylıyor musun?</p>
-        <div class="confirm-btns">
-            <button class="circle-btn btn-no" onclick="closeHint(false)"><i class="fa-solid fa-xmark"></i></button>
-            <button class="circle-btn btn-yes" onclick="closeHint(true)"><i class="fa-solid fa-check"></i></button>
-        </div>
-    </div>
-</div>
+<div id="ghost-x"><i class="fa-solid fa-xmark"></i></div>
 
 <div id="name-modal" class="overlay">
     <div class="modal">
-        <h2 style="color:#00d2d3;">SÜRE BİTTİ!</h2>
-        <p id="final-score" style="font-size:26px; font-weight:bold;"></p>
-        <input type="text" id="player-name" placeholder="Adını yaz...">
-        <button class="btn" onclick="save()">PUANI KAYDET</button>
+        <h2 style="color:#00d2d3;">OYUN BİTTİ</h2>
+        <div id="final-score" style="font-size: 45px; font-weight: 800;"></div>
+        <div id="rank-msg" style="margin: 15px 0; color: var(--gold); font-weight: bold;"></div>
+        <input type="text" id="player-name" placeholder="Adını yaz..." maxlength="12">
+        <button class="btn" onclick="save()">LİSTEYE GİR</button>
     </div>
 </div>
 
 <div id="leader-modal" class="overlay">
     <div class="modal">
-        <h2 style="color:var(--gold);">🏆 SINIF LİDERLERİ</h2>
-        <div id="leader-list" style="margin: 20px 0; text-align: left;"></div>
-        <button class="btn" style="background:#ff4757; box-shadow: 0 6px 0 #c0392b;" onclick="restart()">YENİDEN BAŞLA</button>
+        <h2 style="color:var(--gold);">🏆 EN İYİLER</h2>
+        <div id="leader-list"></div>
+        <button class="view-all-btn" style="background:none; border:1px solid #fff; color:#fff; padding:5px 10px; cursor:pointer;" onclick="showLeaders(100)">TÜMÜNÜ GÖR</button>
+        <button class="btn" style="background:#ff4757; margin-top:15px;" onclick="restart()">YENİDEN DENE</button>
     </div>
 </div>
 
 <div class="game-card">
-    <div class="stats">
-        <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">60</span>s</div>
-        <div class="stat-box"><i class="fa-solid fa-star"></i> <span id="score">0</span></div>
+    <div id="reaction-box"></div> <div class="stats">
+        <div class="stat-box"><i class="fa-solid fa-clock"></i> <span id="timer">30</span>s</div>
+        <div class="stat-box"><i class="fa-solid fa-bolt"></i> <span id="score">0</span></div>
     </div>
-    
-    <div class="sign-container">
-        <div class="chains"><div class="chain"></div><div class="chain"></div></div>
-        <div class="wood-sign">
-            <div id="word-box">HAZIR MISIN?</div>
-        </div>
-    </div>
-
-    <input type="text" id="ans" placeholder="Cevabı buraya yaz..." autocomplete="off">
-    <button id="main-btn" class="btn" onclick="check()">OYUNU BAŞLAT</button>
-    <button id="hint-trigger" class="btn" onclick="openHint()" style="display:none; margin-top:15px; background:#fdcb6e; box-shadow: 0 5px 0 #e17055;"><i class="fa-solid fa-lightbulb"></i> İpucu Al</button>
+    <div class="wood-sign"><div id="word-box">READY?</div></div>
+    <input type="text" id="ans" placeholder="Klavyeşörlüğünü konuştur!" autocomplete="off">
+    <button id="main-btn" class="btn" onclick="check()">MACERAYI BAŞLAT 🚀</button>
 </div>
 
 <script>
     const wordList = [
-        { tr: "Yurt dışı", en: "abroad" }, { tr: "Görünüş", en: "appearance" }, { tr: "Kişilik", en: "personality" },
-        { tr: "Cüzdan", en: "wallet" }, { tr: "Sözlük", en: "dictionary" }, { tr: "Gökdelen", en: "skyscraper" },
-        { tr: "Köy", en: "village" }, { tr: "Şehir", en: "city" }, { tr: "Dürüst", en: "honest" },
-        { tr: "Kibar", en: "polite" }, { tr: "İnatçı", en: "stubborn" }, { tr: "Yaratıcı", en: "creative" }
+        {tr:"Yurt dışı", en:"abroad"}, {tr:"Görünüş", en:"appearance"}, {tr:"Kişilik", en:"personality"},
+        {tr:"Cüzdan", en:"wallet"}, {tr:"Sözlük", en:"dictionary"}, {tr:"Gökdelen", en:"skyscraper"},
+        {tr:"Köy", en:"village"}, {tr:"Şehir", en:"city"}, {tr:"Dürüst", en:"honest"},
+        {tr:"Kibar", en:"polite"}, {tr:"İnatçı", en:"stubborn"}, {tr:"Yaratıcı", en:"creative"},
+        {tr:"Bencil", en:"selfish"}, {tr:"Macera", en:"adventure"}, {tr:"Korku", en:"horror"},
+        {tr:"Zeki", en:"intelligent"}, {tr:"Cesur", en:"brave"}, {tr:"Sakin", en:"calm"},
+        {tr:"Fakir", en:"poor"}, {tr:"Zengin", en:"rich"}, {tr:"Genç", en:"young"},
+        {tr:"Yaşlı", en:"old"}, {tr:"Hızlı", en:"fast"}, {tr:"Yavaş", en:"slow"},
+        {tr:"Güzel", en:"beautiful"}, {tr:"Çirkin", en:"ugly"}, {tr:"Büyük", en:"big"},
+        {tr:"Küçük", en:"small"}, {tr:"Mutlu", en:"happy"}, {tr:"Üzgün", en:"sad"},
+        {tr:"Yorgun", en:"tired"}, {tr:"Aç", en:"hungry"}, {tr:"Susamış", en:"thirsty"},
+        {tr:"Sıcak", en:"hot"}, {tr:"Soğuk", en:"cold"}, {tr:"Yeni", en:"new"},
+        {tr:"Eski", en:"old"}, {tr:"Doğru", en:"true"}, {tr:"Yanlış", en:"false"},
+        {tr:"Zor", en:"difficult"}, {tr:"Kolay", en:"easy"}, {tr:"Pahalı", en:"expensive"},
+        {tr:"Ucuz", en:"cheap"}, {tr:"Tehlikeli", en:"dangerous"}, {tr:"Güvenli", en:"safe"},
+        {tr:"Önemli", en:"important"}, {tr:"Sıkıcı", en:"boring"}, {tr:"Komik", en:"funny"},
+        {tr:"Cömert", en:"generous"}, {tr:"Cimri", en:"stingy"}, {tr:"Dakik", en:"punctual"},
+        {tr:"Konuşkan", en:"talkative"}, {tr:"Sessiz", en:"quiet"}, {tr:"Çalışkan", en:"hardworking"},
+        {tr:"Tembel", en:"lazy"}, {tr:"Sabırlı", en:"patient"}, {tr:"Sabırsız", en:"impatient"},
+        {tr:"Unutkan", en:"forgetful"}, {tr:"Dikkatli", en:"careful"}, {tr:"Dikkatsiz", en:"careless"},
+        {tr:"Mütevazı", en:"humble"}, {tr:"Kibirli", en:"arrogant"}, {tr:"Kıskanç", en:"jealous"},
+        {tr:"Meraklı", en:"curious"}, {tr:"Yetenekli", en:"talented"}, {tr:"Güçlü", en:"strong"},
+        {tr:"Zayıf", en:"weak"}, {tr:"Sağlıklı", en:"healthy"}, {tr:"Hasta", en:"sick"},
+        {tr:"Temiz", en:"clean"}, {tr:"Kirli", en:"dirty"}, {tr:"Geniş", en:"wide"},
+        {tr:"Dar", en:"narrow"}, {tr:"Derin", en:"deep"}, {tr:"Sığ", en:"shallow"},
+        {tr:"Yüksek", en:"high"}, {tr:"Alçak", en:"low"}, {tr:"Parlak", en:"bright"},
+        {tr:"Karanlık", en:"dark"}, {tr:"Ağır", en:"heavy"}, {tr:"Hafif", en:"light"},
+        {tr:"Yumuşak", en:"soft"}, {tr:"Sert", en:"hard"}, {tr:"Islak", en:"wet"},
+        {tr:"Kuru", en:"dry"}, {tr:"Lezzetli", en:"delicious"}, {tr:"Berbat", en:"terrible"},
+        {tr:"Korkmuş", en:"scared"}, {tr:"Şaşırmış", en:"surprised"}, {tr:"Endişeli", en:"worried"},
+        {tr:"Heyecanlı", en:"excited"}, {tr:"Gururlu", en:"proud"}, {tr:"Yalnız", en:"alone"},
+        {tr:"Birlikte", en:"together"}, {tr:"Başarılı", en:"successful"}, {tr:"Başarısız", en:"unsuccessful"},
+        {tr:"Nazik", en:"kind"}, {tr:"Kaba", en:"rude"}, {tr:"Zarif", en:"elegant"}, {tr:"Harika", en:"wonderful"}
     ];
 
-    let currentPool = [...wordList], score = 0, timeLeft = 60, gameActive = false, timer, currentWord = {}, isPaused = false;
+    const bravoMsgs = ["ADAMSIN!", "UÇUYORSUN!", "HIZLI VE ÖFKELİ!", "DURMA!", "MUHTEŞEM!", "RAKİPSİSİN!", "BÖYLE DEVAM!", "ALEV ALDIN! 🔥"];
+    const failMsgs = ["CİDDİ MİSİN?", "KLAVYEYE Mİ OTURDUN?", "BU MUYDU?", "ŞAKA YAPIYORSUN...", "HAYIRRR!", "COPTUN GİTTİN!", "DAHA HIZLI!", "BİRAZ ODAKLAN!"];
+
+    let currentPool = [], score = 0, timeLeft = 30, gameActive = false, timer, currentWord = {};
 
     function start() {
-        score = 0; timeLeft = 60; gameActive = true; isPaused = false;
+        score = 0; timeLeft = 30; gameActive = true;
         currentPool = [...wordList];
+        for (let i = currentPool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [currentPool[i], currentPool[j]] = [currentPool[j], currentPool[i]];
+        }
         document.getElementById('score').innerText = score;
-        document.getElementById('main-btn').innerText = "KONTROL ET";
-        document.getElementById('hint-trigger').style.display = "block";
+        document.getElementById('main-btn').innerText = "GÖNDER! 💥";
+        document.getElementById('ans').placeholder = "Hızlı yaz, süreyi kap! 🔥";
         document.getElementById('name-modal').style.display = 'none';
         document.getElementById('leader-modal').style.display = 'none';
-        next();
-        runTimer();
+        next(); runTimer();
     }
 
     function runTimer() {
         clearInterval(timer);
-        timer = setInterval(() => {
-            if(!isPaused) {
-                timeLeft--;
-                document.getElementById('timer').innerText = timeLeft;
-                if(timeLeft <= 0) end();
-            }
-        }, 1000);
+        timer = setInterval(() => { timeLeft--; document.getElementById('timer').innerText = timeLeft; if(timeLeft <= 0) end(); }, 1000);
     }
 
-    function openHint() {
-        if(!gameActive) return;
-        isPaused = true;
-        document.getElementById('hint-modal').style.display = 'flex';
-    }
-
-    function closeHint(confirmed) {
-        document.getElementById('hint-modal').style.display = 'none';
-        if(confirmed) {
-            if(timeLeft > 10) {
-                timeLeft -= 10;
-                document.getElementById('timer').innerText = timeLeft;
-                alert("İpucu: Kelime '" + currentWord.en[0].toUpperCase() + "' harfi ile başlıyor!");
-            } else {
-                alert("Yeterli zamanın yok!");
-            }
-        }
-        isPaused = false;
-        document.getElementById('ans').focus();
+    function showReaction(type) {
+        const box = document.getElementById('reaction-box');
+        const msgs = type === 'success' ? bravoMsgs : failMsgs;
+        box.innerText = msgs[Math.floor(Math.random() * msgs.length)];
+        box.className = type === 'success' ? 'success-msg' : 'fail-msg';
+        setTimeout(() => { box.innerText = ""; }, 800);
     }
 
     function next() {
         if (currentPool.length === 0) { end(); return; }
-        const wb = document.getElementById('word-box');
-        wb.classList.add('wind-enter');
-        setTimeout(() => {
-            const idx = Math.floor(Math.random() * currentPool.length);
-            currentWord = currentPool[idx];
-            wb.innerText = currentWord.tr;
-            wb.classList.remove('wind-enter');
-            document.getElementById('ans').value = "";
-            document.getElementById('ans').focus();
-        }, 200);
+        currentWord = currentPool.pop();
+        document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
+        document.getElementById('ans').value = ""; document.getElementById('ans').focus();
     }
 
     function check() {
         if(!gameActive) { start(); return; }
-        if(isPaused) return;
         const val = document.getElementById('ans').value.toLowerCase().trim();
         if(val === currentWord.en) {
-            score += 10; timeLeft += 3;
+            score += 50; timeLeft += 3;
             document.getElementById('score').innerText = score;
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
-            currentPool = currentPool.filter(w => w.en !== currentWord.en);
-            document.getElementById('word-box').classList.add('wind-exit');
-            setTimeout(() => { document.getElementById('word-box').classList.remove('wind-exit'); next(); }, 400);
+            showReaction('success');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            next();
         } else {
+            const x = document.getElementById('ghost-x');
+            x.classList.remove('ghost-animate'); void x.offsetWidth; x.classList.add('ghost-animate');
+            showReaction('fail');
             document.getElementById('ans').value = "";
-            // Yanlış cevap efekti eklenebilir
         }
     }
 
     function end() {
         gameActive = false; clearInterval(timer);
-        document.getElementById('final-score').innerText = "Skor: " + score;
+        document.getElementById('final-score').innerText = score;
+        let msg = "";
+        if (score < 200) msg = "Geliştir kendini!";
+        else if (score < 500) msg = "Hadi hadi idare edersin...";
+        else if (score < 1000) msg = "Anladık en iyi sensin!";
+        else if (score >= 2000) msg = "Dostum çözdün sen bu işi! 🔥";
+        else msg = "Fena değil, ama daha iyisi olur!";
+        document.getElementById('rank-msg').innerText = msg;
         document.getElementById('name-modal').style.display = 'flex';
     }
 
     function save() {
-        const name = document.getElementById('player-name').value || "Öğrenci";
-        let scs = JSON.parse(localStorage.getItem('top_final_class')) || [];
+        const name = document.getElementById('player-name').value || "Anonim";
+        let scs = JSON.parse(localStorage.getItem('okul_final_v3')) || [];
         scs.push({n: name, s: score});
         scs.sort((a,b) => b.s - a.s);
-        localStorage.setItem('top_final_class', JSON.stringify(scs.slice(0, 10)));
+        localStorage.setItem('okul_final_v3', JSON.stringify(scs.slice(0, 100)));
         document.getElementById('name-modal').style.display = 'none';
-        showLeaders();
+        showLeaders(10);
     }
 
-    function showLeaders() {
+    function showLeaders(limit) {
         const list = document.getElementById('leader-list');
-        const scs = JSON.parse(localStorage.getItem('top_final_class')) || [];
+        const scs = JSON.parse(localStorage.getItem('okul_final_v3')) || [];
         let html = "";
-        scs.forEach((sc, i) => {
+        scs.slice(0, limit).forEach((sc, i) => {
             let icon = (i === 0) ? "👑 " : (i === 1) ? "🥈 " : (i === 2) ? "🥉 " : (i+1) + ". ";
-            html += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #444; ${i<1 ? 'color:var(--gold); font-weight:bold;' : ''}">
-                        <span>${icon} ${sc.n}</span><span>${sc.s}</span>
-                     </div>`;
+            html += `<div class="score-row"><span>${icon}${sc.n}</span><span>${sc.s}</span></div>`;
         });
-        list.innerHTML = html;
+        list.innerHTML = html || "<p>Kayıt yok.</p>";
         document.getElementById('leader-modal').style.display = 'flex';
     }
 

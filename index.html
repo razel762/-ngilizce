@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Burak Dev | 9/N Edition</title>
+    <title>Burak Dev | Ultimate Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
@@ -16,225 +16,279 @@
         body { 
             font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
             background: #000; background: radial-gradient(circle, #200000 0%, #000 100%);
-            color: white; padding: 20px; overflow: hidden;
+            color: white; padding: 10px; overflow: hidden;
         }
+        
+        /* JUMPSCARE ANIMATION */
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-4px, 2px); } 50% { transform: translate(4px, -2px); } }
         .jumpscare-bg { background: #600 !important; animation: shake 0.1s infinite; }
-        
-        /* GHOST JUMPSCARE */
-        #ghost {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            z-index: 9999; font-size: 200px; filter: grayscale(1) contrast(2);
-            transition: 0.1s; pointer-events: none; opacity: 0;
-        }
+        #ghost { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); z-index: 9999; font-size: 200px; transition: 0.1s; pointer-events: none; opacity: 0; }
         .ghost-active { transform: translate(-50%, -50%) scale(1.5) !important; opacity: 0.8 !important; }
 
-        .card-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; position: relative;}
-        input { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: #fff; color: #000; }
-        .btn { background: #6c5ce7; color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .card-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; position: relative;}
+        input { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 14px; text-align: center; margin-bottom: 10px; outline: none; background: #fff; color: #333; }
+        .btn { background: #6c5ce7; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 5px; }
+        .btn:active { transform: scale(0.95); }
 
-        .info-btn { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 30px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid var(--neon-red); color: white; font-size: 14px; z-index: 2000; transition: 0.3s; font-weight: 600; }
-        .info-panel { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2500; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .info-content { background: #111; padding: 25px; border-radius: 20px; border: 2px solid var(--neon-red); width: 100%; max-width: 350px; }
-        .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); align-items: center; }
+        /* VS NOTIFICATION */
+        #vs-invite-box {
+            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #111; border: 2px solid var(--neon-red); padding: 20px; border-radius: 15px;
+            z-index: 5000; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 0 30px rgba(255,0,0,0.5);
+        }
 
-        .founder-panel { 
-            background: #000 !important; border: 3px solid var(--neon-red); padding: 15px; border-radius: 20px; 
-            margin-bottom: 20px; box-shadow: 0 0 25px var(--neon-red); position: relative; overflow: hidden;
-        }
-        .bubble {
-            position: absolute; bottom: -20px; background: rgba(255, 0, 0, 0.4);
-            border-radius: 50%; animation: float 3s infinite ease-in; pointer-events: none;
-        }
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
-        }
-        .dark-dev-role { background: var(--neon-red); color: #fff; padding: 3px 12px; border-radius: 8px; font-weight: 900; font-size: 0.75rem; letter-spacing: 2px; display: inline-block; margin-top: 5px; position: relative; z-index: 2; }
+        /* 1VS1 SCREEN */
+        #pvp-screen { display: none; width: 100vw; height: 100vh; flex-direction: row; position: fixed; inset: 0; z-index: 2000; background: #000; }
+        .pvp-side { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
+        .side-1 { background: rgba(255,0,0,0.03); }
+        .side-2 { background: rgba(0,0,255,0.03); }
+        .pvp-score { font-size: 50px; font-weight: 900; color: var(--gold); }
+        .player-label { position: absolute; top: 30px; font-size: 14px; font-weight: 800; letter-spacing: 2px; color: #aaa; }
 
-        #portal-screen, #game-screen { display: none; width: 100%; max-width: 400px; }
-        .score-row { display: flex; justify-content: space-between; padding: 10px 12px; margin-bottom: 6px; background: rgba(255,255,255,0.07); border-radius: 12px; font-size: 13px; align-items: center; border-left: 4px solid var(--neon-red); }
-        .rank-tag { font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 5px; min-width: 80px; text-align: center; color: #000; }
-        .r-caylak { background: var(--bronze); color: white; }
-        .r-demir { background: var(--iron); color: black; }
-        .r-altin { background: var(--gold); color: black; }
-        .r-elmas { background: var(--diamond); color: white; }
-        .r-elit { background: var(--elit); color: white; box-shadow: 0 0 8px var(--elit); }
+        .dev-badge { background: linear-gradient(45deg, #ff0000, #ffae00); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-left: 5px; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .modal { background: #0a0a0a; width: 100%; max-width: 380px; border-radius: 25px; padding: 20px; border: 1px solid var(--neon-red); }
+        .score-row { display: flex; justify-content: space-between; padding: 12px; margin-bottom: 6px; background: rgba(255,255,255,0.07); border-radius: 12px; align-items: center; font-size: 13px; width: 100%; }
+        
+        /* RANKS */
+        .rank-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; color: #000; min-width: 80px; text-align: center; }
+        .r-caylak { background: var(--bronze); color: white; }
+        .r-demir { background: var(--iron); }
+        .r-altin { background: var(--gold); }
+        .r-elmas { background: var(--diamond); color: white; }
+        .r-elit { background: var(--elit); color: white; box-shadow: 0 0 15px var(--elit); }
     </style>
 </head>
 <body id="main-body" oncontextmenu="return false;">
 
-    <div id="ghost">👻</div>
+<div id="ghost">👻</div>
 
-    <div class="info-btn" onclick="toggleInfo()">
-        <i class="fas fa-info-circle"></i> <span>Rütbeler Nasıl Alınır?</span>
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
+<audio id="snd-jumpscare" src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=FNAF+Jumpscare&filename=mz/MzU3MDU1NTM1MzcwNTY3_97v8_2b_2f_2fmXw.mp3"></audio>
+
+<div id="vs-invite-box">
+    <h4 id="invite-text">VS İsteği!</h4>
+    <div style="display:flex; gap:10px; margin-top: 15px;">
+        <button class="btn" style="background:#2ecc71; flex:1;" onclick="acceptVS()">KABUL ET</button>
+        <button class="btn" style="background:#e74c3c; flex:1;" onclick="declineVS()">REDDET</button>
     </div>
+</div>
 
-    <div id="info-panel" class="info-panel" onclick="toggleInfo()">
-        <div class="info-content" onclick="event.stopPropagation()">
-            <h2 style="color:var(--neon-red); text-align:center; margin-bottom:20px;">RÜTBE SİSTEMİ</h2>
-            <div class="info-item"><span>0 - 199</span> <span class="rank-tag r-caylak">ÇAYLAK</span></div>
-            <div class="info-item"><span>200 - 499</span> <span class="rank-tag r-demir">DEMİR</span></div>
-            <div class="info-item"><span>500 - 999</span> <span class="rank-tag r-altin">ALTIN</span></div>
-            <div class="info-item"><span>1000 - 1999</span> <span class="rank-tag r-elmas">ELMAS</span></div>
-            <div class="info-item"><span>2000+</span> <span class="rank-tag r-elit">ELİT</span></div>
-            <button class="btn" style="margin-top:20px; background:var(--neon-red);" onclick="toggleInfo()">ANLADIM</button>
+<div id="auth-screen">
+    <div class="card-box" style="border: 2px solid var(--neon-red);">
+        <h2 style="color:var(--neon-red); margin-bottom: 15px;">🔒 BURAK DEV ACCESS</h2>
+        <input type="text" id="username" placeholder="Kullanıcı Adı">
+        <input type="password" id="password" placeholder="Şifre">
+        <button class="btn" onclick="handleAuth()">SİSTEME GİRİŞ YAP</button>
+    </div>
+</div>
+
+<div id="portal-screen" style="display:none;">
+    <div class="card-box">
+        <h3 id="welcome-text" style="margin-bottom:20px; font-size: 24px;">Hoşgeldin!</h3>
+        <button class="btn" style="background:var(--neon-red); height: 50px;" onclick="startSingleGame()">TEKLİ OYUN (SÜRELİ)</button>
+        
+        <div style="margin-top:25px; padding-top:20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size:11px; margin-bottom:12px; color:#aaa; font-weight:600;">ARKADAŞINI DÜELLOYA ÇAĞIR</p>
+            <input type="text" id="opponent-name" placeholder="Rakip Kullanıcı Adı">
+            <button class="btn" style="background:#2ecc71" onclick="sendVSRequest()">MEYDAN OKU ⚔️</button>
         </div>
+
+        <button class="btn" style="background:#3498db; margin-top:15px;" onclick="showLeaders()">GLOBAL SIRALAMA</button>
     </div>
+</div>
 
-    <audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-    <audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
-    <audio id="snd-jumpscare" src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=FNAF+Jumpscare&filename=mz/MzU3MDU1NTM1MzcwNTY3_97v8_2b_2f_2fmXw.mp3"></audio>
-
-    <div id="auth-screen">
-        <div class="card-box">
-            <h1 style="color:var(--neon-red);">⚡ OYUN LAB</h1>
-            <p style="margin-bottom:15px; font-size:12px; color: #aaa;">9/N Deki Burak Tarafından Yapıldı</p>
-            <input type="text" id="username" placeholder="Oyuncu Adı">
-            <button class="btn" style="background:var(--neon-red)" onclick="handleAuth()">GİRİŞ</button>
+<div id="game-screen" style="display:none;">
+    <div class="card-box">
+        <div style="display:flex; justify-content: space-between; margin-bottom:20px;">
+            <span style="color:#ff4757; font-weight:800;">SÜRE: <b id="timer">30</b></span>
+            <span style="color:#f1c40f; font-weight:800;">SKOR: <b id="score">0</b></span>
         </div>
+        <div id="word-box" style="font-family:'Kalam'; font-size:40px; color:#fff; margin:20px 0; text-shadow: 0 0 10px rgba(255,255,255,0.5);">...</div>
+        <input type="text" id="ans" placeholder="İngilizcesini yaz...">
     </div>
+</div>
 
-    <div id="portal-screen">
-        <div class="card-box" style="border: 2px solid var(--neon-red); cursor: pointer;" onclick="startAutoGame()">
-            <i class="fa-solid fa-play" style="font-size:40px; color:var(--neon-red); margin-bottom:10px;"></i>
-            <h2>OYUNA BAŞLA</h2>
-        </div>
+<div id="pvp-screen">
+    <div class="pvp-side side-1">
+        <div class="player-label" id="p1-label">P1</div>
+        <div class="pvp-score" id="p1-score">0</div>
+        <div id="p1-word" style="font-family:'Kalam'; font-size:35px; margin:25px 0;">...</div>
+        <input type="text" id="p1-ans" placeholder="Hızlı yaz!">
     </div>
+    <div class="pvp-side side-2">
+        <div class="player-label" id="p2-label">P2</div>
+        <div class="pvp-score" id="p2-score">0</div>
+        <div id="p2-word" style="font-family:'Kalam'; font-size:35px; margin:25px 0;">...</div>
+        <input type="text" id="p2-ans" placeholder="Hızlı yaz!">
+    </div>
+    <button class="btn" style="position:fixed; bottom:20px; width:120px; background:#e74c3c; left: 50%; transform: translateX(-50%);" onclick="closeModals()">VS BİTİR</button>
+</div>
 
-    <div id="game-screen">
-        <div class="card-box">
-            <div style="display:flex; justify-content: space-between; margin-bottom:15px;">
-                <span style="color:#ff4757">SÜRE: <b id="timer">30</b></span>
-                <span style="color:#f1c40f">SKOR: <b id="score">0</b></span>
-            </div>
-            <div id="word-box" style="font-family:'Kalam'; font-size:38px; color:#fff; margin:15px 0;">...</div>
-            <input type="text" id="ans" placeholder="Cevabı yaz...">
-        </div>
+<div id="leader-modal" class="overlay">
+    <div class="card-box" style="max-width:380px;">
+        <h3 style="color:var(--gold); margin-bottom:15px;">🏆 EN İYİLER</h3>
+        <div id="leader-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px;"></div>
+        <button class="btn" onclick="closeModals()">ANA MENÜ</button>
     </div>
+</div>
 
-    <div id="leader-modal" class="overlay">
-        <div class="modal">
-            <div class="founder-panel" id="dev-panel">
-                <div style="font-weight:800; text-align:center; position:relative; z-index:2;">Burak 9/N Sınıfı</div>
-                <div style="text-align:center;"><div class="dark-dev-role">👑 DEVELOPER</div></div>
-            </div>
-            <h3 style="text-align:center; margin-bottom:10px;">🏆 SIRALAMA</h3>
-            <div id="leader-list"></div>
-            <button class="btn" style="margin-top:15px; background:var(--neon-red)" onclick="backToPortal()">TEKRAR 🏠</button>
-        </div>
+<div id="end-modal" class="overlay">
+    <div class="card-box">
+        <h2 style="color:var(--neon-red)">SÜRE BİTTİ!</h2>
+        <div id="final-score" style="font-size:70px; margin:20px 0; font-weight:800;">0</div>
+        <button class="btn" onclick="saveScore()">SKORU KAYDET VE ÇIK</button>
     </div>
-
-    <div id="end-modal" class="overlay">
-        <div class="modal" style="text-align:center;">
-            <h2 style="color:var(--neon-red)">SÜRE BİTTİ!</h2>
-            <div id="final-score" style="font-size: 50px; color:#fff; margin:10px 0;">0</div>
-            <button class="btn" onclick="saveScore()">REKORU KAYDET</button>
-        </div>
-    </div>
+</div>
 
 <script>
-    // GÜVENLİK
-    document.onkeydown = (e) => { if([123, 85].includes(e.keyCode) || (e.ctrlKey && e.shiftKey && [73, 67, 74].includes(e.keyCode))) return false; };
-
-    function createBubble() {
-        const panel = document.getElementById('dev-panel');
-        if(!panel) return;
-        const b = document.createElement('div');
-        b.className = 'bubble';
-        const size = Math.random() * 10 + 5 + 'px';
-        b.style.width = size; b.style.height = size;
-        b.style.left = Math.random() * 100 + '%';
-        panel.appendChild(b);
-        setTimeout(() => b.remove(), 3000);
-    }
-    setInterval(createBubble, 300);
-
+    const DEVS = ["Burak", "burak", "BurakDev"];
+    
+    // TÜM KELİMELERİ GERİ EKLEDİM
     const baseWords = [
-        {tr:"Elma",en:"apple"},{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Masa",en:"table"},{tr:"Kedi",en:"cat"},
-        {tr:"Köpek",en:"dog"},{tr:"Araba",en:"car"},{tr:"Su",en:"water"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},
-        {tr:"Ev",en:"house"},{tr:"Kapı",en:"door"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Mavi",en:"blue"}
+        {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Gelecek",en:"future"},{tr:"Teknoloji",en:"technology"},
+        {tr:"Deneyim",en:"experience"},{tr:"Önemli",en:"important"},{tr:"Farklı",en:"different"},{tr:"Sağlıklı",en:"healthy"},
+        {tr:"Eğitim",en:"education"},{tr:"Başarı",en:"success"},{tr:"Yetenek",en:"ability"},{tr:"Macera",en:"adventure"},
+        {tr:"Zevk",en:"enjoyment"},{tr:"Tatil",en:"holiday"},{tr:"Mevsim",en:"season"},{tr:"Hava Durumu",en:"weather"},
+        {tr:"Kıyafet",en:"clothes"},{tr:"Duygu",en:"feeling"},{tr:"Düşünce",en:"thought"},{tr:"Karar",en:"decision"},
+        {tr:"Meslek",en:"job"},{tr:"Bilim",en:"science"},{tr:"Keşfetmek",en:"explore"},{tr:"İcat",en:"invention"},
+        {tr:"Karakter",en:"character"},{tr:"Dış Görünüş",en:"appearance"},{tr:"Cömert",en:"generous"},{tr:"İnatçı",en:"stubborn"},
+        {tr:"Kibar",en:"polite"},{tr:"Dürüst",en:"honest"},{tr:"Korkunç",en:"terrible"},{tr:"Harika",en:"wonderful"},
+        {tr:"Ulaşım",en:"transport"},{tr:"Halk Oyunları",en:"folk dance"},{tr:"Miras",en:"heritage"},{tr:"Kirlilik",en:"pollution"},
+        {tr:"Küresel Isınma",en:"global warming"},{tr:"Geri Dönüşüm",en:"recycle"},{tr:"Vahşi Yaşam",en:"wildlife"},{tr:"Nesli Tükenmek",en:"extinct"},
+        {tr:"İletişim",en:"communication"},{tr:"Gelişim",en:"improvement"},{tr:"Gereksiz",en:"unnecessary"},{tr:"Faydalı",en:"useful"}
     ];
+    while(baseWords.length < 100) { baseWords.push(baseWords[Math.floor(Math.random()*baseWords.length)]); }
 
-    let currentWords = [], currentUser = "", score = 0, timeLeft = 30, timer, currentWord, gameActive = false;
+    let currentUser = "", currentOpponent = "", score = 0, timeLeft = 30, timer, currentWord, p1Score=0, p2Score=0, p1W, p2W;
 
     function handleAuth() {
         const u = document.getElementById('username').value.trim();
-        if(!u) return; currentUser = u;
-        // Seslerin çalışması için kullanıcı etkileşimi şart
-        document.querySelectorAll('audio').forEach(a => { a.play(); a.pause(); });
+        const p = document.getElementById('password').value.trim();
+        if(!u || !p) return alert("Bilgileri boş bırakma!");
+        
+        let users = JSON.parse(localStorage.getItem('burak_users')) || {};
+        if(users[u] && users[u] !== p) return alert("Hatalı şifre!");
+        users[u] = p;
+        localStorage.setItem('burak_users', JSON.stringify(users));
+        
+        currentUser = u;
         document.getElementById('auth-screen').style.display='none';
         document.getElementById('portal-screen').style.display='block';
+        document.getElementById('welcome-text').innerText = `Selam, ${u}!`;
+        document.querySelectorAll('audio').forEach(a => { a.play(); a.pause(); });
     }
 
-    function backToPortal() {
-        document.getElementById('leader-modal').style.display='none';
-        document.getElementById('portal-screen').style.display='block';
+    // VS SİSTEMİ
+    function sendVSRequest() {
+        const opp = document.getElementById('opponent-name').value.trim();
+        if(!opp) return alert("Rakip adı yazmalısın!");
+        if(opp.toLowerCase() === currentUser.toLowerCase()) return alert("Kendine meydan okuyamazsın!");
+        
+        currentOpponent = opp;
+        document.getElementById('invite-text').innerText = `${currentUser} sana meydan okuyor!`;
+        document.getElementById('vs-invite-box').style.display = 'block';
     }
 
-    function startAutoGame() {
-        document.getElementById('portal-screen').style.display='none';
-        document.getElementById('game-screen').style.display='block';
-        currentWords = [...baseWords].sort(() => Math.random() - 0.5);
-        score = 0; timeLeft = 30; gameActive = true;
+    function acceptVS() {
+        document.getElementById('vs-invite-box').style.display = 'none';
+        document.getElementById('portal-screen').style.display = 'none';
+        document.getElementById('pvp-screen').style.display = 'flex';
+        document.getElementById('p1-label').innerText = currentUser.toUpperCase();
+        document.getElementById('p2-label').innerText = currentOpponent.toUpperCase();
+        p1Score = 0; p2Score = 0;
+        document.getElementById('p1-score').innerText = "0";
+        document.getElementById('p2-score').innerText = "0";
+        nextPvPWord(1); nextPvPWord(2);
+    }
+
+    function declineVS() {
+        document.getElementById('vs-invite-box').style.display = 'none';
+    }
+
+    function nextPvPWord(p) {
+        const w = baseWords[Math.floor(Math.random()*baseWords.length)];
+        if(p === 1) { 
+            p1W = w; document.getElementById('p1-word').innerText = w.tr.toUpperCase(); 
+            document.getElementById('p1-ans').value = ""; 
+        } else { 
+            p2W = w; document.getElementById('p2-word').innerText = w.tr.toUpperCase(); 
+            document.getElementById('p2-ans').value = ""; 
+        }
+    }
+
+    document.getElementById('p1-ans').addEventListener('keypress', e => {
+        if(e.key === 'Enter' && document.getElementById('p1-ans').value.toLowerCase().trim() === p1W.en) {
+            p1Score += 10; document.getElementById('p1-score').innerText = p1Score;
+            document.getElementById('snd-correct').play();
+            confetti({particleCount: 20, origin: {x: 0.2, y: 0.5}});
+            nextPvPWord(1);
+        }
+    });
+
+    document.getElementById('p2-ans').addEventListener('keypress', e => {
+        if(e.key === 'Enter' && document.getElementById('p2-ans').value.toLowerCase().trim() === p2W.en) {
+            p2Score += 10; document.getElementById('p2-score').innerText = p2Score;
+            document.getElementById('snd-correct').play();
+            confetti({particleCount: 20, origin: {x: 0.8, y: 0.5}});
+            nextPvPWord(2);
+        }
+    });
+
+    // TEKLİ OYUN VE JUMPSCARE
+    function startSingleGame() {
+        document.getElementById('portal-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        score = 0; timeLeft = 30;
         document.getElementById('score').innerText = "0";
         newWord();
         timer = setInterval(() => {
-            timeLeft--; document.getElementById('timer').innerText = timeLeft;
+            timeLeft--;
+            document.getElementById('timer').innerText = timeLeft;
             if(timeLeft <= 0) {
-                clearInterval(timer); gameActive = false;
+                clearInterval(timer);
                 document.getElementById('final-score').innerText = score;
-                document.getElementById('end-modal').style.display='flex';
+                document.getElementById('end-modal').style.display = 'flex';
             }
         }, 1000);
     }
 
     function newWord() {
-        if(currentWords.length === 0) currentWords = [...baseWords].sort(() => Math.random() - 0.5);
-        currentWord = currentWords.pop();
+        currentWord = baseWords[Math.floor(Math.random()*baseWords.length)];
         document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
-        document.getElementById('ans').value = ""; document.getElementById('ans').focus();
+        document.getElementById('ans').value = "";
+        document.getElementById('ans').focus();
     }
 
     document.getElementById('ans').addEventListener('keypress', e => {
-        if(e.key === 'Enter' && gameActive) {
-            const userAns = document.getElementById('ans').value.toLowerCase().trim();
-            if(userAns === currentWord.en) {
-                score += 50;
-                timeLeft += 3;
+        if(e.key === 'Enter') {
+            if(document.getElementById('ans').value.toLowerCase().trim() === currentWord.en) {
+                score += 50; timeLeft += 2;
                 document.getElementById('score').innerText = score;
-                document.getElementById('timer').innerText = timeLeft;
-                document.getElementById('snd-correct').play().catch(()=>{});
-                confetti({ particleCount: 30, colors: ['#ff0000', '#ffffff'] });
+                document.getElementById('snd-correct').play();
+                confetti({particleCount: 40, origin: {y: 0.7}});
+                newWord();
             } else {
                 triggerJumpscare();
             }
-            newWord();
         }
     });
 
     function triggerJumpscare() {
-        const body = document.getElementById('main-body');
-        const ghost = document.getElementById('ghost');
-        const snd = document.getElementById('snd-jumpscare');
-        const sndW = document.getElementById('snd-wrong');
-
-        sndW.play().catch(()=>{});
-        snd.currentTime = 0;
-        snd.play().catch(()=>{});
-        
-        body.classList.add('jumpscare-bg');
-        ghost.classList.add('ghost-active');
-        
+        document.getElementById('main-body').classList.add('jumpscare-bg');
+        document.getElementById('ghost').classList.add('ghost-active');
+        document.getElementById('snd-wrong').play();
+        document.getElementById('snd-jumpscare').play();
         setTimeout(() => {
-            body.classList.remove('jumpscare-bg');
-            ghost.classList.remove('ghost-active');
-        }, 500);
+            document.getElementById('main-body').classList.remove('jumpscare-bg');
+            document.getElementById('ghost').classList.remove('ghost-active');
+        }, 650);
+        newWord();
     }
 
+    // KAYIT VE SIRALAMA
     function saveScore() {
         let db = JSON.parse(localStorage.getItem('burak_v_ranks')) || [];
         let r_t = "ÇAYLAK", r_c = "r-caylak";
@@ -249,6 +303,7 @@
         
         db.sort((a,b) => b.s - a.s);
         localStorage.setItem('burak_v_ranks', JSON.stringify(db));
+        document.getElementById('end-modal').style.display = 'none';
         showLeaders();
     }
 
@@ -256,17 +311,22 @@
         let db = JSON.parse(localStorage.getItem('burak_v_ranks')) || [];
         let h = db.map((item, i) => `
             <div class="score-row">
-                <span><b>${i+1}.</b> ${item.n} - ${item.s}</span>
-                <span class="rank-tag ${item.c}">${item.t}</span>
+                <span><b>${i+1}.</b> ${item.n} ${DEVS.includes(item.n) ? '<span class="dev-badge">DEV</span>' : ''}</span>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="color:var(--gold); font-weight:bold;">${item.s}</span>
+                    <span class="rank-tag ${item.c}">${item.t}</span>
+                </div>
             </div>`).join('');
-        document.getElementById('leader-list').innerHTML = h || "<p style='text-align:center; opacity:0.5;'>Henüz skor yok!</p>";
-        document.getElementById('end-modal').style.display='none';
-        document.getElementById('leader-modal').style.display='flex';
+        document.getElementById('leader-list').innerHTML = h || "Henüz kayıt yok!";
+        document.getElementById('leader-modal').style.display = 'flex';
     }
 
-    function toggleInfo() {
-        const panel = document.getElementById('info-panel');
-        panel.style.display = (panel.style.display === 'flex') ? 'none' : 'flex';
+    function closeModals() {
+        document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none');
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('pvp-screen').style.display = 'none';
+        document.getElementById('portal-screen').style.display = 'block';
+        if(timer) clearInterval(timer);
     }
 </script>
 </body>

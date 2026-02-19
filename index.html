@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Burak & Harun | 9/N Global Versus</title>
+    <title>Burak & Harun | 9/N Master</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -11,152 +11,127 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --red: #ff0000; --gold: #f1c40f; --elit: #e74c3c; --blue: #3498db; }
+        :root { --red: #ff0000; --gold: #f1c40f; --blue: #3498db; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { font-family: 'Poppins', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        /* SARSILMA VE PARLAMA */
-        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-10px,5px); } 50% { transform: translate(10px,-5px); } }
-        .shake-active { animation: shake 0.2s; background: #300 !important; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px gold; } 50% { box-shadow: 0 0 25px gold; } }
-
-        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 25px; width: 95%; max-width: 460px; text-align: center; position: relative; }
+        /* NEON VE BALONCUK EFEKTLERİ */
+        @keyframes neon-glow { 0%, 100% { border-color: #ff0000; box-shadow: 0 0 20px #ff0000, inset 0 0 10px #ff0000; } 50% { border-color: #ff4444; box-shadow: 0 0 40px #ff0000, inset 0 0 20px #ff0000; } }
+        @keyframes bubble-float { 0% { transform: translateY(0) scale(1); opacity: 0.8; } 50% { transform: translateY(-20px) scale(1.1); opacity: 0.4; } 100% { transform: translateY(-40px) scale(1); opacity: 0; } }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-8px,4px); } 50% { transform: translate(8px,-4px); } }
         
-        /* KURUCU ALANI */
-        .founder-sticky { 
-            background: linear-gradient(135deg, #1a1a1a, #000); 
-            border: 2px solid gold; border-radius: 20px; 
-            padding: 12px; margin-bottom: 20px; 
-            animation: float 3s infinite ease-in-out, glow 2s infinite;
+        .shake-active { animation: shake 0.2s; background: #300 !important; }
+
+        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 25px; width: 95%; max-width: 480px; text-align: center; position: relative; z-index: 5; }
+        
+        /* DEV NEON KURUCU ALANI */
+        .neon-master-box { 
+            background: rgba(0,0,0,0.9); border: 4px solid var(--red); border-radius: 25px; 
+            padding: 20px; margin-bottom: 25px; 
+            animation: neon-glow 2s infinite ease-in-out;
+            position: relative; overflow: hidden;
         }
+        .neon-master-box h2 { font-family: 'Orbitron', sans-serif; font-size: 14px; color: #fff; text-shadow: 0 0 10px red; line-height: 1.5; }
+        .neon-master-box .tag { display: block; font-size: 10px; color: gold; margin-top: 5px; letter-spacing: 3px; }
+
+        /* SİYAH KIRMIZI BALONCUKLAR */
+        .bubble { position: absolute; width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle, #ff0000, #000); pointer-events: none; animation: bubble-float 3s infinite linear; z-index: -1; }
 
         input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; }
         .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 15px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 10px; }
 
         /* SIRALAMA */
         .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
-        .scroll-area { width: 100%; max-height: 450px; overflow-y: auto; margin: 10px 0; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 12px; min-height: 60px; }
-        .empty-row { border: 1px dashed #222; opacity: 0.2; }
+        .list-container { width: 100%; max-height: 400px; overflow-y: auto; margin-top: 10px; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 12px; min-height: 65px; border: 1px solid #222; }
+        .empty-row { opacity: 0.1; border: 1px dashed #444; }
 
-        .rank-tag { font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; color: #000; min-width: 105px; text-align: center; }
+        .rank-tag { font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; color: #000; min-width: 100px; text-align: center; }
         .r-bronz { background: #cd7f32; color: #fff; }
         .r-demir { background: #bdc3c7; }
         .r-altin { background: #f1c40f; }
         .r-elmas { background: #3498db; color: #fff; }
         .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 15px red; }
-
-        .dev-badge { background: linear-gradient(45deg, #f00, gold, #f00); background-size: 200%; animation: move 2s linear infinite; color: #fff; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; }
-        @keyframes move { 0% { background-position: 0%; } 100% { background-position: 200%; } }
     </style>
 </head>
 <body id="main-body">
 
-<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3"></audio>
-
 <div id="scr-auth" class="panel">
-    <div class="founder-sticky">
-        <h3 style="font-family:'Orbitron'; font-size:11px; color:gold;">KURUCU = 9/N'deki Burak ve Harun</h3>
+    <div class="neon-master-box" id="bubble-container">
+        <h2>KURUCU = 9/N Sınıfındaki <br> Harun Ve Burak</h2>
+        <span class="tag">DEVELOPER RÜTBESİ</span>
     </div>
-    <input type="text" id="username" placeholder="ADINI YAZ">
-    <button class="btn" onclick="sys.auth()">TEKLİ OYNA</button>
-    <button class="btn" onclick="sys.vs_mode()" style="background:var(--blue)">1 VS 1 KAPIŞMA</button>
+    <input type="text" id="username" placeholder="İSİM GİRİN">
+    <button class="btn" onclick="sys.auth()">OYUNA BAŞLA</button>
+    <button class="btn" onclick="sys.vs_mode()" style="background:var(--blue)">1 VS 1 MODU</button>
 </div>
 
 <div id="scr-game" class="panel" style="display:none;">
-    <div id="vs-info" style="color:var(--blue); font-size:12px; margin-bottom:10px; display:none;"></div>
+    <div id="vs-head" style="color:var(--blue); font-size:12px; margin-bottom:10px; font-weight:800; display:none;"></div>
     <div style="display:flex; justify-content: space-between; font-weight: 800;">
-        <span style="color:red">SÜRE: <b id="timer">30</b></span>
+        <span style="color:red">ZAMAN: <b id="timer">30</b></span>
         <span style="color:gold">SKOR: <b id="score">0</b></span>
     </div>
     <div id="word" style="font-size: 45px; font-weight: 900; margin: 30px 0;">...</div>
-    <input type="text" id="answer" placeholder="İNGİLİZCENİ YAZ">
+    <input type="text" id="answer" placeholder="CEVAP">
 </div>
 
 <div id="scr-board" class="overlay">
-    <div class="panel" style="max-height: 95vh; display: flex; flex-direction: column;">
-        <div class="founder-sticky">
-            <h3 style="font-family:'Orbitron'; font-size:10px; color:gold;">KURUCU = 9/N'deki Burak ve Harun</h3>
+    <div class="panel" style="max-height: 98vh; display: flex; flex-direction: column;">
+        <div class="neon-master-box" style="margin-bottom:10px; padding: 12px;">
+            <h2 style="font-size:12px;">KURUCU = 9/N Sınıfındaki Harun Ve Burak</h2>
         </div>
-        <div id="dev-list"></div>
-        <div id="list" class="scroll-area"></div>
-        <button class="btn" onclick="location.reload()" style="background:#222;">TEKRAR DENE</button>
+        <div id="dev-box"></div>
+        <div id="list" class="list-container"></div>
+        <button class="btn" onclick="location.reload()" style="background:#222; margin-top:10px;">GERİ DÖN</button>
     </div>
 </div>
 
 <script>
-    const WORDS = [
-        {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},
-        {tr:"Miras",en:"heritage"},{tr:"Yetenek",en:"ability"},{tr:"Teknoloji",en:"technology"},{tr:"Eğitim",en:"education"},
-        {tr:"Özgürlük",en:"freedom"},{tr:"Adalet",en:"justice"},{tr:"Bilgi",en:"knowledge"},{tr:"Gelişim",en:"development"},
-        {tr:"Deneyim",en:"experience"},{tr:"Yaratıcı",en:"creative"},{tr:"Toplum",en:"society"},{tr:"Hafıza",en:"memory"}
-    ];
-
+    const WORDS = [{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Yetenek",en:"ability"},{tr:"Miras",en:"heritage"},{tr:"Dürüst",en:"honest"},{tr:"Bilgi",en:"knowledge"}];
+    
     firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
     const db = firebase.database();
 
+    // Baloncuk Oluşturucu
+    function createBubbles() {
+        const container = document.getElementById('bubble-container');
+        for(let i=0; i<15; i++) {
+            let b = document.createElement('div');
+            b.className = 'bubble';
+            b.style.left = Math.random() * 100 + "%";
+            b.style.bottom = "-20px";
+            b.style.animationDelay = Math.random() * 3 + "s";
+            container.appendChild(b);
+        }
+    }
+    createBubbles();
+
     const sys = {
-        user: "", score: 0, time: 30, cur: null, isVS: false,
-        auth: () => {
-            sys.user = document.getElementById('username').value.trim();
-            if(!sys.user) return;
-            sys.start();
-        },
-        vs_mode: () => {
-            sys.user = document.getElementById('username').value.trim();
-            if(!sys.user) return;
-            const r = prompt("Rakip İsmi?");
-            if(!r) return;
-            sys.isVS = true;
-            document.getElementById('vs-info').innerText = sys.user + " vs " + r;
-            document.getElementById('vs-info').style.display = 'block';
-            sys.start();
-        },
-        start: () => {
-            document.getElementById('scr-auth').style.display = 'none';
-            document.getElementById('scr-game').style.display = 'block';
-            sys.next();
-            let clock = setInterval(() => {
-                sys.time--;
-                document.getElementById('timer').innerText = sys.time;
-                if(sys.time <= 0) { clearInterval(clock); sys.end(); }
-            }, 1000);
-        },
-        next: () => {
-            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
-            document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
-            document.getElementById('answer').value = ""; document.getElementById('answer').focus();
-        },
-        end: () => {
+        user: "", score: 0, time: 30, cur: null,
+        auth: () => { sys.user = document.getElementById('username').value.trim(); if(sys.user) sys.start(); },
+        vs_mode: () => { sys.user = document.getElementById('username').value.trim(); if(!sys.user) return; let r = prompt("Rakip?"); if(r) { document.getElementById('vs-head').innerText = sys.user + " vs " + r; document.getElementById('vs-head').style.display = 'block'; sys.start(); } },
+        start: () => { document.getElementById('scr-auth').style.display = 'none'; document.getElementById('scr-game').style.display = 'block'; sys.next(); let clock = setInterval(() => { sys.time--; document.getElementById('timer').innerText = sys.time; if(sys.time <= 0) { clearInterval(clock); sys.end(); } }, 1000); },
+        next: () => { sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)]; document.getElementById('word').innerText = sys.cur.tr.toUpperCase(); document.getElementById('answer').value = ""; document.getElementById('answer').focus(); },
+        end: () => { 
             let r = "ÇAYLAK BRONZ", c = "r-bronz";
             if(sys.score >= 2000) { r = "ELİT KIRMIZI"; c = "r-elit"; }
             else if(sys.score >= 1000) { r = "ELMAS MAVİ"; c = "r-elmas"; }
             else if(sys.score >= 500) { r = "ALTIN SARI"; c = "r-altin"; }
             else if(sys.score >= 200) { r = "DEMİR GRİ"; c = "r-demir"; }
-
             sys.showBoard();
-            db.ref('global_final_v10/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c });
+            db.ref('global_final_v12/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c });
         },
         showBoard: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-board').style.display = 'flex';
-            db.ref('global_final_v10').on('value', snap => {
+            db.ref('global_final_v12').on('value', snap => {
                 let all = []; snap.forEach(x => all.push(x.val()));
                 all.sort((a,b) => b.s - a.s);
                 let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak' || p.n === 'Harun');
-                document.getElementById('dev-list').innerHTML = devs.map(p => `
-                    <div class="row" style="border:1px solid gold; background:rgba(255,215,0,0.1);">
-                        <span>${p.n} <span class="dev-badge">DEVELOPER</span></span>
-                        <b>${p.s}</b>
-                    </div>`).join('');
+                document.getElementById('dev-box').innerHTML = devs.map(p => `<div class="row" style="border:2px solid #ff0000; background:rgba(255,0,0,0.1); box-shadow: 0 0 10px red;"><span>${p.n} <b style="color:red">DEV</b></span><b>${p.s}</b></div>`).join('');
                 let players = all.filter(p => !devs.includes(p));
-                let html = players.map((p, i) => `
-                    <div class="row">
-                        <span><b>${i+1}.</b> ${p.n}</span>
-                        <div><b style="color:gold; margin-right:5px;">${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div>
-                    </div>`).join('');
+                let html = players.map((p, i) => `<div class="row"><span><b>${i+1}.</b> ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`).join('');
                 for(let i=0; i<10; i++) html += `<div class="row empty-row"></div>`;
                 document.getElementById('list').innerHTML = html;
             });
@@ -166,15 +141,12 @@
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter') {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en) {
-                sys.score += 50; sys.time += 2;
-                document.getElementById('score').innerText = sys.score;
-                document.getElementById('snd-correct').play();
+                sys.score += 50; sys.time += 2; document.getElementById('score').innerText = sys.score;
                 confetti({ particleCount: 30 }); sys.next();
             } else {
-                document.getElementById('snd-wrong').play();
                 document.getElementById('main-body').classList.add('shake-active');
                 setTimeout(() => document.getElementById('main-body').classList.remove('shake-active'), 300);
-                sys.next(); // Bilemeyince yeni kelime gelsin dedin, ekledim!
+                sys.next();
             }
         }
     });

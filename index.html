@@ -35,7 +35,7 @@
         .r-altin { background: #f1c40f; } 
         .r-elmas { background: #3498db; color: #fff; } 
         .r-elit { background: #e74c3c; color: #fff; }
-        .r-wait { background: #333; color: #777; } /* Bekleniyor stili */
+        .r-wait { background: #333; color: #777; }
         
         .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; }
     </style>
@@ -75,108 +75,23 @@
 
 <script>
     const WORDS = [
-        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},
-        {tr:"Yaratıcı",en:"creative"},{tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Mükemmel",en:"perfect"},{tr:"Harika",en:"wonderful"},
-        {tr:"Tecrübe",en:"experience"},{tr:"Kütüphane",en:"library"},{tr:"Hükümet",en:"government"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},
-        {tr:"Gelişme",en:"improvement"},{tr:"Seçenek",en:"option"},{tr:"Önemli",en:"important"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Güven",en:"trust"}
+        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},
+        {tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Yaratıcı",en:"creative"},
+        {tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Mükemmel",en:"perfect"},
+        {tr:"Harika",en:"wonderful"},{tr:"Tecrübe",en:"experience"},{tr:"Kütüphane",en:"library"},
+        {tr:"Hükümet",en:"government"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},
+        {tr:"Gelişme",en:"improvement"},{tr:"Seçenek",en:"option"},{tr:"Önemli",en:"important"},
+        {tr:"Tehlikeli",en:"dangerous"},{tr:"Güven",en:"trust"}
     ];
-    
-    firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
-    const db = firebase.database();
 
-    const sys = {
-        user: "", score: 0, time: 30, cur: null, active: false,
-        auth: () => { 
-            sys.user = document.getElementById('p1').value.trim(); 
-            if(sys.user) { 
-                document.getElementById('scr-auth').style.display='none'; 
-                document.getElementById('scr-game').style.display='block'; 
-                sys.active = true; sys.start(); 
-            }
-        },
-        start: () => { 
-            sys.next(); 
-            let clock = setInterval(() => { 
-                if(!sys.active) return clearInterval(clock);
-                sys.time--; document.getElementById('timer').innerText = sys.time; 
-                if(sys.time <= 0) { sys.active = false; clearInterval(clock); sys.end(); } 
-            }, 1000); 
-        },
-        next: () => { 
-            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)]; 
-            document.getElementById('word').innerText = sys.cur.tr.toUpperCase(); 
-            document.getElementById('answer').value = ""; document.getElementById('answer').focus(); 
-        },
-        end: () => {
-            let r="ÇAYLAK BRONZ", c="r-bronz";
-            if(sys.score >= 2000) { r="ELİT KIRMIZI"; c="r-elit"; } 
-            else if(sys.score >= 1000) { r="ELMAS MAVİ"; c="r-elmas"; }
-            else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; } 
-            else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
-            
-            document.getElementById('scr-game').style.display = 'none';
-            document.getElementById('scr-board').style.display = 'flex';
-            
-            db.ref('GLOBAL_SCOREBOARD').push({ n: sys.user, s: sys.score, r: r, c: c }).then(() => {
-                sys.loadScores();
-            }).catch(() => { sys.loadScores(); });
-        },
-        loadScores: () => {
-            db.ref('GLOBAL_SCOREBOARD').once('value').then(snap => {
-                let all = []; snap.forEach(x => all.push(x.val()));
-                all.sort((a,b) => b.s - a.s);
-                
-                // DEV listesi
-                let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak' || p.n === 'Harun');
-                let uniqueDevs = Array.from(new Set(devs.map(d => d.n))).map(name => devs.find(d => d.n === name));
-
-                document.getElementById('dev-list').innerHTML = uniqueDevs.map(p => `
-                    <div class="row" style="border:1px solid red; background:rgba(255,0,0,0.1);">
-                        <span>${p.n} <b style="color:red; font-size:10px;">DEV</b></span>
-                        <b style="color:red">${p.s}</b>
-                    </div>`).join('');
-                
-                // Oyuncu listesi (Ana Bölüm)
-                let players = all.filter(p => !p.n.toLowerCase().includes('developer') && p.n !== 'Burak' && p.n !== 'Harun').slice(0, 10);
-                
-                let html = "";
-                // 10 SATIR DÖNGÜSÜ
-                for(let i = 0; i < 10; i++) {
-                    if(players[i]) {
-                        // Kayıtlı oyuncu varsa bas
-                        html += `
-                            <div class="row">
-                                <span><b>${i+1}.</b> ${players[i].n}</span>
-                                <div><b>${players[i].s}</b> <span class="rank-tag ${players[i].c}">${players[i].r}</span></div>
-                            </div>`;
-                    } else {
-                        // Kayıt yoksa Boş Dikdörtgen bas
-                        html += `
-                            <div class="row" style="opacity: 0.3;">
-                                <span><b>${i+1}.</b> BOS</span>
-                                <div><b>0</b> <span class="rank-tag r-wait">BEKLENİYOR</span></div>
-                            </div>`;
-                    }
-                }
-                document.getElementById('list').innerHTML = html;
-            });
-        }
-    };
-
-    document.getElementById('answer').addEventListener('keypress', e => {
-        if(e.key === 'Enter' && sys.active) {
-            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
-                sys.score += 50; sys.time += 2;
-                document.getElementById('score').innerText = sys.score;
-                document.getElementById('snd-correct').play();
-                confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 } });
-                sys.next();
-            } else {
-                document.getElementById('snd-wrong').play();
-                sys.next();
-            }
-        }
+    firebase.initializeApp({
+      apiKey: "AIzaSyDlK-6NMVY6j3Xc5ofTxH4Xlg0Lfi1lHTQ",
+      authDomain: "n-global-score.firebaseapp.com",
+      databaseURL: "https://n-global-score-default-rtdb.firebaseio.com",
+      projectId: "n-global-score",
+      storageBucket: "n-global-score.firebasestorage.app",
+      messagingSenderId: "272086871489",
+      appId: "1:272086871489:web:31e8937233607b1ea91340"
     });
-</script>
-</body>
-</html>
+
+    const db = firebase.database();

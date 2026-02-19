@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Burak Dev | 100 Word Edition</title>
+    <title>Burak Dev | 9/N Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
@@ -24,13 +24,15 @@
         input { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; background: #fff; color: #000; }
         .btn { background: #6c5ce7; color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.2s; }
 
-        /* BİLGİ MENÜSÜ STİLLERİ */
-        .info-btn { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.1); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--neon-red); color: var(--neon-red); font-size: 20px; z-index: 2000; transition: 0.3s; }
-        .info-btn:hover { background: var(--neon-red); color: white; }
+        /* RÜTBELER NASIL ALINIR BUTONU */
+        .info-btn { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 30px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid var(--neon-red); color: white; font-size: 14px; z-index: 2000; transition: 0.3s; font-weight: 600; }
+        .info-btn i { color: var(--neon-red); font-size: 18px; }
+        .info-btn:hover { background: var(--neon-red); }
+        .info-btn:hover i { color: white; }
         
         .info-panel { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2500; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .info-content { background: #111; padding: 25px; border-radius: 20px; border: 2px solid var(--neon-red); width: 100%; max-width: 350px; }
-        .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .info-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); align-items: center; }
 
         .founder-panel { 
             background: #000 !important; border: 3px solid var(--neon-red); padding: 15px; border-radius: 20px; 
@@ -56,18 +58,19 @@
 <body id="main-body">
 
     <div class="info-btn" onclick="toggleInfo()">
-        <i class="fas fa-info"></i>
+        <i class="fas fa-info-circle"></i>
+        <span>Rütbeler Nasıl Alınır?</span>
     </div>
 
     <div id="info-panel" class="info-panel" onclick="toggleInfo()">
         <div class="info-content" onclick="event.stopPropagation()">
             <h2 style="color:var(--neon-red); text-align:center; margin-bottom:20px;">RÜTBE SİSTEMİ</h2>
-            <div class="info-item"><span>0 - 199</span> <span class="rank-tag r-caylak">ÇAYLAK BRONZ</span></div>
-            <div class="info-item"><span>200 - 999</span> <span class="rank-tag r-demir">DEMİR GRİ</span></div>
-            <div class="info-item"><span>1000 - 1999</span> <span class="rank-tag r-altin">ALTIN SARI</span></div>
-            <div class="info-item"><span>2000 - 2999</span> <span class="rank-tag r-elmas">ELMAS MAVİ</span></div>
-            <div class="info-item"><span>3000+</span> <span class="rank-tag r-elit">ELİT KIRMIZI</span></div>
-            <button class="btn" style="margin-top:20px; background:var(--neon-red);" onclick="toggleInfo()">KAPAT</button>
+            <div class="info-item"><span>0 - 199</span> <span class="rank-tag r-caylak">ÇAYLAK</span></div>
+            <div class="info-item"><span>200 - 499</span> <span class="rank-tag r-demir">DEMİR</span></div>
+            <div class="info-item"><span>500 - 999</span> <span class="rank-tag r-altin">ALTIN</span></div>
+            <div class="info-item"><span>1000 - 1999</span> <span class="rank-tag r-elmas">ELMAS</span></div>
+            <div class="info-item"><span>2000+</span> <span class="rank-tag r-elit">ELİT</span></div>
+            <button class="btn" style="margin-top:20px; background:var(--neon-red);" onclick="toggleInfo()">ANLADIM</button>
         </div>
     </div>
 
@@ -78,7 +81,7 @@
     <div id="auth-screen">
         <div class="card-box">
             <h1 style="color:var(--neon-red);">⚡ OYUN LAB</h1>
-            <p style="margin-bottom:15px; font-size:12px;">Burak 9/N Dev Edition</p>
+            <p style="margin-bottom:15px; font-size:12px; color: #aaa;">9/N Deki Burak Tarafından Yapıldı</p>
             <input type="text" id="username" placeholder="Oyuncu Adı">
             <button class="btn" style="background:var(--neon-red)" onclick="handleAuth()">GİRİŞ</button>
         </div>
@@ -214,9 +217,9 @@
         let db = JSON.parse(localStorage.getItem('burak_v_ranks')) || [];
         let r_t = "ÇAYLAK", r_c = "r-caylak";
         
-        if(score >= 3000) { r_t = "ELİT"; r_c = "r-elit"; }
-        else if(score >= 2000) { r_t = "ELMAS"; r_c = "r-elmas"; }
-        else if(score >= 1000) { r_t = "ALTIN"; r_c = "r-altin"; }
+        if(score >= 2000) { r_t = "ELİT"; r_c = "r-elit"; }
+        else if(score >= 1000) { r_t = "ELMAS"; r_c = "r-elmas"; }
+        else if(score >= 500) { r_t = "ALTIN"; r_c = "r-altin"; }
         else if(score >= 200) { r_t = "DEMİR"; r_c = "r-demir"; }
 
         let idx = db.findIndex(i => i.n === currentUser);

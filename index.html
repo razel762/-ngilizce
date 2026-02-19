@@ -24,15 +24,21 @@
         .ember { position: absolute; background: var(--red); border-radius: 50%; pointer-events: none; animation: ember-fly 2s infinite linear; box-shadow: 0 0 8px var(--red); }
         .dev-title { font-family: 'Orbitron', sans-serif; font-size: 22px; color: #fff; margin: 15px 0; letter-spacing: 6px; font-weight: 900; text-shadow: 0 0 10px red; }
         
-        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; }
+        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; padding-right: 5px; }
         .row { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 12px; min-height: 70px; border: 1px solid #222; }
-        .empty-row { opacity: 0.15; border: 1px dashed #555; background: transparent; }
+        .empty-row { opacity: 0.1; border: 1px dashed #444; background: transparent; }
 
-        input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; outline: none; }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 8px; }
-        
+        input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; outline: none; border-bottom: 3px solid var(--red); }
+        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 8px; transition: 0.3s; }
+        .btn:active { transform: scale(0.95); opacity: 0.8; }
+        .btn-vs { background: #1a1a1a; color: #666; border: 1px solid #333; font-size: 11px; margin-top: 5px; }
+
         .rank-tag { font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 8px; color: #000; min-width: 100px; text-align: center; }
-        .r-bronz { background: #cd7f32; color: #fff; } .r-demir { background: #bdc3c7; } .r-altin { background: #f1c40f; } .r-elmas { background: #3498db; color: #fff; } .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 15px red; }
+        .r-bronz { background: #cd7f32; color: #fff; }
+        .r-demir { background: #bdc3c7; }
+        .r-altin { background: #f1c40f; }
+        .r-elmas { background: #3498db; color: #fff; }
+        .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 15px red; }
         
         .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; }
     </style>
@@ -47,6 +53,7 @@
     <div class="dev-title">DEVELOPERS</div>
     <input type="text" id="p1" placeholder="ADINIZI YAZIN">
     <button class="btn" onclick="sys.auth()">OYUNA GİR</button>
+    <button class="btn btn-vs" onclick="alert('Henüz geliştirilme aşamasında!')">1 VS 1 MODU (YAKINDA GELECEK)</button>
 </div>
 
 <div id="scr-game" class="panel" style="display:none;">
@@ -62,37 +69,29 @@
 <div id="scr-board" class="overlay">
     <div class="panel" style="max-height: 98vh; display: flex; flex-direction: column;">
         <div class="neon-box" style="padding: 12px; margin-bottom: 5px;"><h2>KURUCU = 9/N Burak & Harun</h2></div>
-        <div class="dev-title" style="font-size: 16px; margin: 5px 0;">RANKING</div>
+        <div class="dev-title" style="font-size: 16px; margin: 5px 0;">GLOBAL RANKING</div>
         <div id="dev-list"></div>
         <div id="list" class="list-scroll"></div>
-        <button class="btn" onclick="location.reload()" style="background:#222; margin-top:10px;">TEKRAR OYNA</button>
+        <button class="btn" onclick="location.reload()" style="background:#222; margin-top:10px;">YENİDEN BAŞLA</button>
     </div>
 </div>
 
 <script>
+    // 100 Kelimelik Havuz
     const WORDS = [
         {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Özgürlük",en:"freedom"},
         {tr:"Yetenek",en:"ability"},{tr:"Miras",en:"heritage"},{tr:"Dürüst",en:"honest"},{tr:"Bilgi",en:"knowledge"},{tr:"Tecrübe",en:"experience"},
         {tr:"Toplum",en:"society"},{tr:"Fırsat",en:"opportunity"},{tr:"Sorumluluk",en:"responsibility"},{tr:"Adalet",en:"justice"},{tr:"Yaratıcı",en:"creative"},
-        {tr:"Bağımsız",en:"independent"},{tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Gelişim",en:"improvement"},{tr:"Güven",en:"confidence"},
-        {tr:"Macera",en:"adventure"},{tr:"Muhteşem",en:"magnificent"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Faydalı",en:"useful"},{tr:"Hızlı",en:"fast"},
-        {tr:"Zengin",en:"wealthy"},{tr:"Zayıf",en:"weak"},{tr:"Güçlü",en:"strong"},{tr:"Cesur",en:"brave"},{tr:"Kibar",en:"polite"},
-        {tr:"Cömert",en:"generous"},{tr:"Sabırlı",en:"patient"},{tr:"Kıskanç",en:"jealous"},{tr:"Ciddi",en:"serious"},{tr:"Eğlenceli",en:"funny"},
-        {tr:"Mükemmel",en:"perfect"},{tr:"İlginç",en:"interesting"},{tr:"Sıkıcı",en:"boring"},{tr:"Zor",en:"difficult"},{tr:"Kolay",en:"easy"},
-        {tr:"Önemli",en:"important"},{tr:"Gerekli",en:"necessary"},{tr:"Mümkün",en:"possible"},{tr:"İmkansız",en:"impossible"},{tr:"Farklı",en:"different"},
-        {tr:"Aynı",en:"same"},{tr:"Eski",en:"ancient"},{tr:"Modern",en:"modern"},{tr:"Popüler",en:"popular"},{tr:"Yalnız",en:"alone"},
-        {tr:"Birlikte",en:"together"},{tr:"Her zaman",en:"always"},{tr:"Asla",en:"never"},{tr:"Bazen",en:"sometimes"},{tr:"Sık sık",en:"often"},
-        {tr:"Belki",en:"maybe"},{tr:"Hemen",en:"immediately"},{tr:"Aniden",en:"suddenly"},{tr:"Dikkatli",en:"careful"},{tr:"Sessiz",en:"quiet"},
-        {tr:"Gürültülü",en:"noisy"},{tr:"Kalabalık",en:"crowded"},{tr:"Temiz",en:"clean"},{tr:"Kirli",en:"dirty"},{tr:"Güzel",en:"beautiful"},
-        {tr:"Çirkin",en:"ugly"},{tr:"Büyük",en:"huge"},{tr:"Küçük",en:"tiny"},{tr:"Geniş",en:"wide"},{tr:"Dar",en:"narrow"},
-        {tr:"Derin",en:"deep"},{tr:"Sığ",en:"shallow"},{tr:"Yüksek",en:"high"},{tr:"Alçak",en:"low"},{tr:"Uzak",en:"far"},
-        {tr:"Yakın",en:"near"},{tr:"Pahalı",en:"expensive"},{tr:"Ucuz",en:"cheap"},{tr:"Genç",en:"young"},{tr:"Yaşlı",en:"old"},
-        {tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},{tr:"Kızgın",en:"angry"},{tr:"Yorgun",en:"tired"},{tr:"Aç",en:"hungry"},
-        {tr:"Susuz",en:"thirsty"},{tr:"Hasta",en:"sick"},{tr:"Zeki",en:"intelligent"},{tr:"Çalışkan",en:"hardworking"},{tr:"Tembel",en:"lazy"},
-        {tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"},{tr:"Cesur",en:"courageous"},{tr:"Korkak",en:"coward"},{tr:"Gerçek",en:"real"},
-        {tr:"Sahte",en:"fake"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"},{tr:"Güvenli",en:"safe"},{tr:"Harika",en:"wonderful"}
+        {tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Gelişim",en:"improvement"},{tr:"Güven",en:"confidence"},{tr:"Macera",en:"adventure"},
+        {tr:"Muhteşem",en:"magnificent"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Faydalı",en:"useful"},{tr:"Zengin",en:"wealthy"},{tr:"Zayıf",en:"weak"},
+        {tr:"Cömert",en:"generous"},{tr:"Sabırlı",en:"patient"},{tr:"Kıskanç",en:"jealous"},{tr:"Mükemmel",en:"perfect"},{tr:"İlginç",en:"interesting"},
+        {tr:"Önemli",en:"important"},{tr:"Gerekli",en:"necessary"},{tr:"Mümkün",en:"possible"},{tr:"İmkansız",en:"impossible"},{tr:"Popüler",en:"popular"},
+        {tr:"Hemen",en:"immediately"},{tr:"Dikkatli",en:"careful"},{tr:"Sessiz",en:"quiet"},{tr:"Gürültülü",en:"noisy"},{tr:"Temiz",en:"clean"},
+        {tr:"Pahalı",en:"expensive"},{tr:"Ucuz",en:"cheap"},{tr:"Zeki",en:"intelligent"},{tr:"Çalışkan",en:"hardworking"},{tr:"Harika",en:"wonderful"},
+        {tr:"Büyük",en:"large"},{tr:"Küçük",en:"small"},{tr:"Hızlı",en:"quick"},{tr:"Yavaş",en:"slow"},{tr:"Sıcak",en:"hot"}
     ];
     
+    // FIREBASE GLOBAL AYARI
     firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
     const db = firebase.database();
 
@@ -109,24 +108,65 @@
 
     const sys = {
         user: "", score: 0, time: 30, cur: null,
-        auth: () => { sys.user = document.getElementById('p1').value.trim(); if(sys.user) { document.getElementById('scr-auth').style.display='none'; document.getElementById('scr-game').style.display='block'; sys.start(); } },
-        start: () => { sys.next(); let clock = setInterval(() => { sys.time--; document.getElementById('timer').innerText = sys.time; if(sys.time <= 0) { clearInterval(clock); sys.end(); } }, 1000); },
-        next: () => { sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)]; document.getElementById('word').innerText = sys.cur.tr.toUpperCase(); document.getElementById('answer').value = ""; document.getElementById('answer').focus(); },
+        auth: () => { 
+            sys.user = document.getElementById('p1').value.trim(); 
+            if(sys.user) { 
+                document.getElementById('scr-auth').style.display='none'; 
+                document.getElementById('scr-game').style.display='block'; 
+                sys.start(); 
+            } else { alert("Lütfen bir isim yazın!"); }
+        },
+        start: () => { 
+            sys.next(); 
+            let clock = setInterval(() => { 
+                sys.time--; 
+                document.getElementById('timer').innerText = sys.time; 
+                if(sys.time <= 0) { clearInterval(clock); sys.end(); } 
+            }, 1000); 
+        },
+        next: () => { 
+            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)]; 
+            document.getElementById('word').innerText = sys.cur.tr.toUpperCase(); 
+            document.getElementById('answer').value = ""; document.getElementById('answer').focus(); 
+        },
         end: () => {
             let r="ÇAYLAK BRONZ", c="r-bronz";
-            if(sys.score >= 2000) { r="ELİT KIRMIZI"; c="r-elit"; } else if(sys.score >= 1000) { r="ELMAS MAVİ"; c="r-elmas"; }
-            else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; } else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
-            db.ref('FINAL_9N_RANKING/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c }, () => sys.showBoard());
+            if(sys.score >= 2000) { r="ELİT KIRMIZI"; c="r-elit"; } 
+            else if(sys.score >= 1000) { r="ELMAS MAVİ"; c="r-elmas"; }
+            else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; } 
+            else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
+            
+            // GLOBAL KAYIT: Tüm dünya bu düğümden okuyacak
+            db.ref('GLOBAL_SCOREBOARD/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c }).then(() => {
+                sys.showBoard();
+            });
         },
         showBoard: () => {
-            document.getElementById('scr-game').style.display = 'none'; document.getElementById('scr-board').style.display = 'flex';
-            db.ref('FINAL_9N_RANKING').on('value', snap => {
-                let all = []; snap.forEach(x => all.push(x.val())); all.sort((a,b) => b.s - a.s);
+            document.getElementById('scr-game').style.display = 'none';
+            document.getElementById('scr-board').style.display = 'flex';
+            
+            // Veriyi anlık çek ve 10 boşluğu bas
+            db.ref('GLOBAL_SCOREBOARD').once('value').then(snap => {
+                let all = []; snap.forEach(x => all.push(x.val()));
+                all.sort((a,b) => b.s - a.s);
+                
+                // DEVELOPER ÖZEL ALANI
                 let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak' || p.n === 'Harun');
-                document.getElementById('dev-list').innerHTML = devs.map(p => `<div class="row" style="border:2px solid red; background:rgba(255,0,0,0.15);"><span>${p.n} <b style="color:red">DEV</b></span><b>${p.s}</b></div>`).join('');
+                document.getElementById('dev-list').innerHTML = devs.map(p => `<div class="row" style="border:2px solid red; background:rgba(255,0,0,0.2);"><span>${p.n} <b style="color:red">DEV</b></span><b>${p.s}</b></div>`).join('');
+                
+                // OYUNCU LİSTESİ
                 let players = all.filter(p => !devs.includes(p));
-                let html = players.map((p, i) => `<div class="row"><span><b>${i+1}.</b> ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`).join('');
-                for(let i=0; i<10; i++) html += `<div class="row empty-row"></div>`;
+                let html = players.slice(0, 10).map((p, i) => `<div class="row"><span><b>${i+1}.</b> ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`).join('');
+                
+                // 10 BOŞLUK GARANTİSİ (Liste boşsa veya azsa 10 kutu çıkar)
+                let currentLen = players.length;
+                for(let i=0; i < (10 - currentLen); i++) {
+                    html += `<div class="row empty-row"></div>`;
+                }
+                if(currentLen === 0 && html === "") { // Tamamen boşsa direkt 10 kutu bas
+                     for(let i=0; i<10; i++) html += `<div class="row empty-row"></div>`;
+                }
+
                 document.getElementById('list').innerHTML = html;
             });
         }
@@ -135,10 +175,14 @@
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter') {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
-                sys.score += 50; sys.time += 3; document.getElementById('score').innerText = sys.score;
-                document.getElementById('snd-correct').play(); confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); sys.next();
+                sys.score += 50; sys.time += 3;
+                document.getElementById('score').innerText = sys.score;
+                document.getElementById('snd-correct').play();
+                confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, colors: ['#ff0000', '#ffffff', '#f1c40f'] });
+                sys.next();
             } else {
-                document.getElementById('snd-wrong').play(); sys.next();
+                document.getElementById('snd-wrong').play();
+                sys.next();
             }
         }
     });

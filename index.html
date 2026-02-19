@@ -3,229 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>9/N Tournament | Burak & Harun</title>
+    <title>Burak & Harun | 9/N Global</title>
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --bronze: #cd7f32; --iron: #bdc3c7; --gold: #f1c40f; 
-            --diamond: #3498db; --elit: #e74c3c; --neon: #00ff00; --error: #ff0000;
-        }
+        :root { --elit: #e74c3c; --neon: #ff0000; --gold: #f1c40f; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { font-family: 'Segoe UI', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        /* Sarsılma Efekti */
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-8px, 4px); } 50% { transform: translate(8px, -4px); } }
+        .shake-active { animation: shake 0.2s infinite; background: #200 !important; }
+
+        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 25px; padding: 30px; width: 95%; max-width: 420px; text-align: center; box-shadow: 0 0 40px rgba(255,0,0,0.3); }
+        h2 { color: gold; font-size: 14px; margin-bottom: 20px; letter-spacing: 2px; }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; outline: none; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; background: var(--neon); color: #fff; text-transform: uppercase; margin-bottom: 10px; }
         
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: #050505; 
-            color: #fff; 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            overflow: hidden;
-        }
+        /* Rütbe Renkleri */
+        .rank { font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 6px; color: #000; }
+        .r-bronz { background: #cd7f32; color: #fff; }
+        .r-demir { background: #bdc3c7; }
+        .r-altin { background: #f1c40f; }
+        .r-elmas { background: #3498db; color: #fff; }
+        .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 10px red; }
+        .dev-tag { background: linear-gradient(45deg, red, gold); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 9px; margin-left: 5px; }
 
-        /* EKRAN SARSILMA EFEKTİ (SHAKE) */
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-        .shake-active { animation: shake 0.4s; background-color: #200 !important; }
-
-        /* PREMİUM TASARIM */
-        .main-card {
-            background: rgba(15, 15, 15, 0.98);
-            border: 2px solid #333;
-            border-radius: 40px;
-            padding: 40px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,1);
-        }
-
-        .main-card::before {
-            content: ''; position: absolute; inset: -2px;
-            background: linear-gradient(45deg, var(--elit), transparent, var(--diamond));
-            border-radius: 40px; z-index: -1; opacity: 0.3;
-        }
-
-        h2.title { font-family: 'Orbitron', sans-serif; font-size: 14px; color: gold; letter-spacing: 3px; margin-bottom: 30px; }
-        
-        input {
-            width: 100%; padding: 20px; border-radius: 20px; border: 2px solid #222;
-            background: #000; color: #fff; font-size: 20px; font-weight: 600;
-            margin-bottom: 20px; transition: 0.3s;
-        }
-        input:focus { border-color: var(--neon); box-shadow: 0 0 15px rgba(0,255,0,0.2); }
-
-        .btn {
-            width: 100%; padding: 20px; border-radius: 20px; border: none;
-            font-size: 18px; font-weight: 800; cursor: pointer;
-            transition: 0.2s; background: #fff; color: #000;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn:active { transform: scale(0.96); }
-        .btn-vs { background: var(--diamond); color: #fff; margin-top: 10px; }
-        .btn-board { background: transparent; border: 2px solid #333; color: #fff; margin-top: 10px; }
-
-        /* RÜTBE SİSTEMİ */
-        .rank { font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 10px; color: #000; min-width: 90px; text-align: center; display: inline-block; }
-        .r-bronz { background: var(--bronze); color: #fff; }
-        .r-demir { background: var(--iron); }
-        .r-altin { background: var(--gold); }
-        .r-elmas { background: var(--diamond); color: #fff; }
-        .r-elit { background: var(--elit); color: #fff; box-shadow: 0 0 15px var(--elit); }
-
-        .dev-badge { 
-            background: linear-gradient(45deg, #ff0000, #ffaa00); 
-            color: #fff; padding: 3px 8px; border-radius: 6px; 
-            font-size: 10px; font-weight: 900; margin-left: 8px;
-            text-shadow: 0 0 5px #000;
-        }
-
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        .board-list { width: 100%; max-height: 350px; overflow-y: auto; margin: 20px 0; }
-        .entry { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #222; }
+        .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .board { width: 100%; max-height: 320px; overflow-y: auto; margin: 15px 0; border-top: 1px solid #222; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #111; font-size: 14px; }
     </style>
 </head>
-<body id="body">
+<body id="main-body">
 
-<audio id="s-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="s-fail" src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3"></audio>
-
-<div id="scr-auth" class="main-card">
-    <h2 class="title">9/N GLOBAL • MASTER EDITION</h2>
-    <input type="text" id="in-user" placeholder="KULLANICI ADI">
-    <button class="btn" onclick="ui.toPortal()">SİSTEME GİRİŞ YAP</button>
+<div id="scr-auth" class="panel">
+    <h2>BURAK & HARUN | GLOBAL 9/N</h2>
+    <input type="text" id="username" placeholder="ADINI YAZ">
+    <button class="btn" onclick="sys.auth()">GİRİŞ YAP</button>
 </div>
 
-<div id="scr-portal" class="main-card" style="display:none;">
-    <h1 id="hi-msg" style="margin-bottom:25px; font-size: 28px;">Selam!</h1>
-    <button class="btn" onclick="game.start('solo')">TEKLİ OYUN</button>
-    <button class="btn btn-vs" onclick="game.start('vs')">1 VS 1 KAPIŞMA</button>
-    <button class="btn btn-board" onclick="ui.showBoard()">GLOBAL SIRALAMA</button>
+<div id="scr-menu" class="panel" style="display:none;">
+    <h1 id="hi" style="margin-bottom:20px;">Hoşgeldin!</h1>
+    <button class="btn" onclick="sys.start('solo')">OYUNA BAŞLA</button>
+    <button class="btn" onclick="sys.board()" style="background:#222; border:1px solid #444;">SIRALAMA</button>
 </div>
 
-<div id="scr-game" class="main-card" style="display:none;">
-    <div style="display:flex; justify-content: space-between; font-weight: 900; margin-bottom: 15px;">
-        <span style="color:var(--elit)">SÜRE: <b id="timer">30</b></span>
-        <span style="color:var(--gold)">SKOR: <b id="score">0</b></span>
+<div id="scr-game" class="panel" style="display:none;">
+    <div style="display:flex; justify-content: space-between; font-weight: 800; font-size: 13px;">
+        <span style="color:red">SÜRE: <b id="timer">30</b></span>
+        <span style="color:gold">SKOR: <b id="score">0</b></span>
     </div>
-    <div id="word" style="font-size: 50px; font-weight: 900; margin: 30px 0; color: #fff;">...</div>
-    <input type="text" id="in-ans" placeholder="CEVABI YAZIN">
+    <div id="word" style="font-size: 40px; font-weight: 900; margin: 25px 0;">...</div>
+    <input type="text" id="answer" placeholder="İNGİLİZCESİ">
 </div>
 
 <div id="scr-board" class="overlay">
-    <div class="main-card" style="max-height: 85vh; display: flex; flex-direction: column;">
-        <h2 style="color:gold;">🏆 TOP PLAYERS</h2>
-        <div id="board-list" class="board-list"></div>
-        <button class="btn" onclick="location.reload()">ANA MENÜYE DÖN</button>
+    <div class="panel">
+        <h2 style="color:gold">🏆 GLOBAL SIRALAMA</h2>
+        <div id="list" class="board"></div>
+        <button class="btn" onclick="location.reload()">YENİDEN OYNA</button>
     </div>
 </div>
 
 <script>
-    // --- KELİME BANKASI ---
     const WORDS = [
         {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Yetenek",en:"ability"},
-        {tr:"Teknoloji",en:"technology"},{tr:"Gelecek",en:"future"},{tr:"Eğitim",en:"education"},{tr:"Miras",en:"heritage"}
-    ]; // Burası uzatılabilir
+        {tr:"Gelecek",en:"future"},{tr:"Teknoloji",en:"technology"},{tr:"Eğitim",en:"education"},{tr:"Miras",en:"heritage"}
+    ];
 
-    // --- CORE SİSTEM ---
-    const fb = {
-        init: function() {
-            firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
-            this.db = firebase.database();
-        },
-        save: (u, s, r, c) => fb.db.ref('pro_ranking/' + u).set({ n: u, s: s, r: r, c: c })
-    };
+    firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
+    const db = firebase.database();
 
-    const ui = {
-        toPortal: () => {
-            const u = document.getElementById('in-user').value.trim();
+    const sys = {
+        user: "", score: 0, time: 30, clock: null, cur: null,
+        auth: () => {
+            const u = document.getElementById('username').value.trim();
             if(!u) return;
-            game.user = u;
+            sys.user = u;
             document.getElementById('scr-auth').style.display = 'none';
-            document.getElementById('scr-portal').style.display = 'block';
-            document.getElementById('hi-msg').innerText = "Selam, " + u;
+            document.getElementById('scr-menu').style.display = 'block';
+            document.getElementById('hi').innerText = "Selam, " + u;
         },
-        showBoard: () => {
-            document.querySelectorAll('.main-card, #scr-portal, #scr-game').forEach(e => e.style.display = 'none');
+        start: () => {
+            document.getElementById('scr-menu').style.display = 'none';
+            document.getElementById('scr-game').style.display = 'block';
+            sys.score = 0; sys.time = 30; sys.next();
+            sys.clock = setInterval(() => {
+                sys.time--;
+                document.getElementById('timer').innerText = sys.time;
+                if(sys.time <= 0) sys.end();
+            }, 1000);
+        },
+        next: () => {
+            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
+            document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
+            document.getElementById('answer').value = ""; document.getElementById('answer').focus();
+        },
+        end: () => {
+            clearInterval(sys.clock);
+            let r = "BRONZ", c = "r-bronz";
+            if(sys.score >= 2000) { r = "ELİT"; c = "r-elit"; }
+            else if(sys.score >= 1000) { r = "ELMAS"; c = "r-elmas"; }
+            else if(sys.score >= 500) { r = "ALTIN"; c = "r-altin"; }
+            else if(sys.score >= 200) { r = "DEMİR"; c = "r-demir"; }
+            
+            // Sıralama gelmeme sorununa karşı: Önce ekranı aç, sonra veriyi gönder
+            sys.board(); 
+            db.ref('last_final/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c });
+        },
+        board: () => {
+            document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
             document.getElementById('scr-board').style.display = 'flex';
-            fb.db.ref('pro_ranking').orderByChild('s').limitToLast(20).once('value', s => {
+            db.ref('last_final').orderByChild('s').limitToLast(15).on('value', s => {
                 let a = []; s.forEach(x => a.push(x.val()));
                 a.sort((x,y) => y.s - x.s);
-                document.getElementById('board-list').innerHTML = a.map((p, i) => `
-                    <div class="entry">
-                        <span><b>${i+1}.</b> ${p.n} ${p.n.toLowerCase().includes('developer') || p.n === 'Burak' ? '<span class="dev-badge">DEVELOPER</span>' : ''}</span>
+                document.getElementById('list').innerHTML = a.map((p, i) => `
+                    <div class="row">
+                        <span><b>${i+1}.</b> ${p.n} ${p.n.toLowerCase().includes('developer') || p.n === 'Burak' ? '<span class="dev-tag">DEVELOPER</span>' : ''}</span>
                         <div><b>${p.s}</b> <span class="rank ${p.c}">${p.r}</span></div>
                     </div>`).join('');
             });
         }
     };
 
-    const game = {
-        user: "", score: 0, time: 30, clock: null, current: null,
-        start: function(m) {
-            if(m === 'vs') { const op = prompt("Rakip?"); if(!op) return; }
-            document.getElementById('scr-portal').style.display = 'none';
-            document.getElementById('scr-game').style.display = 'block';
-            this.score = 0; this.time = 30; this.next();
-            this.clock = setInterval(() => {
-                this.time--;
-                document.getElementById('timer').innerText = this.time;
-                if(this.time <= 0) this.end();
-            }, 1000);
-        },
-        next: function() {
-            this.current = WORDS[Math.floor(Math.random()*WORDS.length)];
-            document.getElementById('word').innerText = this.current.tr.toUpperCase();
-            document.getElementById('in-ans').value = ""; document.getElementById('in-ans').focus();
-        },
-        fail: function() {
-            document.getElementById('body').classList.add('shake-active');
-            document.getElementById('s-fail').play();
-            setTimeout(() => document.getElementById('body').classList.remove('shake-active'), 400);
-            this.next();
-        },
-        end: function() {
-            clearInterval(this.clock);
-            let rt = "BRONZ", rc = "r-bronz";
-            if(this.score >= 2000) { rt = "ELİT"; rc = "r-elit"; }
-            else if(this.score >= 1000) { rt = "ELMAS"; rc = "r-elmas"; }
-            else if(this.score >= 500) { rt = "ALTIN"; rc = "r-altin"; }
-            else if(this.score >= 200) { rt = "DEMİR"; rc = "r-demir"; }
-            fb.save(this.user, this.score, rt, rc).then(() => ui.showBoard());
-        }
-    };
-
-    document.getElementById('in-ans').addEventListener('keypress', e => {
+    document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter') {
-            if(document.getElementById('in-ans').value.toLowerCase().trim() === game.current.en) {
-                game.score += 50; game.time += 2;
-                document.getElementById('score').innerText = game.score;
-                document.getElementById('s-win').play();
-                confetti({ particleCount: 40 });
-                game.next();
-            } else { game.fail(); }
+            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en) {
+                sys.score += 50; sys.time += 2;
+                document.getElementById('score').innerText = sys.score;
+                confetti({ particleCount: 30, origin: { y: 0.8 } });
+                sys.next();
+            } else {
+                document.getElementById('main-body').classList.add('shake-active');
+                setTimeout(() => document.getElementById('main-body').classList.remove('shake-active'), 300);
+                sys.next();
+            }
         }
     });
-
-    fb.init();
 </script>
 </body>
 </html>

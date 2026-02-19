@@ -18,16 +18,16 @@
         @keyframes ember-fly { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-130px) scale(0); opacity: 0; } }
         @keyframes neon-pulse { 0%, 100% { box-shadow: 0 0 20px var(--red); border-color: var(--red); } 50% { box-shadow: 0 0 45px var(--red); border-color: #fff; } }
         
-        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 25px; width: 95%; max-width: 480px; text-align: center; position: relative; }
+        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 25px; width: 95%; max-width: 480px; text-align: center; position: relative; z-index: 10; }
         .neon-box { background: #000; border: 4px solid var(--red); border-radius: 25px; padding: 22px; margin-bottom: 20px; animation: neon-pulse 2s infinite ease-in-out; position: relative; overflow: hidden; }
         .neon-box h2 { font-family: 'Orbitron', sans-serif; font-size: 13px; color: #fff; position: relative; z-index: 2; }
-        .ember { position: absolute; background: var(--red); border-radius: 50%; pointer-events: none; animation: ember-fly 1.5s infinite linear; box-shadow: 0 0 8px var(--red); }
+        .ember { position: absolute; background: var(--red); border-radius: 50%; pointer-events: none; animation: ember-fly 2s infinite linear; box-shadow: 0 0 8px var(--red); }
         .dev-title { font-family: 'Orbitron', sans-serif; font-size: 22px; color: #fff; margin: 15px 0; letter-spacing: 6px; font-weight: 900; text-shadow: 0 0 10px red; }
         
-        /* SIRALAMA LİSTESİ */
-        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; padding-right: 5px; }
+        /* SIRALAMA VE 10 BOSLUK */
+        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; }
         .row { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 12px; min-height: 70px; border: 1px solid #222; }
-        .empty-row { opacity: 0.15; border: 1px dashed #555; background: transparent; pointer-events: none; }
+        .empty-row { opacity: 0.15; border: 1px dashed #555; background: transparent; }
 
         input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; outline: none; }
         .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 8px; }
@@ -38,16 +38,20 @@
         .r-altin { background: #f1c40f; }
         .r-elmas { background: #3498db; color: #fff; }
         .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 15px red; }
+        
+        .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body id="main-body">
 
+<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3"></audio>
+
 <div id="scr-auth" class="panel">
     <div class="neon-box" id="ember-container"><h2>KURUCU = 9/N Sınıfındaki <br> Harun Ve Burak</h2></div>
     <div class="dev-title">DEVELOPERS</div>
-    <input type="text" id="p1" placeholder="İSMİNİZİ YAZIN">
-    <button class="btn" onclick="sys.auth('solo')">TEKLİ OYNA</button>
-    <button class="btn" onclick="sys.auth('vs')" style="background:#3498db">1 VS 1 MODU (YAKINDA)</button>
+    <input type="text" id="p1" placeholder="ADINIZI YAZIN">
+    <button class="btn" onclick="sys.auth()">OYUNA GİR</button>
 </div>
 
 <div id="scr-game" class="panel" style="display:none;">
@@ -55,11 +59,11 @@
         <span style="color:red">SÜRE: <b id="timer">30</b></span>
         <span style="color:gold">SKOR: <b id="score">0</b></span>
     </div>
-    <div id="word" style="font-size: 42px; font-weight: 900; margin: 35px 0; text-shadow:0 0 15px red;">...</div>
-    <input type="text" id="answer" placeholder="CEVAP">
+    <div id="word" style="font-size: 42px; font-weight: 900; margin: 35px 0;">...</div>
+    <input type="text" id="answer" placeholder="CEVABI YAZ">
 </div>
 
-<div id="scr-board" style="display:none; position:fixed; inset:0; background:#000; z-index:99; flex-direction:column; align-items:center; justify-content:center;">
+<div id="scr-board" class="overlay">
     <div class="panel" style="max-height: 98vh; display: flex; flex-direction: column;">
         <div class="neon-box" style="padding: 12px; margin-bottom: 10px;">
             <h2 style="font-size: 11px;">KURUCU = 9/N Sınıfındaki Harun Ve Burak</h2>
@@ -72,7 +76,7 @@
 </div>
 
 <script>
-    const WORDS = [{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Miras",en:"heritage"},{tr:"Gelecek",en:"future"},{tr:"Eğitim",en:"education"},{tr:"Özgürlük",en:"freedom"},{tr:"Yetenek",en:"ability"},{tr:"Bilim",en:"science"}];
+    const WORDS = [{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Özgürlük",en:"freedom"},{tr:"Yetenek",en:"ability"}];
     
     firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
     const db = firebase.database();
@@ -80,21 +84,17 @@
     function createEmbers() {
         const container = document.getElementById('ember-container');
         setInterval(() => {
-            const e = document.createElement('div');
-            e.className = 'ember';
-            let size = Math.random() * 4 + 2;
-            e.style.width = size + "px"; e.style.height = size + "px";
-            e.style.left = Math.random() * 100 + "%";
-            e.style.bottom = "0";
-            container.appendChild(e);
-            setTimeout(() => e.remove(), 2000);
+            const e = document.createElement('div'); e.className = 'ember';
+            e.style.width = (Math.random()*4+2)+"px"; e.style.height = e.style.width;
+            e.style.left = Math.random()*100+"%"; e.style.bottom = "0";
+            container.appendChild(e); setTimeout(() => e.remove(), 2000);
         }, 150);
     }
     createEmbers();
 
     const sys = {
         user: "", score: 0, time: 30, cur: null,
-        auth: (m) => { sys.user = document.getElementById('p1').value.trim(); if(sys.user) { document.getElementById('scr-auth').style.display='none'; document.getElementById('scr-game').style.display='block'; sys.start(); } },
+        auth: () => { sys.user = document.getElementById('p1').value.trim(); if(sys.user) { document.getElementById('scr-auth').style.display='none'; document.getElementById('scr-game').style.display='block'; sys.start(); } },
         start: () => { sys.next(); let clock = setInterval(() => { sys.time--; document.getElementById('timer').innerText = sys.time; if(sys.time <= 0) { clearInterval(clock); sys.end(); } }, 1000); },
         next: () => { sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)]; document.getElementById('word').innerText = sys.cur.tr.toUpperCase(); document.getElementById('answer').value = ""; document.getElementById('answer').focus(); },
         end: () => {
@@ -103,26 +103,25 @@
             else if(sys.score >= 1000) { r = "ELMAS MAVİ"; c = "r-elmas"; }
             else if(sys.score >= 500) { r = "ALTIN SARI"; c = "r-altin"; }
             else if(sys.score >= 200) { r = "DEMİR GRİ"; c = "r-demir"; }
-            db.ref('9N_GLOBAL_RANKING/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c }, () => sys.showBoard());
+            db.ref('Final_Ranking_9N/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c }, () => sys.showBoard());
         },
         showBoard: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-board').style.display = 'flex';
-            db.ref('9N_GLOBAL_RANKING').on('value', snap => {
+            db.ref('Final_Ranking_9N').on('value', snap => {
                 let all = []; snap.forEach(x => all.push(x.val()));
                 all.sort((a,b) => b.s - a.s);
                 
+                // DEV-LIST (Siz)
                 let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak' || p.n === 'Harun');
                 document.getElementById('dev-list').innerHTML = devs.map(p => `<div class="row" style="border:2px solid red; background:rgba(255,0,0,0.1);"><span>${p.n} <b style="color:red">DEV</b></span><b>${p.s}</b></div>`).join('');
                 
+                // NORMAL LISTE
                 let players = all.filter(p => !devs.includes(p));
                 let html = players.map((p, i) => `<div class="row"><span><b>${i+1}.</b> ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`).join('');
                 
-                // KİMSE OYNAMASA BİLE 10 BOŞLUK ÇIKARTAN DÖNGÜ
-                let emptyCount = Math.max(0, 10 - players.length);
-                for(let i=0; i < 10; i++) {
-                    html += `<div class="row empty-row"></div>`;
-                }
+                // İŞTE O KRİTİK 10 BOŞ KUTU (HİÇBİR ZAMAN SİLİNMEZ)
+                for(let i=0; i<10; i++) html += `<div class="row empty-row"></div>`;
                 
                 document.getElementById('list').innerHTML = html;
             });
@@ -132,9 +131,14 @@
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter') {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en) {
-                sys.score += 50; sys.time += 3; document.getElementById('score').innerText = sys.score;
+                sys.score += 50; sys.time += 3; 
+                document.getElementById('score').innerText = sys.score;
+                document.getElementById('snd-correct').play(); // SES ÇALIŞIYOR
                 confetti({ particleCount: 40 }); sys.next();
-            } else { sys.next(); }
+            } else {
+                document.getElementById('snd-wrong').play(); // SES ÇALIŞIYOR
+                sys.next();
+            }
         }
     });
 </script>

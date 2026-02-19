@@ -3,76 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Burak Developer | 9/N Global</title>
+    <title>Burak & Harun | 9/N Global Master</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --red: #ff0000; --gold: #f1c40f; --elit: #e74c3c; }
+        :root { --red: #ff0000; --gold: #f1c40f; --elit: #e74c3c; --blue: #3498db; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { font-family: 'Poppins', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-10px,5px); } 50% { transform: translate(10px,-5px); } }
-        .shake-active { animation: shake 0.2s; background: #200 !important; }
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-10px,5px); } 40% { transform: translate(10px,-5px); } }
+        .shake-active { animation: shake 0.2s; background: #300 !important; }
 
-        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 30px; width: 95%; max-width: 450px; text-align: center; box-shadow: 0 0 40px rgba(255,0,0,0.3); }
-        
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; }
+        /* BALONCUK VE PARLAMA EFEKTİ */
+        @keyframes bubble { 0% { transform: translateY(0) scale(1); opacity: 1; } 50% { transform: translateY(-5px) scale(1.02); opacity: 0.8; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+        @keyframes glow { 0% { box-shadow: 0 0 10px gold; } 50% { box-shadow: 0 0 30px gold; } 100% { box-shadow: 0 0 10px gold; } }
 
-        /* SIRALAMA VE ÖZEL DEVSER */
-        .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .board { width: 100%; max-height: 450px; overflow-y: auto; margin: 10px 0; }
+        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 30px; width: 95%; max-width: 460px; text-align: center; box-shadow: 0 0 40px rgba(255,0,0,0.3); position: relative; }
         
-        /* DEVELOPER AYRI BÖLME */
-        .dev-section { background: rgba(255, 215, 0, 0.1); border: 2px solid gold; border-radius: 15px; padding: 15px; margin-bottom: 25px; box-shadow: 0 0 20px gold; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #222; margin-bottom: 10px; } /* 10px boşluk eklendi */
+        /* KURUCU ALANI */
+        .founder-box { 
+            background: linear-gradient(135deg, #1a1a1a, #000); 
+            border: 2px solid gold; border-radius: 20px; 
+            padding: 15px; margin-bottom: 20px; 
+            animation: bubble 3s infinite ease-in-out, glow 2s infinite;
+        }
+
+        input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; }
+        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); }
+
+        /* SIRALAMA SİSTEMİ */
+        .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
+        .board-container { width: 100%; max-height: 500px; overflow-y: auto; margin: 10px 0; padding-right: 5px; }
         
-        /* RÜTBELER */
-        .rank { font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; color: #000; min-width: 90px; text-align: center; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 10px; border-left: 4px solid var(--red); }
+        
+        .rank-tag { font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; color: #000; min-width: 100px; text-align: center; }
         .r-bronz { background: #cd7f32; color: #fff; }
         .r-demir { background: #bdc3c7; }
         .r-altin { background: #f1c40f; }
         .r-elmas { background: #3498db; color: #fff; }
-        .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 10px red; }
+        .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 15px red; }
 
-        .dev-badge { background: linear-gradient(45deg, #f00, gold); color: #fff; padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 900; letter-spacing: 1px; }
+        .dev-badge { background: linear-gradient(45deg, #f00, #ff0, #f00); background-size: 200%; animation: flow 2s linear infinite; color: #fff; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; }
+        @keyframes flow { 0% { background-position: 0%; } 100% { background-position: 200%; } }
     </style>
 </head>
 <body id="main-body">
 
 <div id="scr-auth" class="panel">
-    <h2 style="font-family:'Orbitron'; font-size:14px; color:gold; margin-bottom:20px;">9/N GLOBAL TOURNAMENT</h2>
-    <input type="text" id="username" placeholder="İSİM YAZ">
-    <button class="btn" onclick="sys.auth()">SİSTEME GİRİŞ</button>
+    <div class="founder-box">
+        <h3 style="font-family:'Orbitron'; font-size:11px; color:gold;">KURUCU = 9/N'deki Burak ve Harun</h3>
+    </div>
+    <input type="text" id="username" placeholder="İSİM YAZIN">
+    <button class="btn" onclick="sys.auth()">GİRİŞ YAP</button>
 </div>
 
 <div id="scr-game" class="panel" style="display:none;">
-    <div style="display:flex; justify-content: space-between; font-weight: 800; font-size: 14px;">
+    <div style="display:flex; justify-content: space-between; font-weight: 800;">
         <span style="color:red">SÜRE: <b id="timer">30</b></span>
         <span style="color:gold">SKOR: <b id="score">0</b></span>
     </div>
-    <div id="word" style="font-size: 45px; font-weight: 900; margin: 30px 0;">...</div>
+    <div id="word" style="font-size: 45px; font-weight: 900; margin: 30px 0; text-shadow: 0 0 10px rgba(255,255,255,0.3);">...</div>
     <input type="text" id="answer" placeholder="CEVAP">
 </div>
 
 <div id="scr-board" class="overlay">
-    <div class="panel" style="max-height: 95vh; overflow: hidden; display: flex; flex-direction: column;">
-        <h2 style="color:gold; margin-bottom:15px;">🏆 GLOBAL RANKING</h2>
-        
-        <div id="dev-list"></div>
-        
-        <div id="list" class="board"></div>
-        <button class="btn" onclick="location.reload()" style="margin-top:10px;">YENİDEN BAŞLA</button>
+    <div class="panel" style="max-height: 95vh; display: flex; flex-direction: column;">
+        <div class="founder-box" style="margin-bottom:10px;">
+            <h3 style="font-family:'Orbitron'; font-size:10px; color:gold;">KURUCU = 9/N'deki Burak ve Harun</h3>
+        </div>
+        <h2 style="color:gold; font-size:16px; margin-bottom:10px;">🏆 GLOBAL RANKING</h2>
+        <div id="dev-spot" style="margin-bottom:15px;"></div>
+        <div id="list" class="board-container"></div>
+        <button class="btn" onclick="location.reload()" style="background:#222; border:1px solid #444;">TEKRAR OYNA</button>
     </div>
 </div>
 
 <script>
-    const WORDS = [{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Miras",en:"heritage"},{tr:"Yetenek",en:"ability"}];
-    
+    // GENİŞLETİLMİŞ KELİME LİSTESİ
+    const WORDS = [
+        {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Yetenek",en:"ability"},
+        {tr:"Gelecek",en:"future"},{tr:"Teknoloji",en:"technology"},{tr:"Eğitim",en:"education"},{tr:"Miras",en:"heritage"},
+        {tr:"Dürüst",en:"honest"},{tr:"Zeki",en:"intelligent"},{tr:"Macera",en:"adventure"},{tr:"Keşfetmek",en:"explore"},
+        {tr:"Deneyim",en:"experience"},{tr:"Önemli",en:"important"},{tr:"Kibar",en:"polite"},{tr:"Cömert",en:"generous"},
+        {tr:"Gelişim",en:"development"},{tr:"Bilgi",en:"knowledge"},{tr:"Özgürlük",en:"freedom"},{tr:"Adalet",en:"justice"}
+    ];
+
     firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
     const db = firebase.database();
 
@@ -105,33 +126,30 @@
             else if(sys.score >= 500) { r = "ALTIN SARI"; c = "r-altin"; }
             else if(sys.score >= 200) { r = "DEMİR GRİ"; c = "r-demir"; }
 
-            sys.showBoard(); // Önce ekranı aç
-            db.ref('final_ranking_v7/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c });
+            sys.showBoard();
+            db.ref('global_final_v8/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c });
         },
         showBoard: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-board').style.display = 'flex';
             
-            db.ref('final_ranking_v7').on('value', s => {
+            db.ref('global_final_v8').on('value', s => {
                 let all = []; s.forEach(x => all.push(x.val()));
                 all.sort((a,b) => b.s - a.s);
 
-                // Developer'ı Ayır
-                let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak');
-                let players = all.filter(p => !p.n.toLowerCase().includes('developer') && p.n !== 'Burak');
+                let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak' || p.n === 'Harun');
+                let players = all.filter(p => !devs.includes(p));
 
-                document.getElementById('dev-list').innerHTML = devs.map(p => `
-                    <div class="dev-section">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span>${p.n} <span class="dev-badge">DEVELOPER</span></span>
-                            <b>${p.s} PUAN</b>
-                        </div>
+                document.getElementById('dev-spot').innerHTML = devs.map(p => `
+                    <div class="row" style="border:1px solid gold; background:rgba(255,215,0,0.1);">
+                        <span>${p.n} <span class="dev-badge">DEVELOPER</span></span>
+                        <b>${p.s}</b>
                     </div>`).join('');
 
                 document.getElementById('list').innerHTML = players.map((p, i) => `
                     <div class="row">
                         <span><b>${i+1}.</b> ${p.n}</span>
-                        <div><b style="color:gold; margin-right:5px;">${p.s}</b> <span class="rank ${p.c}">${p.r}</span></div>
+                        <div><b style="color:gold; margin-right:5px;">${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div>
                     </div>`).join('');
             });
         }
@@ -142,7 +160,7 @@
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en) {
                 sys.score += 50; sys.time += 2;
                 document.getElementById('score').innerText = sys.score;
-                confetti({ particleCount: 40 }); sys.next();
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); sys.next();
             } else {
                 document.getElementById('main-body').classList.add('shake-active');
                 setTimeout(() => document.getElementById('main-body').classList.remove('shake-active'), 300);

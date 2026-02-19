@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Burak & Harun | 9/N Master Edition</title>
+    <title>Burak & Harun | 9/N Global Tournament</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -15,163 +15,226 @@
             --bronze: #cd7f32; --iron: #bdc3c7; --gold: #f1c40f; 
             --diamond: #3498db; --elit: #e74c3c; --neon: #ff0000; 
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { font-family: 'Poppins', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; outline: none; }
+        body { font-family: 'Poppins', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
 
-        /* Jumpscare Efektleri */
-        @keyframes shake { 0% { transform: translate(0,0); } 25% { transform: translate(-10px, 5px); } 50% { transform: translate(10px, -5px); } 100% { transform: translate(0,0); } }
-        .js-bg { background: #800 !important; animation: shake 0.1s infinite; }
-        #ghost { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); z-index: 10000; font-size: 200px; opacity: 0; transition: 0.1s; pointer-events: none; }
-        .ghost-on { transform: translate(-50%, -50%) scale(2.5) !important; opacity: 1 !important; }
+        /* JUMPSCARE SİSTEMİ - TAKILMAZ */
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-15px, 10px); } 50% { transform: translate(15px, -10px); } }
+        .jumpscare-active { background: #700 !important; animation: shake 0.1s infinite !important; }
+        #ghost { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); z-index: 9999; font-size: 220px; opacity: 0; transition: 0.1s; pointer-events: none; }
+        .ghost-show { transform: translate(-50%, -50%) scale(2.5) !important; opacity: 1 !important; }
 
-        /* Tasarım Bileşenleri */
-        .neon-card { border: 3px solid var(--neon); box-shadow: 0 0 40px var(--neon); background: rgba(0,0,0,0.95); border-radius: 30px; padding: 40px; width: 95%; max-width: 450px; text-align: center; z-index: 100; }
-        .header { background: linear-gradient(135deg, #400, #000, #400); border: 2px solid gold; padding: 15px; border-radius: 20px; margin-bottom: 25px; }
-        
-        input { width: 100%; padding: 18px; border-radius: 15px; border: none; margin-bottom: 15px; text-align: center; font-size: 20px; font-weight: 800; background: #fff; color: #000; }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; background: var(--neon); color: #fff; }
-        .btn:active { transform: scale(0.95); }
+        /* ANA TASARIM */
+        .glass-panel { 
+            border: 3px solid var(--neon); 
+            box-shadow: 0 0 50px var(--neon), inset 0 0 20px rgba(255,0,0,0.5); 
+            background: rgba(0, 0, 0, 0.96); 
+            border-radius: 40px; 
+            padding: 40px; 
+            width: 95%; 
+            max-width: 480px; 
+            text-align: center; 
+            z-index: 100;
+        }
 
-        /* Rütbe Etiketleri */
-        .rank { font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 10px; color: #000; min-width: 90px; display: inline-block; }
-        .r-bronz { background: var(--bronze); color: #fff; }
-        .r-demir { background: var(--iron); }
-        .r-altin { background: var(--gold); }
-        .r-elmas { background: var(--diamond); color: #fff; }
-        .r-elit { background: var(--elit); color: #fff; box-shadow: 0 0 15px red; }
+        .tournament-header { 
+            background: linear-gradient(135deg, #200, #000, #200); 
+            border: 2px solid gold; 
+            padding: 20px; 
+            border-radius: 20px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 0 25px rgba(255,0,0,0.4);
+        }
 
-        .dev-tag { background: linear-gradient(45deg, #f00, gold); color: #fff; padding: 2px 8px; border-radius: 5px; font-size: 10px; margin-left: 5px; font-weight: 900; }
+        input { 
+            width: 100%; padding: 20px; border-radius: 18px; border: none; 
+            margin-bottom: 15px; text-align: center; font-size: 22px; 
+            font-weight: 800; background: #fff; color: #000; 
+        }
 
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        .score-list { overflow-y: auto; max-height: 300px; text-align: left; margin: 20px 0; }
-        .row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.1); padding: 12px; margin-bottom: 8px; border-radius: 10px; }
+        .btn { 
+            width: 100%; padding: 20px; border-radius: 18px; border: none; 
+            font-size: 18px; font-weight: 900; cursor: pointer; 
+            transition: 0.2s; background: var(--neon); color: #fff;
+            box-shadow: 0 5px 0 #800;
+        }
+        .btn:active { transform: translateY(4px); box-shadow: none; }
+
+        /* RÜTBE VE LİSTE */
+        .rank-badge { font-size: 11px; font-weight: 900; padding: 6px 12px; border-radius: 12px; color: #000; min-width: 100px; text-align: center; }
+        .r-bronze { background: var(--bronze); color: #fff; }
+        .r-iron { background: var(--iron); }
+        .r-gold { background: var(--gold); }
+        .r-diamond { background: var(--diamond); color: #fff; }
+        .r-elit { background: var(--elit); color: #fff; box-shadow: 0 0 20px red; }
+
+        .dev-tag { background: linear-gradient(45deg, #f00, gold, #f00); background-size: 200%; color: #fff; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; margin-left: 8px; animation: flow 2s linear infinite; }
+        @keyframes flow { 0% { background-position: 0%; } 100% { background-position: 200%; } }
+
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.99); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 25px; }
+        .scroll-list { overflow-y: auto; max-height: 400px; width: 100%; margin: 20px 0; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); padding: 15px; margin-bottom: 10px; border-radius: 15px; border-left: 5px solid var(--neon); }
     </style>
 </head>
 <body>
 
 <div id="ghost">👻</div>
-<audio id="s-jump" src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=FNAF+Jumpscare&filename=mz/MzU3MDU1NTM1MzcwNTY3_97v8_2b_2f_2fmXw.mp3"></audio>
-<audio id="s-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-jump" src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=FNAF+Jumpscare&filename=mz/MzU3MDU1NTM1MzcwNTY3_97v8_2b_2f_2fmXw.mp3"></audio>
+<audio id="snd-win" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 
-<div id="scr-auth" class="neon-card">
-    <div class="header"><h2 style="font-size: 14px; color: gold;">PROUDLY MADE BY BURAK & HARUN</h2></div>
-    <input type="text" id="in-user" placeholder="Kullanıcı Adı">
-    <button class="btn" onclick="goPortal()">SİSTEME GİRİŞ</button>
-</div>
-
-<div id="scr-portal" class="neon-card" style="display:none;">
-    <h1 id="txt-hi" style="color:var(--neon); margin-bottom:20px;">Hoşgeldin!</h1>
-    <button class="btn" onclick="goGame()">OYUNU BAŞLAT</button>
-    <button class="btn" style="background:#3498db; margin-top:10px;" onclick="showBoard()">SIRALAMA</button>
-</div>
-
-<div id="scr-game" class="neon-card" style="display:none;">
-    <div style="display:flex; justify-content: space-between; font-weight: 800;">
-        <span style="color:red">SÜRE: <b id="txt-time">30</b></span>
-        <span style="color:gold">SKOR: <b id="txt-score">0</b></span>
+<div id="view-auth" class="glass-panel">
+    <div class="tournament-header">
+        <h2 style="font-size: 15px; color: gold; letter-spacing: 2px;">9/N GLOBAL TOURNAMENT</h2>
+        <p style="font-size: 10px; color: #aaa;">BY BURAK & HARUN</p>
     </div>
-    <div id="txt-word" style="font-family:'Kalam'; font-size:50px; margin:30px 0; text-shadow: 0 0 10px red;">...</div>
-    <input type="text" id="in-ans" placeholder="İngilizcesini Yaz">
+    <input type="text" id="user-input" placeholder="İSİM YAZ">
+    <button class="btn" onclick="app.login()">KAYIT OL VE GİR</button>
 </div>
 
-<div id="scr-board" class="overlay">
-    <div class="neon-card">
-        <h2 style="color:gold;">🏆 GLOBAL LİSTE</h2>
-        <div id="list-container" class="score-list"></div>
-        <button class="btn" onclick="location.reload()">TEKRAR DENE</button>
+<div id="view-menu" class="glass-panel" style="display:none;">
+    <h1 id="welcome-msg" style="font-size: 32px; color: var(--neon); margin-bottom: 25px;">Selam!</h1>
+    <button class="btn" onclick="app.startGame('solo')" style="margin-bottom: 10px; height: 80px; font-size: 22px;">TEKLİ OYNA</button>
+    <button class="btn" onclick="app.showVS()" style="background: #2ecc71; margin-bottom: 10px;">1 VS 1 MODU</button>
+    <button class="btn" onclick="app.showLeaderboard()" style="background: #3498db;">DÜNYA SIRALAMASI</button>
+</div>
+
+<div id="view-game" class="glass-panel" style="display:none;">
+    <div style="display:flex; justify-content: space-between; font-weight: 900; font-size: 20px;">
+        <span style="color:red">SÜRE: <b id="game-time">30</b></span>
+        <span style="color:gold">SKOR: <b id="game-score">0</b></span>
+    </div>
+    <div id="vs-header" style="color:cyan; font-size: 14px; margin-top: 5px; font-weight: bold;"></div>
+    <div id="word-display" style="font-family:'Kalam'; font-size: 55px; margin: 30px 0; text-shadow: 0 0 15px red;">...</div>
+    <input type="text" id="ans-input" placeholder="İngilizcesini Yaz">
+</div>
+
+<div id="view-board" class="overlay">
+    <div class="glass-panel" style="max-height: 90vh; display: flex; flex-direction: column;">
+        <h2 style="color:gold;">🏆 GLOBAL RANKING</h2>
+        <div id="board-content" class="scroll-list"></div>
+        <button class="btn" onclick="location.reload()">TEKRAR OYNA / ÇIKIŞ</button>
     </div>
 </div>
 
 <script>
-    const WORDS = [
-        {tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Teknoloji",en:"technology"},{tr:"Eğitim",en:"education"},
-        {tr:"Yetenek",en:"ability"},{tr:"Miras",en:"heritage"},{tr:"Dürüst",en:"honest"},{tr:"Çevre",en:"environment"},
-        {tr:"Gelenek",en:"tradition"},{tr:"Macera",en:"adventure"},{tr:"Kibar",en:"polite"},{tr:"Zeki",en:"intelligent"}
-    ]; // Toplam 100 kelimeye tamamlanabilir
+    const WORD_BANK = [
+        {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Gelecek",en:"future"},{tr:"Teknoloji",en:"technology"},{tr:"Eğitim",en:"education"},{tr:"Başarı",en:"success"},{tr:"Yetenek",en:"ability"},{tr:"Macera",en:"adventure"},{tr:"Miras",en:"heritage"},{tr:"Kirlilik",en:"pollution"},{tr:"Dürüst",en:"honest"},{tr:"Cömert",en:"generous"},{tr:"İnatçı",en:"stubborn"},{tr:"Kibar",en:"polite"},{tr:"Zeki",en:"intelligent"},{tr:"Gelişim",en:"improvement"},{tr:"Keşfetmek",en:"explore"},{tr:"Sağlıklı",en:"healthy"},{tr:"Önemli",en:"important"},{tr:"Deneyim",en:"experience"}
+    ]; // Buraya 100 kelime eklenebilir.
 
-    let user = "", score = 0, time = 30, clock, current;
-    const config = { databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" };
-    firebase.initializeApp(config);
-    const db = firebase.database();
+    const app = {
+        user: "", score: 0, time: 30, timer: null, currentWord: null,
+        db: null,
 
-    function goPortal() {
-        user = document.getElementById('in-user').value.trim();
-        if(!user) return;
-        document.getElementById('scr-auth').style.display = 'none';
-        document.getElementById('scr-portal').style.display = 'block';
-        document.getElementById('txt-hi').innerText = "Selam, " + user;
-    }
+        init: function() {
+            const fbConfig = { databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" };
+            firebase.initializeApp(fbConfig);
+            this.db = firebase.database();
+            
+            document.getElementById('ans-input').addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') this.checkAns();
+            });
+        },
 
-    function goGame() {
-        document.getElementById('scr-portal').style.display = 'none';
-        document.getElementById('scr-game').style.display = 'block';
-        score = 0; time = 30; nextWord();
-        clock = setInterval(() => {
-            time--;
-            document.getElementById('txt-time').innerText = time;
-            if(time <= 0) finish();
-        }, 1000);
-    }
+        login: function() {
+            const val = document.getElementById('user-input').value.trim();
+            if(!val) return;
+            this.user = val;
+            document.getElementById('view-auth').style.display = 'none';
+            document.getElementById('view-menu').style.display = 'block';
+            document.getElementById('welcome-msg').innerText = "Selam, " + val;
+        },
 
-    function nextWord() {
-        current = WORDS[Math.floor(Math.random()*WORDS.length)];
-        document.getElementById('txt-word').innerText = current.tr.toUpperCase();
-        document.getElementById('in-ans').value = ""; document.getElementById('in-ans').focus();
-    }
+        startGame: function(mode) {
+            if(mode === 'vs') {
+                const opp = prompt("Rakip İsmi:");
+                if(!opp) return;
+                document.getElementById('vs-header').innerText = this.user + " VS " + opp;
+            }
+            document.getElementById('view-menu').style.display = 'none';
+            document.getElementById('view-game').style.display = 'block';
+            this.score = 0; this.time = 30;
+            this.nextWord();
+            this.timer = setInterval(() => {
+                this.time--;
+                document.getElementById('game-time').innerText = this.time;
+                if(this.time <= 0) this.endGame();
+            }, 1000);
+        },
 
-    document.getElementById('in-ans').addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') {
-            if(document.getElementById('in-ans').value.toLowerCase().trim() === current.en) {
-                score += 50; time += 2;
-                document.getElementById('txt-score').innerText = score;
-                document.getElementById('s-win').play();
-                confetti({ particleCount: 40, spread: 60 });
-                nextWord();
-            } else { boom(); }
-        }
-    });
+        nextWord: function() {
+            this.currentWord = WORD_BANK[Math.floor(Math.random() * WORD_BANK.length)];
+            document.getElementById('word-display').innerText = this.currentWord.tr.toUpperCase();
+            document.getElementById('ans-input').value = "";
+            document.getElementById('ans-input').focus();
+        },
 
-    function boom() {
-        document.body.classList.add('js-bg');
-        document.getElementById('ghost').classList.add('ghost-on');
-        document.getElementById('s-jump').play();
-        setTimeout(() => {
-            document.body.classList.remove('js-bg');
-            document.getElementById('ghost').classList.remove('ghost-on');
-        }, 600);
-        nextWord();
-    }
+        checkAns: function() {
+            const val = document.getElementById('ans-input').value.toLowerCase().trim();
+            if(val === this.currentWord.en) {
+                this.score += 50; this.time += 2;
+                document.getElementById('game-score').innerText = this.score;
+                document.getElementById('snd-win').play();
+                confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+                this.nextWord();
+            } else {
+                this.triggerJump();
+            }
+        },
 
-    function finish() {
-        clearInterval(clock);
-        // Zorla temizle
-        document.body.classList.remove('js-bg');
-        document.getElementById('ghost').classList.remove('ghost-on');
+        triggerJump: function() {
+            document.body.classList.add('jumpscare-active');
+            document.getElementById('ghost').classList.add('ghost-show');
+            document.getElementById('snd-jump').play();
+            setTimeout(() => {
+                document.body.classList.remove('jumpscare-active');
+                document.getElementById('ghost').classList.remove('ghost-show');
+            }, 600);
+            this.nextWord();
+        },
 
-        let rText = "BRONZ", rClass = "r-bronz";
-        if(score >= 2000) { rText = "ELİT"; rClass = "r-elit"; }
-        else if(score >= 1000) { rText = "ELMAS"; rClass = "r-elmas"; }
-        else if(score >= 500) { rText = "ALTIN"; rClass = "r-altin"; }
-        else if(score >= 200) { rText = "DEMİR"; rClass = "r-demir"; }
+        endGame: function() {
+            clearInterval(this.timer);
+            // Zorla temizle (Donma Koruması)
+            document.body.classList.remove('jumpscare-active');
+            document.getElementById('ghost').classList.remove('ghost-show');
 
-        db.ref('scores_v3/' + user).set({ n: user, s: score, t: rText, c: rClass }).then(() => showBoard());
-    }
+            let r = "BRONZ", c = "r-bronze";
+            if(this.score >= 2000) { r = "ELİT"; c = "r-elit"; }
+            else if(this.score >= 1000) { r = "ELMAS"; c = "r-diamond"; }
+            else if(this.score >= 500) { r = "ALTIN"; c = "r-gold"; }
+            else if(this.score >= 200) { r = "DEMİR"; c = "r-iron"; }
 
-    function showBoard() {
-        document.getElementById('scr-game').style.display = 'none';
-        document.getElementById('scr-portal').style.display = 'none';
-        document.getElementById('scr-board').style.display = 'flex';
-        
-        db.ref('scores_v3').orderByChild('s').limitToLast(15).once('value', (s) => {
-            let arr = []; s.forEach(x => arr.push(x.val()));
-            arr.sort((a,b) => b.s - a.s);
-            document.getElementById('list-container').innerHTML = arr.map((p, i) => `
-                <div class="row">
-                    <span><b>${i+1}.</b> ${p.n} ${p.n.toLowerCase().includes('developer') || p.n === 'Burak' ? '<span class="dev-tag">DEVELOPER</span>' : ''}</span>
-                    <div><b>${p.s}</b> <span class="rank ${p.c}">${p.t}</span></div>
-                </div>`).join('');
-        });
-    }
+            this.db.ref('final_ranking_v4/' + this.user).set({
+                n: this.user, s: this.score, r: r, c: c
+            }).then(() => this.showLeaderboard());
+        },
+
+        showLeaderboard: function() {
+            document.getElementById('view-game').style.display = 'none';
+            document.getElementById('view-menu').style.display = 'none';
+            document.getElementById('view-board').style.display = 'flex';
+
+            this.db.ref('final_ranking_v4').orderByChild('s').limitToLast(25).once('value', (snap) => {
+                let data = [];
+                snap.forEach(child => data.push(child.val()));
+                data.sort((a,b) => b.s - a.s);
+                
+                document.getElementById('board-content').innerHTML = data.map((p, i) => `
+                    <div class="list-item">
+                        <span><b>${i+1}.</b> ${p.n} ${(p.n.toLowerCase().includes('developer') || p.n === 'Burak') ? '<span class="dev-tag">DEVELOPER</span>' : ''}</span>
+                        <div>
+                            <b style="color:gold; margin-right:10px;">${p.s}</b>
+                            <span class="rank-badge ${p.c}">${p.r}</span>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        },
+
+        showVS: function() { this.startGame('vs'); }
+    };
+
+    app.init();
 </script>
 </body>
 </html>

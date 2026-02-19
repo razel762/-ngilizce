@@ -24,21 +24,19 @@
         .ember { position: absolute; background: var(--red); border-radius: 50%; pointer-events: none; animation: ember-fly 2s infinite linear; box-shadow: 0 0 8px var(--red); }
         .dev-title { font-family: 'Orbitron', sans-serif; font-size: 22px; color: #fff; margin: 15px 0; letter-spacing: 6px; font-weight: 900; text-shadow: 0 0 10px red; }
         
-        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; padding-right: 5px; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 12px; min-height: 70px; border: 1px solid #222; }
-        .empty-row { opacity: 0.1; border: 1px dashed #444; background: transparent; }
+        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; padding-right: 5px; margin-top: 10px; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: rgba(255,255,255,0.05); border-radius: 15px; margin-bottom: 8px; min-height: 60px; border: 1px solid #222; }
+        .empty-row { opacity: 0.1; border: 1px dashed #444; background: transparent; height: 60px; margin-bottom: 8px; border-radius: 15px; }
 
         input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; outline: none; border-bottom: 3px solid var(--red); }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 8px; transition: 0.3s; }
-        .btn:active { transform: scale(0.95); opacity: 0.8; }
-        .btn-vs { background: #1a1a1a; color: #666; border: 1px solid #333; font-size: 11px; margin-top: 5px; }
-
-        .rank-tag { font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 8px; color: #000; min-width: 100px; text-align: center; }
+        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 8px; }
+        
+        .rank-tag { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; color: #000; min-width: 80px; text-align: center; margin-left: 10px; }
         .r-bronz { background: #cd7f32; color: #fff; }
         .r-demir { background: #bdc3c7; }
         .r-altin { background: #f1c40f; }
         .r-elmas { background: #3498db; color: #fff; }
-        .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 15px red; }
+        .r-elit { background: #e74c3c; color: #fff; box-shadow: 0 0 10px red; }
         
         .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; }
     </style>
@@ -53,7 +51,6 @@
     <div class="dev-title">DEVELOPERS</div>
     <input type="text" id="p1" placeholder="ADINIZI YAZIN">
     <button class="btn" onclick="sys.auth()">OYUNA GİR</button>
-    <button class="btn btn-vs" onclick="alert('Henüz geliştirilme aşamasında!')">1 VS 1 MODU (YAKINDA GELECEK)</button>
 </div>
 
 <div id="scr-game" class="panel" style="display:none;">
@@ -61,15 +58,15 @@
         <span style="color:red">SÜRE: <b id="timer">30</b></span>
         <span style="color:gold">SKOR: <b id="score">0</b></span>
     </div>
-    <div id="word" style="font-size: 36px; font-weight: 900; margin: 30px 0; color: #fff; text-shadow: 0 0 10px red;">YÜKLENİYOR...</div>
+    <div id="word" style="font-size: 32px; font-weight: 900; margin: 25px 0; color: #fff; text-shadow: 0 0 10px red;">YÜKLENİYOR...</div>
     <input type="text" id="answer" placeholder="İNGİLİZCESİ?" autocomplete="off">
     <button class="btn" onclick="sys.next()" style="background:#222; font-size: 10px;">BİLEMEDİM, DEĞİŞTİR</button>
 </div>
 
 <div id="scr-board" class="overlay">
-    <div class="panel" style="max-height: 98vh; display: flex; flex-direction: column;">
-        <div class="neon-box" style="padding: 12px; margin-bottom: 5px;"><h2>KURUCU = 9/N Burak & Harun</h2></div>
-        <div class="dev-title" style="font-size: 16px; margin: 5px 0;">GLOBAL RANKING</div>
+    <div class="panel" style="max-height: 98vh; display: flex; flex-direction: column; overflow: hidden;">
+        <div class="neon-box" style="padding: 10px; margin-bottom: 5px;"><h2>KURUCU = 9/N Burak & Harun</h2></div>
+        <div class="dev-title" style="font-size: 14px; margin: 5px 0;">GLOBAL LEADERBOARD</div>
         <div id="dev-list"></div>
         <div id="list" class="list-scroll"></div>
         <button class="btn" onclick="location.reload()" style="background:#222; margin-top:10px;">YENİDEN BAŞLA</button>
@@ -77,51 +74,34 @@
 </div>
 
 <script>
-    // 100 Kelimelik Havuz
     const WORDS = [
-        {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Özgürlük",en:"freedom"},
-        {tr:"Yetenek",en:"ability"},{tr:"Miras",en:"heritage"},{tr:"Dürüst",en:"honest"},{tr:"Bilgi",en:"knowledge"},{tr:"Tecrübe",en:"experience"},
-        {tr:"Toplum",en:"society"},{tr:"Fırsat",en:"opportunity"},{tr:"Sorumluluk",en:"responsibility"},{tr:"Adalet",en:"justice"},{tr:"Yaratıcı",en:"creative"},
-        {tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Gelişim",en:"improvement"},{tr:"Güven",en:"confidence"},{tr:"Macera",en:"adventure"},
-        {tr:"Muhteşem",en:"magnificent"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Faydalı",en:"useful"},{tr:"Zengin",en:"wealthy"},{tr:"Zayıf",en:"weak"},
-        {tr:"Cömert",en:"generous"},{tr:"Sabırlı",en:"patient"},{tr:"Kıskanç",en:"jealous"},{tr:"Mükemmel",en:"perfect"},{tr:"İlginç",en:"interesting"},
-        {tr:"Önemli",en:"important"},{tr:"Gerekli",en:"necessary"},{tr:"Mümkün",en:"possible"},{tr:"İmkansız",en:"impossible"},{tr:"Popüler",en:"popular"},
-        {tr:"Hemen",en:"immediately"},{tr:"Dikkatli",en:"careful"},{tr:"Sessiz",en:"quiet"},{tr:"Gürültülü",en:"noisy"},{tr:"Temiz",en:"clean"},
-        {tr:"Pahalı",en:"expensive"},{tr:"Ucuz",en:"cheap"},{tr:"Zeki",en:"intelligent"},{tr:"Çalışkan",en:"hardworking"},{tr:"Harika",en:"wonderful"},
-        {tr:"Büyük",en:"large"},{tr:"Küçük",en:"small"},{tr:"Hızlı",en:"quick"},{tr:"Yavaş",en:"slow"},{tr:"Sıcak",en:"hot"}
+        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},
+        {tr:"Özgürlük",en:"freedom"},{tr:"Yetenek",en:"ability"},{tr:"Miras",en:"heritage"},{tr:"Dürüst",en:"honest"},{tr:"Bilgi",en:"knowledge"},
+        {tr:"Tecrübe",en:"experience"},{tr:"Toplum",en:"society"},{tr:"Fırsat",en:"opportunity"},{tr:"Adalet",en:"justice"},{tr:"Yaratıcı",en:"creative"},
+        {tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Gelişim",en:"improvement"},{tr:"Güven",en:"confidence"},{tr:"Macera",en:"adventure"}
     ];
     
-    // FIREBASE GLOBAL AYARI
     firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
     const db = firebase.database();
 
-    function createEmbers() {
-        const container = document.getElementById('ember-container');
-        setInterval(() => {
-            const e = document.createElement('div'); e.className = 'ember';
-            e.style.width = (Math.random()*4+2)+"px"; e.style.height = e.style.width;
-            e.style.left = Math.random()*100+"%"; e.style.bottom = "0";
-            container.appendChild(e); setTimeout(() => e.remove(), 2000);
-        }, 150);
-    }
-    createEmbers();
-
     const sys = {
-        user: "", score: 0, time: 30, cur: null,
+        user: "", score: 0, time: 30, cur: null, active: false,
         auth: () => { 
             sys.user = document.getElementById('p1').value.trim(); 
             if(sys.user) { 
                 document.getElementById('scr-auth').style.display='none'; 
                 document.getElementById('scr-game').style.display='block'; 
+                sys.active = true;
                 sys.start(); 
-            } else { alert("Lütfen bir isim yazın!"); }
+            }
         },
         start: () => { 
             sys.next(); 
             let clock = setInterval(() => { 
+                if(!sys.active) return clearInterval(clock);
                 sys.time--; 
                 document.getElementById('timer').innerText = sys.time; 
-                if(sys.time <= 0) { clearInterval(clock); sys.end(); } 
+                if(sys.time <= 0) { sys.active = false; clearInterval(clock); sys.end(); } 
             }, 1000); 
         },
         next: () => { 
@@ -136,49 +116,42 @@
             else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; } 
             else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
             
-            // GLOBAL KAYIT: Tüm dünya bu düğümden okuyacak
-            db.ref('GLOBAL_SCOREBOARD/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c }).then(() => {
-                sys.showBoard();
-            });
+            // Veri kaydı ve tabloyu açma (Zorlamalı geçiş eklendi)
+            db.ref('GLOBAL_SCOREBOARD/' + sys.user).set({ n: sys.user, s: sys.score, r: r, c: c });
+            
+            // Firebase cevabını beklemeden 800ms sonra tabloyu göster (Donmayı önler)
+            setTimeout(() => { sys.showBoard(); }, 800);
         },
         showBoard: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-board').style.display = 'flex';
             
-            // Veriyi anlık çek ve 10 boşluğu bas
             db.ref('GLOBAL_SCOREBOARD').once('value').then(snap => {
                 let all = []; snap.forEach(x => all.push(x.val()));
                 all.sort((a,b) => b.s - a.s);
                 
-                // DEVELOPER ÖZEL ALANI
                 let devs = all.filter(p => p.n.toLowerCase().includes('developer') || p.n === 'Burak' || p.n === 'Harun');
-                document.getElementById('dev-list').innerHTML = devs.map(p => `<div class="row" style="border:2px solid red; background:rgba(255,0,0,0.2);"><span>${p.n} <b style="color:red">DEV</b></span><b>${p.s}</b></div>`).join('');
+                document.getElementById('dev-list').innerHTML = devs.map(p => `<div class="row" style="border:2px solid red; background:rgba(255,0,0,0.15);"><span>${p.n} <b style="color:red">DEV</b></span><b>${p.s}</b></div>`).join('');
                 
-                // OYUNCU LİSTESİ
-                let players = all.filter(p => !devs.includes(p));
-                let html = players.slice(0, 10).map((p, i) => `<div class="row"><span><b>${i+1}.</b> ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`).join('');
+                let players = all.filter(p => !devs.includes(p)).slice(0, 10);
+                let html = players.map((p, i) => `<div class="row"><span><b>${i+1}.</b> ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`).join('');
                 
-                // 10 BOŞLUK GARANTİSİ (Liste boşsa veya azsa 10 kutu çıkar)
-                let currentLen = players.length;
-                for(let i=0; i < (10 - currentLen); i++) {
-                    html += `<div class="row empty-row"></div>`;
-                }
-                if(currentLen === 0 && html === "") { // Tamamen boşsa direkt 10 kutu bas
-                     for(let i=0; i<10; i++) html += `<div class="row empty-row"></div>`;
-                }
-
+                // 10 Boşluk Garantisi
+                for(let i=players.length; i<10; i++) html += `<div class="row empty-row"></div>`;
                 document.getElementById('list').innerHTML = html;
+            }).catch(err => {
+                document.getElementById('list').innerHTML = "<p>Bağlantı Hatası!</p>";
             });
         }
     };
 
     document.getElementById('answer').addEventListener('keypress', e => {
-        if(e.key === 'Enter') {
+        if(e.key === 'Enter' && sys.active) {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
-                sys.score += 50; sys.time += 3;
+                sys.score += 50; sys.time += 2;
                 document.getElementById('score').innerText = sys.score;
                 document.getElementById('snd-correct').play();
-                confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, colors: ['#ff0000', '#ffffff', '#f1c40f'] });
+                confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 } });
                 sys.next();
             } else {
                 document.getElementById('snd-wrong').play();
@@ -186,6 +159,19 @@
             }
         }
     });
+
+    // Süsleme Efekti
+    function createEmbers() {
+        const container = document.getElementById('ember-container');
+        if(!container) return;
+        setInterval(() => {
+            const e = document.createElement('div'); e.className = 'ember';
+            e.style.width = (Math.random()*4+2)+"px"; e.style.height = e.style.width;
+            e.style.left = Math.random()*100+"%"; e.style.bottom = "0";
+            container.appendChild(e); setTimeout(() => e.remove(), 2000);
+        }, 200);
+    }
+    createEmbers();
 </script>
 </body>
 </html>

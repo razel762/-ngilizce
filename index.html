@@ -95,3 +95,103 @@
     });
 
     const db = firebase.database();
+
+    const sys = {
+    user: "", score: 0, time: 30, cur: null, active: false,
+
+    auth: () => {
+        sys.user = document.getElementById('p1').value.trim();
+        if(sys.user !== "") {
+            document.getElementById('scr-auth').style.display='none';
+            document.getElementById('scr-game').style.display='block';
+            sys.active = true;
+            sys.start();
+        }
+    },
+
+    start: () => {
+        sys.next();
+        let clock = setInterval(() => {
+            if(!sys.active) return clearInterval(clock);
+            sys.time--;
+            document.getElementById('timer').innerText = sys.time;
+            if(sys.time <= 0){
+                sys.active = false;
+                clearInterval(clock);
+                sys.end();
+            }
+        },1000);
+    },
+
+    next: () => {
+        sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
+        document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
+        document.getElementById('answer').value="";
+        document.getElementById('answer').focus();
+    },
+
+    end: () => {
+        let r="ÇAYLAK BRONZ", c="r-bronz";
+        if(sys.score >= 2000){ r="ELİT KIRMIZI"; c="r-elit";}
+        else if(sys.score >= 1000){ r="ELMAS MAVİ"; c="r-elmas";}
+        else if(sys.score >= 500){ r="ALTIN SARI"; c="r-altin";}
+        else if(sys.score >= 200){ r="DEMİR GRİ"; c="r-demir";}
+
+        document.getElementById('scr-game').style.display='none';
+        document.getElementById('scr-board').style.display='flex';
+
+        db.ref("GLOBAL_SCOREBOARD").push({
+            n: sys.user,
+            s: sys.score,
+            r: r,
+            c: c
+        }).then(()=> sys.loadScores());
+    },
+
+    loadScores: () => {
+        db.ref("GLOBAL_SCOREBOARD").once("value").then(snap=>{
+            let all=[];
+            snap.forEach(x=> all.push(x.val()));
+            all.sort((a,b)=> b.s - a.s);
+
+            let players = all.slice(0,10);
+            let html="";
+
+            for(let i=0;i<10;i++){
+                if(players[i]){
+                    html+=`
+                    <div class="row">
+                        <span><b>${i+1}.</b> ${players[i].n}</span>
+                        <div><b>${players[i].s}</b>
+                        <span class="rank-tag ${players[i].c}">${players[i].r}</span></div>
+                    </div>`;
+                } else {
+                    html+=`
+                    <div class="row" style="opacity:0.3;">
+                        <span><b>${i+1}.</b> BOS</span>
+                        <div><b>0</b>
+                        <span class="rank-tag r-wait">BEKLENİYOR</span></div>
+                    </div>`;
+                }
+            }
+
+            document.getElementById("list").innerHTML = html;
+        });
+    }
+};
+
+document.getElementById("answer").addEventListener("keypress", e=>{
+    if(e.key==="Enter" && sys.active){
+        if(document.getElementById("answer").value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
+            sys.score+=50;
+            sys.time+=2;
+            document.getElementById("score").innerText=sys.score;
+            document.getElementById("snd-correct").play();
+            confetti({particleCount:40,spread:50,origin:{y:0.7}});
+            sys.next();
+        } else {
+            document.getElementById("snd-wrong").play();
+            sys.next();
+        }
+    }
+});

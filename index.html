@@ -3,330 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Burak Dev | Ultimate Edition</title>
+    <title>Bu Oyun 9/N Deki Burak & Harun Tarafından Geliştirildi</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Kalam:wght@700&display=swap" rel="stylesheet">
+    
     <style>
         :root { 
             --bronze: #cd7f32; --iron: #bdc3c7; --gold: #f1c40f; 
             --diamond: #3498db; --elit: #e74c3c; --neon-red: #ff0000; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { 
-            font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; 
-            background: #000; background: radial-gradient(circle, #200000 0%, #000 100%);
-            color: white; padding: 10px; overflow: hidden;
-        }
-        
-        /* JUMPSCARE ANIMATION */
+        body { font-family: 'Poppins', sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #000; overflow: hidden; color: white; position: relative; }
+        body::before { content: ""; position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #200000 0%, #000 100%); z-index: -1; }
+
+        /* JUMPSCARE */
         @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-4px, 2px); } 50% { transform: translate(4px, -2px); } }
         .jumpscare-bg { background: #600 !important; animation: shake 0.1s infinite; }
         #ghost { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); z-index: 9999; font-size: 200px; transition: 0.1s; pointer-events: none; opacity: 0; }
         .ghost-active { transform: translate(-50%, -50%) scale(1.5) !important; opacity: 0.8 !important; }
 
-        .card-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; position: relative;}
-        input { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 14px; text-align: center; margin-bottom: 10px; outline: none; background: #fff; color: #333; }
-        .btn { background: #6c5ce7; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 5px; }
-        .btn:active { transform: scale(0.95); }
-
-        /* VS NOTIFICATION */
-        #vs-invite-box {
-            display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: #111; border: 2px solid var(--neon-red); padding: 20px; border-radius: 15px;
-            z-index: 5000; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 0 30px rgba(255,0,0,0.5);
-        }
-
-        /* 1VS1 SCREEN */
-        #pvp-screen { display: none; width: 100vw; height: 100vh; flex-direction: row; position: fixed; inset: 0; z-index: 2000; background: #000; }
-        .pvp-side { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
-        .side-1 { background: rgba(255,0,0,0.03); }
-        .side-2 { background: rgba(0,0,255,0.03); }
-        .pvp-score { font-size: 50px; font-weight: 900; color: var(--gold); }
-        .player-label { position: absolute; top: 30px; font-size: 14px; font-weight: 800; letter-spacing: 2px; color: #aaa; }
-
-        .dev-badge { background: linear-gradient(45deg, #ff0000, #ffae00); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; margin-left: 5px; animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .score-row { display: flex; justify-content: space-between; padding: 12px; margin-bottom: 6px; background: rgba(255,255,255,0.07); border-radius: 12px; align-items: center; font-size: 13px; width: 100%; }
+        /* NEON TASARIM */
+        .neon-box { border: 3px solid var(--neon-red); box-shadow: 0 0 20px var(--neon-red), inset 0 0 10px var(--neon-red); background: rgba(0, 0, 0, 0.95); border-radius: 25px; padding: 25px; width: 100%; max-width: 420px; text-align: center; position: relative; z-index: 10; }
+        .maker-header { background: linear-gradient(135deg, #000, #600, #000); border: 2px solid var(--neon-red); padding: 15px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 0 25px rgba(255, 0, 0, 0.6); animation: glow 2s infinite ease-in-out; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 15px var(--neon-red); } 50% { box-shadow: 0 0 35px var(--neon-red); } }
         
-        /* RANKS */
-        .rank-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 6px; color: #000; min-width: 80px; text-align: center; }
+        .bubble { position: absolute; bottom: -50px; background: rgba(255, 0, 0, 0.15); border-radius: 50%; animation: rise 8s infinite ease-in; z-index: 1; }
+        @keyframes rise { 0% { transform: translateY(0) scale(1); opacity: 0; } 50% { opacity: 0.4; } 100% { transform: translateY(-110vh) scale(1.5); opacity: 0; } }
+
+        /* SIRALAMA */
+        .score-row { display: flex; justify-content: space-between; padding: 12px; margin-bottom: 8px; background: rgba(255,0,0,0.1); border-radius: 12px; align-items: center; border: 1px solid rgba(255,0,0,0.3); }
+        .dev-badge { background: linear-gradient(45deg, #ff0000, #ffae00); color: white; padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 900; margin-left: 8px; box-shadow: 0 0 10px #f00; }
+        
+        .rank-tag { font-size: 10px; font-weight: 900; padding: 5px 10px; border-radius: 8px; color: #000; min-width: 85px; text-align: center; }
         .r-caylak { background: var(--bronze); color: white; }
         .r-demir { background: var(--iron); }
         .r-altin { background: var(--gold); }
         .r-elmas { background: var(--diamond); color: white; }
         .r-elit { background: var(--elit); color: white; box-shadow: 0 0 15px var(--elit); }
+
+        input { width: 100%; padding: 14px; border-radius: 12px; border: none; margin-bottom: 12px; text-align: center; font-weight: bold; background: #fff; color: #000; outline: none; }
+        .btn { background: #6c5ce7; color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 5px; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body id="main-body" oncontextmenu="return false;">
 
 <div id="ghost">👻</div>
-
-<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
 <audio id="snd-jumpscare" src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=FNAF+Jumpscare&filename=mz/MzU3MDU1NTM1MzcwNTY3_97v8_2b_2f_2fmXw.mp3"></audio>
 
-<div id="vs-invite-box">
-    <h4 id="invite-text">VS İsteği!</h4>
-    <div style="display:flex; gap:10px; margin-top: 15px;">
-        <button class="btn" style="background:#2ecc71; flex:1;" onclick="acceptVS()">KABUL ET</button>
-        <button class="btn" style="background:#e74c3c; flex:1;" onclick="declineVS()">REDDET</button>
-    </div>
-</div>
-
 <div id="auth-screen">
-    <div class="card-box" style="border: 2px solid var(--neon-red);">
-        <h2 style="color:var(--neon-red); margin-bottom: 15px;">🔒 BURAK DEV ACCESS</h2>
-        <input type="text" id="username" placeholder="Kullanıcı Adı">
-        <input type="password" id="password" placeholder="Şifre">
-        <button class="btn" onclick="handleAuth()">SİSTEME GİRİŞ YAP</button>
+    <div class="neon-box">
+        <div class="maker-header">
+            <p style="font-size: 13px; font-weight: 800; color: #fff; line-height: 1.5; text-transform: uppercase;">
+                BU OYUN 9/N DEKİ BURAK VE HARUN TARAFINDAN YAPILMISTUR
+            </p>
+        </div>
+        <input type="text" id="username" placeholder="İsminizi Yazın...">
+        <button class="btn" style="background:var(--neon-red)" onclick="handleAuth()">GİRİŞ YAP</button>
     </div>
 </div>
 
 <div id="portal-screen" style="display:none;">
-    <div class="card-box">
-        <h3 id="welcome-text" style="margin-bottom:20px; font-size: 24px;">Hoşgeldin!</h3>
-        <button class="btn" style="background:var(--neon-red); height: 50px;" onclick="startSingleGame()">TEKLİ OYUN (SÜRELİ)</button>
-        
-        <div style="margin-top:25px; padding-top:20px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <p style="font-size:11px; margin-bottom:12px; color:#aaa; font-weight:600;">ARKADAŞINI DÜELLOYA ÇAĞIR</p>
-            <input type="text" id="opponent-name" placeholder="Rakip Kullanıcı Adı">
-            <button class="btn" style="background:#2ecc71" onclick="sendVSRequest()">MEYDAN OKU ⚔️</button>
+    <div class="neon-box">
+        <h3 id="welcome-text" style="margin-bottom:20px; color: var(--neon-red); font-size: 24px;">Hoşgeldin!</h3>
+        <button class="btn" style="background:var(--neon-red); height: 60px;" onclick="startSingleGame()">OYUNA BAŞLA</button>
+        <button class="btn" style="background:#3498db;" onclick="showLeaders()">DÜNYA SIRALAMASI</button>
+        <div style="margin-top:15px;">
+            <input type="text" id="opp-name" placeholder="Rakip İsmi">
+            <button class="btn" style="background:#2ecc71;" onclick="startVS()">VS MODU BAŞLAT</button>
         </div>
-
-        <button class="btn" style="background:#3498db; margin-top:15px;" onclick="showLeaders()">GLOBAL SIRALAMA</button>
     </div>
 </div>
 
 <div id="game-screen" style="display:none;">
-    <div class="card-box">
+    <div class="neon-box">
         <div style="display:flex; justify-content: space-between; margin-bottom:20px;">
             <span style="color:#ff4757; font-weight:800;">SÜRE: <b id="timer">30</b></span>
             <span style="color:#f1c40f; font-weight:800;">SKOR: <b id="score">0</b></span>
         </div>
-        <div id="word-box" style="font-family:'Kalam'; font-size:40px; color:#fff; margin:20px 0; text-shadow: 0 0 10px rgba(255,255,255,0.5);">...</div>
-        <input type="text" id="ans" placeholder="İngilizcesini yaz...">
+        <div id="word-box" style="font-family:'Kalam'; font-size:40px; margin:20px 0; color: #fff; text-shadow: 0 0 10px #f00;">...</div>
+        <input type="text" id="ans" placeholder="İngilizcesi?">
     </div>
-</div>
-
-<div id="pvp-screen">
-    <div class="pvp-side side-1">
-        <div class="player-label" id="p1-label">P1</div>
-        <div class="pvp-score" id="p1-score">0</div>
-        <div id="p1-word" style="font-family:'Kalam'; font-size:35px; margin:25px 0;">...</div>
-        <input type="text" id="p1-ans" placeholder="Hızlı yaz!">
-    </div>
-    <div class="pvp-side side-2">
-        <div class="player-label" id="p2-label">P2</div>
-        <div class="pvp-score" id="p2-score">0</div>
-        <div id="p2-word" style="font-family:'Kalam'; font-size:35px; margin:25px 0;">...</div>
-        <input type="text" id="p2-ans" placeholder="Hızlı yaz!">
-    </div>
-    <button class="btn" style="position:fixed; bottom:20px; width:120px; background:#e74c3c; left: 50%; transform: translateX(-50%);" onclick="closeModals()">VS BİTİR</button>
 </div>
 
 <div id="leader-modal" class="overlay">
-    <div class="card-box" style="max-width:380px;">
-        <h3 style="color:var(--gold); margin-bottom:15px;">🏆 EN İYİLER</h3>
-        <div id="leader-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px;"></div>
+    <div class="neon-box">
+        <div class="maker-header" style="padding: 10px; margin-bottom: 10px;">
+            <p style="font-size: 12px; color: #fff;">DEVELOPER: 9/N BURAK & HARUN</p>
+        </div>
+        <h3 style="color:var(--gold); margin-bottom:15px;">🏆 GLOBAL LİDERLER</h3>
+        <div id="leader-list" style="max-height: 350px; overflow-y: auto;"></div>
         <button class="btn" onclick="closeModals()">ANA MENÜ</button>
     </div>
 </div>
 
-<div id="end-modal" class="overlay">
-    <div class="card-box">
-        <h2 style="color:var(--neon-red)">SÜRE BİTTİ!</h2>
-        <div id="final-score" style="font-size:70px; margin:20px 0; font-weight:800;">0</div>
-        <button class="btn" onclick="saveScore()">SKORU KAYDET VE ÇIK</button>
-    </div>
-</div>
-
 <script>
-    const DEVS = ["Burak", "burak", "BurakDev"];
+    // --- KONFİGÜRASYON ---
+    const DEVS = ["9/N Sınıfındaki Burak ve Harun", "Burak", "Harun", "Burak 9/N", "Harun 9/N"];
     
-    // TÜM KELİMELERİ GERİ EKLEDİM
+    // --- 100 KELİMELİK TAM LİSTE ---
     const baseWords = [
         {tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Gelecek",en:"future"},{tr:"Teknoloji",en:"technology"},
-        {tr:"Deneyim",en:"experience"},{tr:"Önemli",en:"important"},{tr:"Farklı",en:"different"},{tr:"Sağlıklı",en:"healthy"},
         {tr:"Eğitim",en:"education"},{tr:"Başarı",en:"success"},{tr:"Yetenek",en:"ability"},{tr:"Macera",en:"adventure"},
-        {tr:"Zevk",en:"enjoyment"},{tr:"Tatil",en:"holiday"},{tr:"Mevsim",en:"season"},{tr:"Hava Durumu",en:"weather"},
-        {tr:"Kıyafet",en:"clothes"},{tr:"Duygu",en:"feeling"},{tr:"Düşünce",en:"thought"},{tr:"Karar",en:"decision"},
-        {tr:"Meslek",en:"job"},{tr:"Bilim",en:"science"},{tr:"Keşfetmek",en:"explore"},{tr:"İcat",en:"invention"},
-        {tr:"Karakter",en:"character"},{tr:"Dış Görünüş",en:"appearance"},{tr:"Cömert",en:"generous"},{tr:"İnatçı",en:"stubborn"},
-        {tr:"Kibar",en:"polite"},{tr:"Dürüst",en:"honest"},{tr:"Korkunç",en:"terrible"},{tr:"Harika",en:"wonderful"},
-        {tr:"Ulaşım",en:"transport"},{tr:"Halk Oyunları",en:"folk dance"},{tr:"Miras",en:"heritage"},{tr:"Kirlilik",en:"pollution"},
-        {tr:"Küresel Isınma",en:"global warming"},{tr:"Geri Dönüşüm",en:"recycle"},{tr:"Vahşi Yaşam",en:"wildlife"},{tr:"Nesli Tükenmek",en:"extinct"},
-        {tr:"İletişim",en:"communication"},{tr:"Gelişim",en:"improvement"},{tr:"Gereksiz",en:"unnecessary"},{tr:"Faydalı",en:"useful"}
+        {tr:"Miras",en:"heritage"},{tr:"Kirlilik",en:"pollution"},{tr:"Küresel Isınma",en:"global warming"},{tr:"Dürüst",en:"honest"},
+        {tr:"Cömert",en:"generous"},{tr:"İnatçı",en:"stubborn"},{tr:"Kibar",en:"polite"},{tr:"Vahşi Yaşam",en:"wildlife"},
+        {tr:"İletişim",en:"communication"},{tr:"Gelişim",en:"improvement"},{tr:"Nesli Tükenmek",en:"extinct"},{tr:"Keşfetmek",en:"explore"},
+        {tr:"Halk Oyunları",en:"folk dance"},{tr:"Geri Dönüşüm",en:"recycle"},{tr:"Sağlıklı",en:"healthy"},{tr:"Deneyim",en:"experience"},
+        {tr:"Önemli",en:"important"},{tr:"Farklı",en:"different"},{tr:"Kıyafet",en:"clothes"},{tr:"Hava Durumu",en:"weather"},
+        {tr:"Mevsim",en:"season"},{tr:"Tatil",en:"holiday"},{tr:"Bilim",en:"science"},{tr:"İcat",en:"invention"},
+        {tr:"Zevk",en:"enjoyment"},{tr:"Karakter",en:"character"},{tr:"Düşünce",en:"thought"},{tr:"Karar",en:"decision"},
+        {tr:"Meslek",en:"job"},{tr:"Harika",en:"wonderful"},{tr:"Korkunç",en:"terrible"},{tr:"Ulaşım",en:"transport"},
+        {tr:"Becerikli",en:"skilful"},{tr:"Kaba",en:"rude"},{tr:"Zeki",en:"intelligent"},{tr:"Ciddi",en:"serious"},
+        {tr:"Eğlenceli",en:"funny"},{tr:"Utangaç",en:"shy"},{tr:"Sabırlı",en:"patient"},{tr:"Dikkatsiz",en:"careless"},
+        {tr:"Güvenli",en:"safe"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},
+        {tr:"Güçlü",en:"strong"},{tr:"Zayıf",en:"weak"},{tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},
+        {tr:"Sinirli",en:"angry"},{tr:"Yorgun",en:"tired"},{tr:"Aç",en:"hungry"},{tr:"Susuz",en:"thirsty"},
+        {tr:"Büyük",en:"large"},{tr:"Küçük",en:"small"},{tr:"Geniş",en:"wide"},{tr:"Dar",en:"narrow"},
+        {tr:"Pahalı",en:"expensive"},{tr:"Ucuz",en:"cheap"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"},
+        {tr:"Temiz",en:"clean"},{tr:"Kirli",en:"dirty"},{tr:"Sıcak",en:"hot"},{tr:"Soğuk",en:"cold"},
+        {tr:"Kolay",en:"easy"},{tr:"Zor",en:"difficult"},{tr:"Genç",en:"young"},{tr:"Yaşlı",en:"old"},
+        {tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"},
+        {tr:"Güzel",en:"beautiful"},{tr:"Çirkin",en:"ugly"},{tr:"Gürültülü",en:"noisy"},{tr:"Sessiz",en:"quiet"},
+        {tr:"Yüksek",en:"high"},{tr:"Alçak",en:"low"},{tr:"Parlak",en:"bright"},{tr:"Karanlık",en:"dark"},
+        {tr:"Mükemmel",en:"perfect"},{tr:"İmkansız",en:"impossible"},{tr:"Mümkün",en:"possible"},{tr:"Ünlü",en:"famous"},
+        {tr:"Yabancı",en:"foreign"},{tr:"Modern",en:"modern"},{tr:"Antik",en:"ancient"},{tr:"Özel",en:"special"},
+        {tr:"Sıradan",en:"ordinary"},{tr:"Gerekli",en:"necessary"},{tr:"Faydalı",en:"useful"},{tr:"Zararlı",en:"harmful"}
     ];
-    while(baseWords.length < 100) { baseWords.push(baseWords[Math.floor(Math.random()*baseWords.length)]); }
 
-    let currentUser = "", currentOpponent = "", score = 0, timeLeft = 30, timer, currentWord, p1Score=0, p2Score=0, p1W, p2W;
+    let currentUser = "", score = 0, timeLeft = 30, timer, currentWord;
+
+    // FIREBASE (CANLI TABLO)
+    const firebaseConfig = { databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
     function handleAuth() {
         const u = document.getElementById('username').value.trim();
-        const p = document.getElementById('password').value.trim();
-        if(!u || !p) return alert("Bilgileri boş bırakma!");
-        
-        let users = JSON.parse(localStorage.getItem('burak_users')) || {};
-        if(users[u] && users[u] !== p) return alert("Hatalı şifre!");
-        users[u] = p;
-        localStorage.setItem('burak_users', JSON.stringify(users));
-        
+        if(!u) return;
         currentUser = u;
         document.getElementById('auth-screen').style.display='none';
         document.getElementById('portal-screen').style.display='block';
         document.getElementById('welcome-text').innerText = `Selam, ${u}!`;
-        document.querySelectorAll('audio').forEach(a => { a.play(); a.pause(); });
+        createBubbles();
     }
 
-    // VS SİSTEMİ
-    function sendVSRequest() {
-        const opp = document.getElementById('opponent-name').value.trim();
-        if(!opp) return alert("Rakip adı yazmalısın!");
-        if(opp.toLowerCase() === currentUser.toLowerCase()) return alert("Kendine meydan okuyamazsın!");
-        
-        currentOpponent = opp;
-        document.getElementById('invite-text').innerText = `${currentUser} sana meydan okuyor!`;
-        document.getElementById('vs-invite-box').style.display = 'block';
-    }
-
-    function acceptVS() {
-        document.getElementById('vs-invite-box').style.display = 'none';
-        document.getElementById('portal-screen').style.display = 'none';
-        document.getElementById('pvp-screen').style.display = 'flex';
-        document.getElementById('p1-label').innerText = currentUser.toUpperCase();
-        document.getElementById('p2-label').innerText = currentOpponent.toUpperCase();
-        p1Score = 0; p2Score = 0;
-        document.getElementById('p1-score').innerText = "0";
-        document.getElementById('p2-score').innerText = "0";
-        nextPvPWord(1); nextPvPWord(2);
-    }
-
-    function declineVS() {
-        document.getElementById('vs-invite-box').style.display = 'none';
-    }
-
-    function nextPvPWord(p) {
-        const w = baseWords[Math.floor(Math.random()*baseWords.length)];
-        if(p === 1) { 
-            p1W = w; document.getElementById('p1-word').innerText = w.tr.toUpperCase(); 
-            document.getElementById('p1-ans').value = ""; 
-        } else { 
-            p2W = w; document.getElementById('p2-word').innerText = w.tr.toUpperCase(); 
-            document.getElementById('p2-ans').value = ""; 
+    function createBubbles() {
+        for(let i=0; i<15; i++) {
+            let b = document.createElement("div"); b.className = "bubble";
+            let size = Math.random() * 20 + 10 + "px"; b.style.width = size;
+            b.style.left = Math.random() * 100 + "vw"; b.style.animationDuration = Math.random() * 5 + 5 + "s";
+            document.body.appendChild(b);
         }
     }
 
-    document.getElementById('p1-ans').addEventListener('keypress', e => {
-        if(e.key === 'Enter' && document.getElementById('p1-ans').value.toLowerCase().trim() === p1W.en) {
-            p1Score += 10; document.getElementById('p1-score').innerText = p1Score;
-            document.getElementById('snd-correct').play();
-            confetti({particleCount: 20, origin: {x: 0.2, y: 0.5}});
-            nextPvPWord(1);
-        }
-    });
-
-    document.getElementById('p2-ans').addEventListener('keypress', e => {
-        if(e.key === 'Enter' && document.getElementById('p2-ans').value.toLowerCase().trim() === p2W.en) {
-            p2Score += 10; document.getElementById('p2-score').innerText = p2Score;
-            document.getElementById('snd-correct').play();
-            confetti({particleCount: 20, origin: {x: 0.8, y: 0.5}});
-            nextPvPWord(2);
-        }
-    });
-
-    // TEKLİ OYUN VE JUMPSCARE
     function startSingleGame() {
         document.getElementById('portal-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
-        score = 0; timeLeft = 30;
-        document.getElementById('score').innerText = "0";
+        score = 0; timeLeft = 30; document.getElementById('score').innerText = "0";
         newWord();
         timer = setInterval(() => {
-            timeLeft--;
-            document.getElementById('timer').innerText = timeLeft;
-            if(timeLeft <= 0) {
-                clearInterval(timer);
-                document.getElementById('final-score').innerText = score;
-                document.getElementById('end-modal').style.display = 'flex';
-            }
+            timeLeft--; document.getElementById('timer').innerText = timeLeft;
+            if(timeLeft <= 0) { clearInterval(timer); saveScore(); }
         }, 1000);
     }
 
     function newWord() {
         currentWord = baseWords[Math.floor(Math.random()*baseWords.length)];
         document.getElementById('word-box').innerText = currentWord.tr.toUpperCase();
-        document.getElementById('ans').value = "";
-        document.getElementById('ans').focus();
+        document.getElementById('ans').value = ""; document.getElementById('ans').focus();
     }
 
     document.getElementById('ans').addEventListener('keypress', e => {
         if(e.key === 'Enter') {
             if(document.getElementById('ans').value.toLowerCase().trim() === currentWord.en) {
-                score += 50; timeLeft += 2;
-                document.getElementById('score').innerText = score;
-                document.getElementById('snd-correct').play();
-                confetti({particleCount: 40, origin: {y: 0.7}});
-                newWord();
-            } else {
-                triggerJumpscare();
-            }
+                score += 50; timeLeft += 2; document.getElementById('score').innerText = score;
+                confetti({particleCount: 40, spread: 70, origin: {y: 0.6}}); newWord();
+            } else { triggerJumpscare(); }
         }
     });
 
     function triggerJumpscare() {
         document.getElementById('main-body').classList.add('jumpscare-bg');
         document.getElementById('ghost').classList.add('ghost-active');
-        document.getElementById('snd-wrong').play();
         document.getElementById('snd-jumpscare').play();
-        setTimeout(() => {
-            document.getElementById('main-body').classList.remove('jumpscare-bg');
-            document.getElementById('ghost').classList.remove('ghost-active');
+        setTimeout(() => { 
+            document.getElementById('main-body').classList.remove('jumpscare-bg'); 
+            document.getElementById('ghost').classList.remove('ghost-active'); 
         }, 650);
         newWord();
     }
 
-    // KAYIT VE SIRALAMA
     function saveScore() {
-        let db = JSON.parse(localStorage.getItem('burak_v_ranks')) || [];
-        let r_t = "ÇAYLAK", r_c = "r-caylak";
+        let r_t = "BRONZ", r_c = "r-caylak";
         if(score >= 2000) { r_t = "ELİT"; r_c = "r-elit"; }
         else if(score >= 1000) { r_t = "ELMAS"; r_c = "r-elmas"; }
         else if(score >= 500) { r_t = "ALTIN"; r_c = "r-altin"; }
         else if(score >= 200) { r_t = "DEMİR"; r_c = "r-demir"; }
 
-        let idx = db.findIndex(i => i.n === currentUser);
-        if (idx !== -1) { if(score > db[idx].s) db[idx] = {n:currentUser, s:score, t:r_t, c:r_c}; }
-        else { db.push({n:currentUser, s:score, t:r_t, c:r_c}); }
-        
-        db.sort((a,b) => b.s - a.s);
-        localStorage.setItem('burak_v_ranks', JSON.stringify(db));
-        document.getElementById('end-modal').style.display = 'none';
+        database.ref('global_scores/' + currentUser).set({ n: currentUser, s: score, t: r_t, c: r_c });
+        alert("Oyun Bitti! Skorun: " + score);
+        document.getElementById('game-screen').style.display = 'none';
         showLeaders();
     }
 
     function showLeaders() {
-        let db = JSON.parse(localStorage.getItem('burak_v_ranks')) || [];
-        let h = db.map((item, i) => `
-            <div class="score-row">
-                <span><b>${i+1}.</b> ${item.n} ${DEVS.includes(item.n) ? '<span class="dev-badge">DEV</span>' : ''}</span>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="color:var(--gold); font-weight:bold;">${item.s}</span>
-                    <span class="rank-tag ${item.c}">${item.t}</span>
-                </div>
-            </div>`).join('');
-        document.getElementById('leader-list').innerHTML = h || "Henüz kayıt yok!";
-        document.getElementById('leader-modal').style.display = 'flex';
+        database.ref('global_scores').orderByChild('s').limitToLast(30).once('value', (snap) => {
+            let list = [];
+            snap.forEach(c => { list.push(c.val()); });
+            list.reverse();
+            let h = list.map((item, i) => `
+                <div class="score-row">
+                    <span><b>${i+1}.</b> ${item.n} ${DEVS.includes(item.n) ? '<span class="dev-badge">DEVELOPER</span>' : ''}</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="color:var(--gold); font-weight:bold;">${item.s}</span>
+                        <span class="rank-tag ${item.c}">${item.t}</span>
+                    </div>
+                </div>`).join('');
+            document.getElementById('leader-list').innerHTML = h || "Skor yok.";
+            document.getElementById('leader-modal').style.display = 'flex';
+        });
     }
 
     function closeModals() {
         document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none');
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('pvp-screen').style.display = 'none';
         document.getElementById('portal-screen').style.display = 'block';
-        if(timer) clearInterval(timer);
     }
 </script>
 </body>

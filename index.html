@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>9/N GLOBAL | DEVELOPERS</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     
@@ -15,37 +13,40 @@
         
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2000&auto=format&fit=crop'); 
-            background-size: cover; background-position: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523050853063-bd80d27433ad?q=80&w=2000&auto=format&fit=crop'); 
+            background-size: cover; background-position: center; background-attachment: fixed;
             color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; overflow: hidden; 
         }
 
-        .big-card { background: rgba(10, 10, 10, 0.9); border: 2px solid #333; border-radius: 30px; width: 90%; max-width: 400px; padding: 30px; text-align: center; backdrop-filter: blur(10px); }
-        .card-active { border-color: var(--green); box-shadow: 0 0 20px rgba(46, 204, 113, 0.3); }
-        .card-locked { opacity: 0.7; border-style: dashed; border-color: #444; }
+        .big-card { background: rgba(0, 0, 0, 0.85); border: 2px solid rgba(255,255,255,0.1); border-radius: 30px; width: 90%; max-width: 400px; padding: 30px; text-align: center; backdrop-filter: blur(15px); }
+        .card-active { border-color: var(--green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2); }
+        .card-locked { opacity: 0.6; border-style: dashed; border-color: #444; }
 
         .title { font-family: 'Orbitron', sans-serif; font-size: 18px; color: var(--green); margin-bottom: 15px; font-weight: 900; }
         .icon-brain { font-size: 50px; display: block; margin-bottom: 10px; }
 
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #444; background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; transition: 0.3s; }
+        
+        @keyframes popup { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.4); opacity: 1; } 100% { transform: scale(1.2); opacity: 0; } }
+        .feedback { position: fixed; top: 30%; font-weight: 900; font-size: 35px; pointer-events: none; z-index: 1000; animation: popup 1s forwards; text-shadow: 2px 2px 10px #000; }
 
-        /* Geri Bildirim Yazıları (Küçükten Büyüğe) */
-        @keyframes popup { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1.5); opacity: 1; } }
-        .feedback { position: fixed; top: 40%; font-weight: 900; pointer-events: none; z-index: 1000; animation: popup 0.5s forwards; }
-
-        /* Titreşim */
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-        .shaking { animation: shake 0.2s ease-in-out 2; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-15px); } 40% { transform: translateX(15px); } 60% { transform: translateX(-10px); } 80% { transform: translateX(10px); } }
+        .shaking { animation: shake 0.4s ease-in-out; }
 
         .list-scroll { width: 100%; max-height: 250px; overflow-y: auto; margin: 15px 0; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 5px; font-size: 12px; }
-        .rank-tag { font-size: 8px; padding: 3px 6px; border-radius: 4px; color: #000; min-width: 80px; font-weight: 900; text-align: center; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-bottom: 6px; font-size: 13px; }
+        .rank-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; color: #000; min-width: 90px; font-weight: 900; text-align: center; }
         
-        /* Rütbe Renkleri */
-        .r-bronz { background: #cd7f32; color: #fff; } .r-demir { background: #bdc3c7; } .r-altin { background: #f1c40f; } .r-elmas { background: #3498db; color: #fff; } .r-elit { background: #e74c3c; color: #fff; } .r-wait { background: #222; color: #444; }
+        /* RÜTBE STİLLERİ */
+        .r-bronz { background: #cd7f32; color: #fff; } 
+        .r-demir { background: #bdc3c7; } 
+        .r-altin { background: #f1c40f; } 
+        .r-elmas { background: #3498db; color: #fff; } 
+        .r-elit { background: #e74c3c; color: #fff; } 
+        .r-wait { background: #222; color: #555; }
 
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
@@ -58,43 +59,52 @@
     </div>
     <div class="big-card card-locked">
         <span style="font-size:30px">🔒</span>
-        <div style="color:#666; font-size:12px; font-weight:800; margin-top:10px;">YENİ OYUN BERKİ GELİR</div>
+        <div style="color:#888; font-size:12px; font-weight:800; margin-top:10px;">YENİ OYUN BERKİ GELİR</div>
     </div>
 </div>
 
-<div id="scr-game" class="overlay">
+<div id="scr-game" class="overlay" style="background:none;">
     <div class="big-card card-active" id="game-box">
         <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); margin-bottom: 10px;">
             <span>SÜRE: <b id="timer">30</b></span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
         <div id="word" style="font-size: 28px; font-weight: 900; margin: 25px 0;">YÜKLENİYOR...</div>
-        <input type="text" id="answer" placeholder="İNGİLİZCESİ?" autocomplete="off">
+        <input type="text" id="answer" placeholder="CEVABI YAZ VE ENTER" autocomplete="off">
     </div>
 </div>
 
 <div id="scr-board" class="overlay">
     <div class="big-card card-active" id="save-box">
         <div class="title">OYUN BİTTİ!</div>
-        <div style="font-size:20px; margin-bottom:15px;">SKOR: <b id="final-score">0</b></div>
+        <div style="font-size:24px; margin-bottom:15px;">SKORUN: <b id="final-score" style="color:var(--green)">0</b></div>
         <input type="text" id="p1" placeholder="ADINIZI GİRİN">
         <button class="btn" onclick="sys.save()">SKORU KAYDET</button>
     </div>
     
     <div class="big-card card-active" id="table-box" style="margin-top:20px; display:none;">
-        <div class="title" style="font-size:14px;">GLOBAL LİDERLER</div>
+        <div class="title" style="font-size:14px;">GLOBAL TOP 10</div>
         <div id="list" class="list-scroll"></div>
         <button class="btn" onclick="location.reload()">TEKRAR OYNA</button>
     </div>
 </div>
 
 <script>
-    const WORDS = [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},{tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Zeki",en:"intelligent"}];
-    const GOOD = ["ADAMSIN!", "DEHA!", "HARİKA!", "MÜKEMMEL!", "9/N GURURU!"];
-    const BAD = ["BU NE HAL?", "ŞAKA MISIN?", "ÇALIŞ BİRAZ!", "COŞMA!", "OLMADI..."];
-
-    firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
-    const db = firebase.database();
+    const WORDS = [
+        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},{tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Zeki",en:"intelligent"},
+        {tr:"Mükemmel",en:"perfect"},{tr:"Harika",en:"wonderful"},{tr:"Tecrübe",en:"experience"},{tr:"Kütüphane",en:"library"},{tr:"Hükümet",en:"government"},{tr:"Önemli",en:"important"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Güven",en:"trust"},{tr:"Miras",en:"heritage"},{tr:"Toplum",en:"society"},
+        {tr:"Fırsat",en:"opportunity"},{tr:"Adalet",en:"justice"},{tr:"Dürüstlük",en:"honesty"},{tr:"Bilgi",en:"knowledge"},{tr:"Hayal gücü",en:"imagination"},{tr:"Mücadele",en:"struggle"},{tr:"İletişim",en:"communication"},{tr:"Geleneksel",en:"traditional"},{tr:"Eğlence",en:"entertainment"},{tr:"Yolculuk",en:"journey"},
+        {tr:"Keşfetmek",en:"discover"},{tr:"Maceracı",en:"adventurous"},{tr:"Sabırlı",en:"patient"},{tr:"Cömert",en:"generous"},{tr:"Kıskanç",en:"jealous"},{tr:"İyimser",en:"optimistic"},{tr:"Kötümser",en:"pessimistic"},{tr:"Hassas",en:"sensitive"},{tr:"Cesur",en:"brave"},{tr:"Gizemli",en:"mysterious"},
+        {tr:"Gururlu",en:"proud"},{tr:"Kibar",en:"polite"},{tr:"Kaba",en:"rude"},{tr:"Yorgun",en:"tired"},{tr:"Heyecanlı",en:"excited"},{tr:"Meraklı",en:"curious"},{tr:"Arkadaşlık",en:"friendship"},{tr:"Özgürlük",en:"freedom"},{tr:"Sağlık",en:"health"},{tr:"Mutluluk",en:"happiness"},
+        {tr:"Duygu",en:"emotion"},{tr:"Karar",en:"decision"},{tr:"Hedef",en:"goal"},{tr:"Hafıza",en:"memory"},{tr:"Saygı",en:"respect"},{tr:"Gülümsemek",en:"smile"},{tr:"Ağlamak",en:"cry"},{tr:"Korku",en:"fear"},{tr:"Öfke",en:"anger"},{tr:"Şaşırmış",en:"surprised"},
+        {tr:"Öğrenci",en:"student"},{tr:"Öğretmen",en:"teacher"},{tr:"Okul",en:"school"},{tr:"Sınıf",en:"classroom"},{tr:"Kitap",en:"book"},{tr:"Kalem",en:"pencil"},{tr:"Sınav",en:"exam"},{tr:"Ders",en:"lesson"},{tr:"Tarih",en:"history"},{tr:"Matematik",en:"math"},
+        {tr:"Sanat",en:"art"},{tr:"Müzik",en:"music"},{tr:"Spor",en:"sport"},{tr:"Yemek",en:"food"},{tr:"Su",en:"water"},{tr:"Hava",en:"air"},{tr:"Dünya",en:"world"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yıldız",en:"star"},
+        {tr:"Doğa",en:"nature"},{tr:"Hayvan",en:"animal"},{tr:"Bitki",en:"plant"},{tr:"Şehir",en:"city"},{tr:"Köy",en:"village"},{tr:"Ülke",en:"country"},{tr:"Dil",en:"language"},{tr:"Zaman",en:"time"},{tr:"Saat",en:"hour"},{tr:"Gün",en:"day"},
+        {tr:"Hafta",en:"week"},{tr:"Ay",en:"month"},{tr:"Yıl",en:"year"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Genç",en:"young"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"}
+    ];
+    
+    const GOOD = ["ADAMSIN!", "DEHA!", "HARİKA!", "MÜKEMMEL!", "9/N GURURU!", "SÜPER!"];
+    const BAD = ["BU NE HAL?", "ŞAKA MISIN?", "ÇALIŞ BİRAZ!", "COŞMA!", "OLMADI...", "GİT ÇALIŞ!"];
 
     const sys = {
         score: 0, time: 30, cur: null, active: false,
@@ -118,7 +128,7 @@
             const el = document.createElement("div");
             el.className = "feedback"; el.innerText = txt; el.style.color = color;
             document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
+            setTimeout(() => el.remove(), 1000);
         },
         end: () => {
             document.getElementById('scr-game').style.display = 'none';
@@ -127,7 +137,7 @@
         },
         save: () => {
             const name = document.getElementById('p1').value.trim();
-            if(!name) return alert("Adını yazmalısın!");
+            if(!name) return alert("Adını yaz!");
             
             let r="ÇAYLAK BRONZ", c="r-bronz";
             if(sys.score >= 2000) { r="ELİT KIRMIZI"; c="r-elit"; }
@@ -135,37 +145,38 @@
             else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; }
             else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
 
-            db.ref('GLOBAL_SCOREBOARD').push({ n: name, s: sys.score, r: r, c: c }).then(() => {
-                document.getElementById('save-box').style.display = 'none';
-                document.getElementById('table-box').style.display = 'block';
-                sys.loadScores();
-            });
+            let scores = JSON.parse(localStorage.getItem('N9_Scores') || '[]');
+            scores.push({ n: name, s: sys.score, r: r, c: c });
+            scores.sort((a,b) => b.s - a.s);
+            localStorage.setItem('N9_Scores', JSON.stringify(scores));
+
+            document.getElementById('save-box').style.display = 'none';
+            document.getElementById('table-box').style.display = 'block';
+            sys.loadScores();
         },
         loadScores: () => {
-            db.ref('GLOBAL_SCOREBOARD').once('value').then(snap => {
-                let all = []; snap.forEach(x => all.push(x.val()));
-                all.sort((a,b) => b.s - a.s);
-                let players = all.slice(0, 10);
-                let html = "";
-                for(let i=0; i<10; i++) {
-                    if(players[i]) {
-                        html += `<div class="row"><span>${players[i].n}</span><div><b>${players[i].s}</b> <span class="rank-tag ${players[i].c}">${players[i].r}</span></div></div>`;
-                    } else {
-                        html += `<div class="row" style="opacity:0.2;"><span>BOS</span><div><b>0</b> <span class="rank-tag r-wait">BEKLENİYOR</span></div></div>`;
-                    }
+            let scores = JSON.parse(localStorage.getItem('N9_Scores') || '[]');
+            let players = scores.slice(0, 10);
+            let html = "";
+            for(let i=0; i<10; i++) {
+                if(players[i]) {
+                    html += `<div class="row"><span>${players[i].n}</span><div><b>${players[i].s}</b> <span class="rank-tag ${players[i].c}">${players[i].r}</span></div></div>`;
+                } else {
+                    html += `<div class="row" style="opacity:0.2;"><span>BOS</span><div><b>0</b> <span class="rank-tag r-wait">BEKLENİYOR</span></div></div>`;
                 }
-                document.getElementById('list').innerHTML = html;
-            });
+            }
+            document.getElementById('list').innerHTML = html;
         }
     };
 
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
-            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
+            const reply = document.getElementById('answer').value.toLowerCase().trim();
+            if(reply === sys.cur.en.toLowerCase()) {
                 sys.score += 50; sys.time += 2;
                 document.getElementById('score').innerText = sys.score;
                 sys.showFeedback(GOOD[Math.floor(Math.random()*GOOD.length)], "#2ecc71");
-                confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
+                if(window.confetti) confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
                 sys.next();
             } else {
                 document.getElementById('game-box').classList.add('shaking');

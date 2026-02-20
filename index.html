@@ -11,187 +11,138 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --red: #ff0000; --gold: #f1c40f; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { font-family: 'Poppins', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        body { font-family: 'Poppins', sans-serif; background: #000; color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; overflow: hidden; }
 
-        @keyframes neon-pulse { 0%, 100% { box-shadow: 0 0 20px var(--red); border-color: var(--red); } 50% { box-shadow: 0 0 45px var(--red); border-color: #fff; } }
+        /* ANA KUTU (OYUN VE SKOR ALANI) */
+        .panel { background: #0a0a0a; border: 1px solid #222; border-radius: 20px; padding: 25px; width: 95%; max-width: 450px; text-align: center; }
         
-        .panel { background: #0a0a0a; border: 2px solid #333; border-radius: 30px; padding: 25px; width: 95%; max-width: 480px; text-align: center; position: relative; }
-        .neon-box { background: #000; border: 4px solid var(--red); border-radius: 25px; padding: 18px; margin-bottom: 20px; animation: neon-pulse 2s infinite ease-in-out; }
-        .neon-box h2 { font-family: 'Orbitron', sans-serif; font-size: 13px; color: #fff; }
-        .dev-title { font-family: 'Orbitron', sans-serif; font-size: 20px; color: #fff; margin: 15px 0; letter-spacing: 4px; font-weight: 900; text-shadow: 0 0 10px red; }
-        
-        .list-scroll { width: 100%; max-height: 380px; overflow-y: auto; padding-right: 5px; margin: 10px 0; scrollbar-width: thin; scrollbar-color: var(--red) #000; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 6px; border: 1px solid #222; }
-        
-        input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid #444; background: #111; color: #fff; font-size: 18px; margin-bottom: 15px; text-align: center; outline: none; border-bottom: 3px solid var(--red); }
-        .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--red); color: #fff; text-transform: uppercase; margin-bottom: 8px; transition: 0.2s; }
-        .btn-vs { background: #1a1a1a; color: #666; border: 1px solid #333; font-size: 11px; margin-top: 5px; cursor: pointer; }
+        /* ALT KUTU (NOT ALANI) */
+        .bottom-panel { background: #0a0a0a; border: 1px solid #222; border-radius: 15px; padding: 15px; width: 95%; max-width: 450px; text-align: center; color: #555; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
 
-        .rank-tag { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; color: #000; min-width: 85px; text-align: center; display: inline-block; }
+        .header-img { width: 100%; height: 100px; background: #111; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; border: 1px solid #1a1a1a; color: #333; font-weight: 900; }
+        
+        .list-scroll { width: 100%; max-height: 320px; overflow-y: auto; margin: 10px 0; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #111; border-radius: 10px; margin-bottom: 5px; border: 1px solid #1a1a1a; }
+        
+        input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; background: #fff; color: #000; text-transform: uppercase; }
+
+        .rank-tag { font-size: 8px; font-weight: 900; padding: 3px 6px; border-radius: 4px; color: #000; min-width: 75px; text-align: center; }
         .r-bronz { background: #cd7f32; color: #fff; } 
         .r-demir { background: #bdc3c7; } 
         .r-altin { background: #f1c40f; } 
         .r-elmas { background: #3498db; color: #fff; } 
         .r-elit { background: #e74c3c; color: #fff; }
-        .r-wait { background: #333; color: #777; }
+        .r-wait { background: #1a1a1a; color: #444; }
         
-        .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; }
+        .overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
     </style>
 </head>
 <body>
 
-<audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3"></audio>
-
 <div id="scr-auth" class="panel">
-    <div class="neon-box"><h2>KURUCU = 9/N Sınıfındaki <br> Harun Ve Burak</h2></div>
-    <div class="dev-title">DEVELOPERS</div>
+    <div class="header-img">9/N GLOBAL | DEVELOPERS</div>
     <input type="text" id="p1" placeholder="ADINIZI YAZIN">
-    <button class="btn" onclick="sys.auth()">OYUNA GİR</button>
-    <button class="btn btn-vs" onclick="alert('Henüz geliştirilme aşamasında!')">1 VS 1 MODU (YAKINDA GELECEK)</button>
+    <button class="btn" onclick="sys.auth()">OYUNA BAŞLA</button>
 </div>
 
 <div id="scr-game" class="panel" style="display:none;">
-    <div style="display:flex; justify-content: space-between; font-weight: 800; margin-bottom: 10px;">
-        <span style="color:red">SÜRE: <b id="timer">30</b></span>
-        <span style="color:gold">SKOR: <b id="score">0</b></span>
+    <div style="display:flex; justify-content: space-between; font-size: 12px; margin-bottom: 20px;">
+        <span style="color:#444">SÜRE: <b id="timer" style="color:#fff">30</b></span>
+        <span style="color:#444">SKOR: <b id="score" style="color:#fff">0</b></span>
     </div>
-    <div id="word" style="font-size: 30px; font-weight: 900; margin: 25px 0; color: #fff; text-shadow: 0 0 10px red;">YÜKLENİYOR...</div>
-    <input type="text" id="answer" placeholder="İNGİLİZCESİ?" autocomplete="off">
-    <button class="btn" onclick="sys.next()" style="background:#222; font-size: 10px;">BİLEMEDİM, DEĞİŞTİR</button>
+    <div id="word" style="font-size: 28px; font-weight: 900; margin: 30px 0;">YÜKLENİYOR...</div>
+    <input type="text" id="answer" placeholder="Cevabı yazın..." autocomplete="off">
 </div>
 
 <div id="scr-board" class="overlay">
-    <div class="panel" style="max-height: 98vh; display: flex; flex-direction: column;">
-        <div class="neon-box" style="padding: 10px; margin-bottom: 5px;"><h2>KURUCU = 9/N Burak & Harun</h2></div>
-        <div id="dev-list"></div>
-        <div class="dev-title" style="font-size: 12px; margin: 5px 0; color: #555;">GLOBAL TOP 10</div>
+    <div class="panel">
+        <div class="header-img">SCOREBOARD</div>
         <div id="list" class="list-scroll"></div>
-        <button class="btn" onclick="location.reload()" style="background:#222; margin-top:10px;">YENİDEN BAŞLA</button>
+        <button class="btn" onclick="location.reload()">TEKRAR DENE</button>
     </div>
+    <div class="bottom-panel">yeni oyun berki gelir</div>
 </div>
+
+<div id="bottom-info" class="bottom-panel">yeni oyun berki gelir</div>
 
 <script>
     const WORDS = [
-        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},
-        {tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Yaratıcı",en:"creative"},
-        {tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Mükemmel",en:"perfect"},
-        {tr:"Harika",en:"wonderful"},{tr:"Tecrübe",en:"experience"},{tr:"Kütüphane",en:"library"},
-        {tr:"Hükümet",en:"government"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},
-        {tr:"Gelişme",en:"improvement"},{tr:"Seçenek",en:"option"},{tr:"Önemli",en:"important"},
-        {tr:"Tehlikeli",en:"dangerous"},{tr:"Güven",en:"trust"}
+        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},
+        {tr:"Yaratıcı",en:"creative"},{tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Mükemmel",en:"perfect"},{tr:"Harika",en:"wonderful"}
     ];
-
-    firebase.initializeApp({
-      apiKey: "AIzaSyDlK-6NMVY6j3Xc5ofTxH4Xlg0Lfi1lHTQ",
-      authDomain: "n-global-score.firebaseapp.com",
-      databaseURL: "https://n-global-score-default-rtdb.firebaseio.com",
-      projectId: "n-global-score",
-      storageBucket: "n-global-score.firebasestorage.app",
-      messagingSenderId: "272086871489",
-      appId: "1:272086871489:web:31e8937233607b1ea91340"
-    });
-
+    
+    firebase.initializeApp({ databaseURL: "https://burak-harun-9n-default-rtdb.firebaseio.com" });
     const db = firebase.database();
 
     const sys = {
-    user: "", score: 0, time: 30, cur: null, active: false,
-
-    auth: () => {
-        sys.user = document.getElementById('p1').value.trim();
-        if(sys.user !== "") {
-            document.getElementById('scr-auth').style.display='none';
-            document.getElementById('scr-game').style.display='block';
-            sys.active = true;
-            sys.start();
-        }
-    },
-
-    start: () => {
-        sys.next();
-        let clock = setInterval(() => {
-            if(!sys.active) return clearInterval(clock);
-            sys.time--;
-            document.getElementById('timer').innerText = sys.time;
-            if(sys.time <= 0){
-                sys.active = false;
-                clearInterval(clock);
-                sys.end();
+        user: "", score: 0, time: 30, cur: null, active: false,
+        auth: () => { 
+            sys.user = document.getElementById('p1').value.trim(); 
+            if(sys.user) { 
+                document.getElementById('scr-auth').style.display='none'; 
+                document.getElementById('scr-game').style.display='block'; 
+                sys.active = true; sys.start(); 
             }
-        },1000);
-    },
-
-    next: () => {
-        sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
-        document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
-        document.getElementById('answer').value="";
-        document.getElementById('answer').focus();
-    },
-
-    end: () => {
-        let r="ÇAYLAK BRONZ", c="r-bronz";
-        if(sys.score >= 2000){ r="ELİT KIRMIZI"; c="r-elit";}
-        else if(sys.score >= 1000){ r="ELMAS MAVİ"; c="r-elmas";}
-        else if(sys.score >= 500){ r="ALTIN SARI"; c="r-altin";}
-        else if(sys.score >= 200){ r="DEMİR GRİ"; c="r-demir";}
-
-        document.getElementById('scr-game').style.display='none';
-        document.getElementById('scr-board').style.display='flex';
-
-        db.ref("GLOBAL_SCOREBOARD").push({
-            n: sys.user,
-            s: sys.score,
-            r: r,
-            c: c
-        }).then(()=> sys.loadScores());
-    },
-
-    loadScores: () => {
-        db.ref("GLOBAL_SCOREBOARD").once("value").then(snap=>{
-            let all=[];
-            snap.forEach(x=> all.push(x.val()));
-            all.sort((a,b)=> b.s - a.s);
-
-            let players = all.slice(0,10);
-            let html="";
-
-            for(let i=0;i<10;i++){
-                if(players[i]){
-                    html+=`
-                    <div class="row">
-                        <span><b>${i+1}.</b> ${players[i].n}</span>
-                        <div><b>${players[i].s}</b>
-                        <span class="rank-tag ${players[i].c}">${players[i].r}</span></div>
-                    </div>`;
-                } else {
-                    html+=`
-                    <div class="row" style="opacity:0.3;">
-                        <span><b>${i+1}.</b> BOS</span>
-                        <div><b>0</b>
-                        <span class="rank-tag r-wait">BEKLENİYOR</span></div>
-                    </div>`;
+        },
+        start: () => { 
+            sys.next(); 
+            let clock = setInterval(() => { 
+                if(!sys.active) return clearInterval(clock);
+                sys.time--; document.getElementById('timer').innerText = sys.time; 
+                if(sys.time <= 0) { sys.active = false; clearInterval(clock); sys.end(); } 
+            }, 1000); 
+        },
+        next: () => { 
+            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)]; 
+            document.getElementById('word').innerText = sys.cur.tr.toUpperCase(); 
+            document.getElementById('answer').value = ""; document.getElementById('answer').focus(); 
+        },
+        end: () => {
+            let r="ÇAYLAK BRONZ", c="r-bronz";
+            if(sys.score >= 2000) { r="ELİT KIRMIZI"; c="r-elit"; } 
+            else if(sys.score >= 1000) { r="ELMAS MAVİ"; c="r-elmas"; }
+            else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; } 
+            else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
+            
+            document.getElementById('scr-game').style.display = 'none';
+            document.getElementById('bottom-info').style.display = 'none';
+            document.getElementById('scr-board').style.display = 'flex';
+            
+            db.ref('GLOBAL_SCOREBOARD').push({ n: sys.user, s: sys.score, r: r, c: c }).then(() => {
+                sys.loadScores();
+            });
+        },
+        loadScores: () => {
+            db.ref('GLOBAL_SCOREBOARD').once('value').then(snap => {
+                let all = []; snap.forEach(x => all.push(x.val()));
+                all.sort((a,b) => b.s - a.s);
+                let players = all.slice(0, 10);
+                
+                let html = "";
+                for(let i = 0; i < 10; i++) {
+                    if(players[i]) {
+                        html += `<div class="row"><span>${players[i].n}</span><div><b>${players[i].s}</b> <span class="rank-tag ${players[i].c}">${players[i].r}</span></div></div>`;
+                    } else {
+                        html += `<div class="row" style="opacity:0.2;"><span>BOS</span><div><b>0</b> <span class="rank-tag r-wait">BEKLENİYOR</span></div></div>`;
+                    }
                 }
-            }
-
-            document.getElementById("list").innerHTML = html;
-        });
-    }
-};
-
-document.getElementById("answer").addEventListener("keypress", e=>{
-    if(e.key==="Enter" && sys.active){
-        if(document.getElementById("answer").value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
-            sys.score+=50;
-            sys.time+=2;
-            document.getElementById("score").innerText=sys.score;
-            document.getElementById("snd-correct").play();
-            confetti({particleCount:40,spread:50,origin:{y:0.7}});
-            sys.next();
-        } else {
-            document.getElementById("snd-wrong").play();
-            sys.next();
+                document.getElementById('list').innerHTML = html;
+            });
         }
-    }
-});
+    };
+
+    document.getElementById('answer').addEventListener('keypress', e => {
+        if(e.key === 'Enter' && sys.active) {
+            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
+                sys.score += 50; sys.time += 2;
+                document.getElementById('score').innerText = sys.score;
+                confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
+                sys.next();
+            } else { sys.next(); }
+        }
+    });
+</script>
+</body>
+</html>

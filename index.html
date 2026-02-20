@@ -8,164 +8,161 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --green: #2ecc71; --red: #e74c3c; }
+        :root { --green: #2ecc71; --red: #ff4757; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1523050853063-bd80d27433ad?q=80&w=2000&auto=format&fit=crop'); 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2000&auto=format&fit=crop'); 
             background-size: cover; background-position: center; background-attachment: fixed;
             color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; overflow: hidden; 
         }
 
-        .big-card { background: rgba(0, 0, 0, 0.85); border: 2px solid rgba(255,255,255,0.1); border-radius: 30px; width: 90%; max-width: 400px; padding: 30px; text-align: center; backdrop-filter: blur(15px); }
-        .card-active { border-color: var(--green); box-shadow: 0 0 30px rgba(46, 204, 113, 0.2); }
-        .card-locked { opacity: 0.6; border-style: dashed; border-color: #444; }
+        .big-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 30px; 
+            width: 90%; max-width: 400px; padding: 30px; text-align: center; 
+            backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
 
-        .title { font-family: 'Orbitron', sans-serif; font-size: 18px; color: var(--green); margin-bottom: 15px; font-weight: 900; }
-        .icon-brain { font-size: 50px; display: block; margin-bottom: 10px; }
+        /* KELİME SÜZÜLME */
+        #word-container { height: 60px; display: flex; align-items: center; justify-content: center; margin: 20px 0; }
+        #word { font-size: 32px; font-weight: 900; text-shadow: 2px 2px 10px #000; transition: 0.5s; }
+        .slide-up { transform: translateY(-120px) rotate(15deg); opacity: 0; }
+        .slide-down { transform: translateY(120px) rotate(-15deg); opacity: 0; }
+        .slide-in { animation: slideIn 0.5s forwards; }
+        @keyframes slideIn { from { transform: scale(0.3) translateY(50px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #444; background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; transition: 0.3s; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.4); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; }
+
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0,0,0,0.5); border-radius: 12px; margin-bottom: 6px; font-size: 13px; }
+        .rank-tag { font-size: 10px; padding: 5px 10px; border-radius: 7px; color: #000; min-width: 90px; font-weight: 900; text-align: center; text-transform: uppercase; }
         
-        @keyframes popup { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.4); opacity: 1; } 100% { transform: scale(1.2); opacity: 0; } }
-        .feedback { position: fixed; top: 30%; font-weight: 900; font-size: 35px; pointer-events: none; z-index: 1000; animation: popup 1s forwards; text-shadow: 2px 2px 10px #000; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-15px); } 40% { transform: translateX(15px); } 60% { transform: translateX(-10px); } 80% { transform: translateX(10px); } }
-        .shaking { animation: shake 0.4s ease-in-out; }
-
-        .list-scroll { width: 100%; max-height: 250px; overflow-y: auto; margin: 15px 0; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.08); border-radius: 10px; margin-bottom: 6px; font-size: 13px; }
-        .rank-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; color: #000; min-width: 90px; font-weight: 900; text-align: center; }
-        
-        /* RÜTBE STİLLERİ */
+        /* GÜNCELLENMİŞ RÜTBE RENKLERİ */
         .r-bronz { background: #cd7f32; color: #fff; } 
-        .r-demir { background: #bdc3c7; } 
-        .r-altin { background: #f1c40f; } 
+        .r-demir { background: #bdc3c7; color: #000; } 
+        .r-altin { background: #f1c40f; color: #000; } 
         .r-elmas { background: #3498db; color: #fff; } 
         .r-elit { background: #e74c3c; color: #fff; } 
-        .r-wait { background: #222; color: #555; }
+        .r-wait { background: #333; color: #777; }
 
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .feedback { position: fixed; top: 35%; font-weight: 900; font-size: 40px; pointer-events: none; z-index: 1000; animation: popup 1s forwards; text-shadow: 2px 2px 15px #000; }
+        @keyframes popup { 0% { transform: scale(0.2); opacity: 0; } 50% { transform: scale(1.5); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+        .overlay { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
 <body>
 
 <div id="main-menu" style="display: contents;">
-    <div class="big-card card-active">
-        <span class="icon-brain">🧠</span>
-        <div class="title">İNGİLİZCE ETKİNLİĞİ</div>
-        <button class="btn" onclick="sys.start()">OYUNA BAŞLA</button>
+    <div class="big-card" style="border: 2px solid var(--green);">
+        <span style="font-size:55px; display:block;">🧠</span>
+        <div style="font-family:'Orbitron'; color:var(--green); font-weight:900; margin-bottom:15px;">İNGİLİZCE ETKİNLİĞİ</div>
+        <button class="btn" onclick="sys.start()">BAŞLA</button>
     </div>
-    <div class="big-card card-locked">
+    <div class="big-card" style="opacity:0.6; border: 1px dashed #fff; margin-top:10px;">
         <span style="font-size:30px">🔒</span>
-        <div style="color:#888; font-size:12px; font-weight:800; margin-top:10px;">YENİ OYUN BERKİ GELİR</div>
+        <div style="color:#eee; font-size:12px; font-weight:800; margin-top:10px;">YENİ OYUN BERKİ GELİR</div>
     </div>
 </div>
 
-<div id="scr-game" class="overlay" style="background:none;">
-    <div class="big-card card-active" id="game-box">
-        <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); margin-bottom: 10px;">
+<div id="scr-game" class="overlay">
+    <div class="big-card" style="border: 2px solid var(--green);">
+        <div style="display:flex; justify-content: space-between; font-size: 13px; color: var(--green); font-weight: 800;">
             <span>SÜRE: <b id="timer">30</b></span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
-        <div id="word" style="font-size: 28px; font-weight: 900; margin: 25px 0;">YÜKLENİYOR...</div>
+        <div id="word-container"><div id="word">YÜKLENİYOR...</div></div>
         <input type="text" id="answer" placeholder="CEVABI YAZ VE ENTER" autocomplete="off">
     </div>
 </div>
 
-<div id="scr-board" class="overlay">
-    <div class="big-card card-active" id="save-box">
-        <div class="title">OYUN BİTTİ!</div>
-        <div style="font-size:24px; margin-bottom:15px;">SKORUN: <b id="final-score" style="color:var(--green)">0</b></div>
-        <input type="text" id="p1" placeholder="ADINIZI GİRİN">
-        <button class="btn" onclick="sys.save()">SKORU KAYDET</button>
+<div id="scr-board" class="overlay" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+    <div class="big-card" id="save-box" style="border: 2px solid var(--green);">
+        <div style="color:var(--green); font-weight:900; margin-bottom:10px;">OYUN BİTTİ</div>
+        <div style="font-size:26px; margin-bottom:20px;">SKORUN: <b id="final-score">0</b></div>
+        <input type="text" id="p1" placeholder="ADINIZI YAZIN">
+        <button class="btn" onclick="sys.save()">SIRALAMAYA GİR</button>
     </div>
     
-    <div class="big-card card-active" id="table-box" style="margin-top:20px; display:none;">
-        <div class="title" style="font-size:14px;">GLOBAL TOP 10</div>
-        <div id="list" class="list-scroll"></div>
+    <div class="big-card" id="table-box" style="display:none; border: 2px solid var(--green);">
+        <div style="color:var(--green); font-weight:900; font-size:14px; margin-bottom:10px;">9/N LİDERLİK TABLOSU</div>
+        <div id="list" style="max-height: 250px; overflow-y: auto; margin-bottom:15px;"></div>
         <button class="btn" onclick="location.reload()">TEKRAR OYNA</button>
     </div>
 </div>
 
 <script>
-    const WORDS = [
-        {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Çevre",en:"environment"},{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},{tr:"Eğitim",en:"education"},{tr:"Bilim",en:"science"},{tr:"Zeki",en:"intelligent"},
-        {tr:"Mükemmel",en:"perfect"},{tr:"Harika",en:"wonderful"},{tr:"Tecrübe",en:"experience"},{tr:"Kütüphane",en:"library"},{tr:"Hükümet",en:"government"},{tr:"Önemli",en:"important"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Güven",en:"trust"},{tr:"Miras",en:"heritage"},{tr:"Toplum",en:"society"},
-        {tr:"Fırsat",en:"opportunity"},{tr:"Adalet",en:"justice"},{tr:"Dürüstlük",en:"honesty"},{tr:"Bilgi",en:"knowledge"},{tr:"Hayal gücü",en:"imagination"},{tr:"Mücadele",en:"struggle"},{tr:"İletişim",en:"communication"},{tr:"Geleneksel",en:"traditional"},{tr:"Eğlence",en:"entertainment"},{tr:"Yolculuk",en:"journey"},
-        {tr:"Keşfetmek",en:"discover"},{tr:"Maceracı",en:"adventurous"},{tr:"Sabırlı",en:"patient"},{tr:"Cömert",en:"generous"},{tr:"Kıskanç",en:"jealous"},{tr:"İyimser",en:"optimistic"},{tr:"Kötümser",en:"pessimistic"},{tr:"Hassas",en:"sensitive"},{tr:"Cesur",en:"brave"},{tr:"Gizemli",en:"mysterious"},
-        {tr:"Gururlu",en:"proud"},{tr:"Kibar",en:"polite"},{tr:"Kaba",en:"rude"},{tr:"Yorgun",en:"tired"},{tr:"Heyecanlı",en:"excited"},{tr:"Meraklı",en:"curious"},{tr:"Arkadaşlık",en:"friendship"},{tr:"Özgürlük",en:"freedom"},{tr:"Sağlık",en:"health"},{tr:"Mutluluk",en:"happiness"},
-        {tr:"Duygu",en:"emotion"},{tr:"Karar",en:"decision"},{tr:"Hedef",en:"goal"},{tr:"Hafıza",en:"memory"},{tr:"Saygı",en:"respect"},{tr:"Gülümsemek",en:"smile"},{tr:"Ağlamak",en:"cry"},{tr:"Korku",en:"fear"},{tr:"Öfke",en:"anger"},{tr:"Şaşırmış",en:"surprised"},
-        {tr:"Öğrenci",en:"student"},{tr:"Öğretmen",en:"teacher"},{tr:"Okul",en:"school"},{tr:"Sınıf",en:"classroom"},{tr:"Kitap",en:"book"},{tr:"Kalem",en:"pencil"},{tr:"Sınav",en:"exam"},{tr:"Ders",en:"lesson"},{tr:"Tarih",en:"history"},{tr:"Matematik",en:"math"},
-        {tr:"Sanat",en:"art"},{tr:"Müzik",en:"music"},{tr:"Spor",en:"sport"},{tr:"Yemek",en:"food"},{tr:"Su",en:"water"},{tr:"Hava",en:"air"},{tr:"Dünya",en:"world"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yıldız",en:"star"},
-        {tr:"Doğa",en:"nature"},{tr:"Hayvan",en:"animal"},{tr:"Bitki",en:"plant"},{tr:"Şehir",en:"city"},{tr:"Köy",en:"village"},{tr:"Ülke",en:"country"},{tr:"Dil",en:"language"},{tr:"Zaman",en:"time"},{tr:"Saat",en:"hour"},{tr:"Gün",en:"day"},
-        {tr:"Hafta",en:"week"},{tr:"Ay",en:"month"},{tr:"Yıl",en:"year"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Genç",en:"young"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"}
-    ];
-    
-    const GOOD = ["ADAMSIN!", "DEHA!", "HARİKA!", "MÜKEMMEL!", "9/N GURURU!", "SÜPER!"];
-    const BAD = ["BU NE HAL?", "ŞAKA MISIN?", "ÇALIŞ BİRAZ!", "COŞMA!", "OLMADI...", "GİT ÇALIŞ!"];
+    const sound = (f, t, d) => {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.type = t; o.frequency.setValueAtTime(f, ctx.currentTime);
+        g.gain.setValueAtTime(0.1, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + d);
+        o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + d);
+    };
+
+    const WORDS = [{tr:"Gelecek",en:"future"},{tr:"Sorumluluk",en:"responsibility"},{tr:"Başarı",en:"success"},{tr:"Gelenek",en:"tradition"},{tr:"Yetenek",en:"ability"},{tr:"Bilim",en:"science"},{tr:"Eğitim",en:"education"},{tr:"Önemli",en:"important"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Zeki",en:"intelligent"},{tr:"Tehlikeli",en:"dangerous"}];
+    const GOOD = ["HARİKA!", "ADAMSIN!", "SÜPER!", "DEHA!"];
+    const BAD = ["PUHAHA!", "GİT ÇALIŞ!", "EYVAH!", "OLMADI!"];
 
     const sys = {
         score: 0, time: 30, cur: null, active: false,
         start: () => {
             document.getElementById('main-menu').style.display='none';
             document.getElementById('scr-game').style.display='flex';
-            sys.score = 0; sys.time = 30; sys.active = true;
-            sys.next();
+            sys.score = 0; sys.time = 30; sys.active = true; sys.next();
             let clock = setInterval(() => {
                 if(!sys.active) return clearInterval(clock);
                 sys.time--; document.getElementById('timer').innerText = sys.time;
                 if(sys.time <= 0) { sys.active = false; sys.end(); }
             }, 1000);
         },
-        next: () => {
-            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
-            document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
-            document.getElementById('answer').value = ""; document.getElementById('answer').focus();
+        next: (effect) => {
+            const el = document.getElementById('word');
+            if(effect) el.className = effect;
+            setTimeout(() => {
+                sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
+                el.innerText = sys.cur.tr.toUpperCase(); el.className = 'slide-in';
+                document.getElementById('answer').value = ""; document.getElementById('answer').focus();
+            }, effect ? 400 : 0);
         },
-        showFeedback: (txt, color) => {
-            const el = document.createElement("div");
-            el.className = "feedback"; el.innerText = txt; el.style.color = color;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 1000);
+        showFeedback: (t, c) => {
+            const f = document.createElement("div"); f.className="feedback"; f.innerText=t; f.style.color=c;
+            document.body.appendChild(f); setTimeout(()=>f.remove(), 1000);
         },
         end: () => {
-            document.getElementById('scr-game').style.display = 'none';
-            document.getElementById('scr-board').style.display = 'flex';
+            sound(150, 'sawtooth', 0.5);
+            document.getElementById('scr-game').style.display='none';
+            document.getElementById('scr-board').style.display='flex';
             document.getElementById('final-score').innerText = sys.score;
         },
         save: () => {
-            const name = document.getElementById('p1').value.trim();
-            if(!name) return alert("Adını yaz!");
-            
-            let r="ÇAYLAK BRONZ", c="r-bronz";
-            if(sys.score >= 2000) { r="ELİT KIRMIZI"; c="r-elit"; }
-            else if(sys.score >= 1000) { r="ELMAS MAVİ"; c="r-elmas"; }
-            else if(sys.score >= 500) { r="ALTIN SARI"; c="r-altin"; }
-            else if(sys.score >= 200) { r="DEMİR GRİ"; c="r-demir"; }
+            const n = document.getElementById('p1').value.trim(); if(!n) return;
+            let r="ÇAYLAK", c="r-bronz";
+            if(sys.score >= 2000) { r="ELİT"; c="r-elit"; }
+            else if(sys.score >= 1000) { r="ELMAS"; c="r-elmas"; }
+            else if(sys.score >= 500) { r="ALTIN"; c="r-altin"; } 
+            else if(sys.score >= 200) { r="DEMİR"; c="r-demir"; }
 
-            let scores = JSON.parse(localStorage.getItem('N9_Scores') || '[]');
-            scores.push({ n: name, s: sys.score, r: r, c: c });
-            scores.sort((a,b) => b.s - a.s);
-            localStorage.setItem('N9_Scores', JSON.stringify(scores));
-
-            document.getElementById('save-box').style.display = 'none';
-            document.getElementById('table-box').style.display = 'block';
+            let s = JSON.parse(localStorage.getItem('N9_Scores') || '[]');
+            s.push({ n: n, s: sys.score, r: r, c: c });
+            s.sort((a,b)=>b.s - a.s);
+            localStorage.setItem('N9_Scores', JSON.stringify(s));
+            document.getElementById('save-box').style.display='none';
+            document.getElementById('table-box').style.display='block';
             sys.loadScores();
         },
         loadScores: () => {
-            let scores = JSON.parse(localStorage.getItem('N9_Scores') || '[]');
-            let players = scores.slice(0, 10);
-            let html = "";
+            let s = JSON.parse(localStorage.getItem('N9_Scores') || '[]');
+            let h = "";
             for(let i=0; i<10; i++) {
-                if(players[i]) {
-                    html += `<div class="row"><span>${players[i].n}</span><div><b>${players[i].s}</b> <span class="rank-tag ${players[i].c}">${players[i].r}</span></div></div>`;
-                } else {
-                    html += `<div class="row" style="opacity:0.2;"><span>BOS</span><div><b>0</b> <span class="rank-tag r-wait">BEKLENİYOR</span></div></div>`;
-                }
+                if(s[i]) h += `<div class="row"><span>${s[i].n}</span><div><b>${s[i].s}</b> <span class="rank-tag ${s[i].c}">${s[i].r}</span></div></div>`;
+                else h += `<div class="row" style="opacity:0.3;"><span>BOS</span><div><b>0</b> <span class="rank-tag r-wait">BEKLENİYOR</span></div></div>`;
             }
-            document.getElementById('list').innerHTML = html;
+            document.getElementById('list').innerHTML = h;
         }
     };
 
@@ -176,13 +173,13 @@
                 sys.score += 50; sys.time += 2;
                 document.getElementById('score').innerText = sys.score;
                 sys.showFeedback(GOOD[Math.floor(Math.random()*GOOD.length)], "#2ecc71");
-                if(window.confetti) confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
-                sys.next();
+                sound(600, 'sine', 0.2);
+                confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
+                sys.next('slide-up');
             } else {
-                document.getElementById('game-box').classList.add('shaking');
-                setTimeout(() => document.getElementById('game-box').classList.remove('shaking'), 400);
-                sys.showFeedback(BAD[Math.floor(Math.random()*BAD.length)], "#e74c3c");
-                sys.next();
+                sys.showFeedback(BAD[Math.floor(Math.random()*BAD.length)], "#ff4757");
+                sound(100, 'square', 0.3);
+                sys.next('slide-down');
             }
         }
     });

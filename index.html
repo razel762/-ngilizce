@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>9/N ARENA | LOCAL</title>
+    <title>ingilizce | etkinlik</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     <style>
@@ -21,11 +21,18 @@
         .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
         .btn-1vs1 { background: #e67e22; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:active { transform: scale(0.95); }
-        #jumpscare { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; align-items: center; justify-content: center; }
-        .ghost { font-size: 200px; filter: grayscale(1) contrast(2); animation: ghostShake 0.1s infinite; }
-        @keyframes ghostShake { 0% { transform: translate(5px, 5px); } 50% { transform: translate(-5px, -5px); } 100% { transform: translate(5px, -5px); } }
+        
+        /* KIRMIZI JUMPSCARE AYARI */
+        #jumpscare { position: fixed; inset: 0; background: #ff0000; z-index: 1000; display: none; align-items: center; justify-content: center; }
+        .ghost { font-size: 250px; filter: contrast(2) brightness(0.5); animation: ghostShake 0.05s infinite; }
+        @keyframes ghostShake { 0% { transform: translate(10px, 10px); } 50% { transform: translate(-10px, -10px); } 100% { transform: translate(10px, -10px); } }
+        
         .overlay { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
         .sub-tag { font-size: 12px; font-style: italic; color: #888; }
+        
+        /* Süre artış efekti */
+        .time-bonus { color: var(--green); animation: pulse 0.5s; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -50,7 +57,7 @@
         </div>
         <div id="word">YÜKLENİYOR...</div>
         <input type="text" id="answer" placeholder="İNGİLİZCESİNİ YAZ" autocomplete="off">
-        <div style="font-size: 11px; color: #666; margin-top: 10px;">SÜRE: <span id="timer">30</span></div>
+        <div id="timer-box" style="font-size: 11px; color: #666; margin-top: 10px;">SÜRE: <span id="timer">30</span></div>
     </div>
 </div>
 
@@ -113,12 +120,21 @@
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
-                sys.score += 50; document.getElementById('score').innerText = sys.score;
-                sound(600, 'sine', 0.2); confetti({ particleCount: 50, spread: 60 }); sys.next();
+                sys.score += 50; 
+                sys.time += 3; // SURE ARTIŞI EKLEDİM
+                document.getElementById('score').innerText = sys.score;
+                document.getElementById('timer').classList.add('time-bonus');
+                setTimeout(()=>document.getElementById('timer').classList.remove('time-bonus'), 500);
+                
+                sound(600, 'sine', 0.2, 0.1); 
+                confetti({ particleCount: 50, spread: 60 }); 
+                sys.next();
             } else {
+                // KIRMIZI VE YÜKSEK SESLİ JUMPSCARE
                 document.getElementById('jumpscare').style.display = 'flex';
-                sound(80, 'sawtooth', 0.4, 0.3);
-                setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 400);
+                sound(50, 'sawtooth', 0.6, 0.8); // Daha bas ve yüksek ses
+                sound(120, 'square', 0.6, 0.6);
+                setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 500);
                 sys.next();
             }
         }

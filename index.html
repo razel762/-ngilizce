@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>9/N GLOBAL | BURAK & HARUN</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>9/N ARENA | LOCAL</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     <style>
@@ -13,160 +11,115 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2000&auto=format&fit=crop'); 
-            background-size: cover; background-position: center; background-attachment: fixed;
+            background: radial-gradient(circle, #2c3e50, #000); 
             color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; overflow: hidden; 
         }
-        .big-card { background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-        .dev-tag { font-size: 10px; font-weight: 800; color: #fff; text-transform: uppercase; margin-bottom: 5px; opacity: 0.9; }
-        .sub-tag { font-size: 11px; font-weight: 700; color: #aaa; margin-top: 10px; font-style: italic; }
-        #word { font-size: 28px; font-weight: 900; text-shadow: 2px 2px 10px #000; min-height: 40px; }
-        .slide-up { transform: translateY(-100px); opacity: 0; transition: 0.4s; }
-        .slide-down { transform: translateY(100px); opacity: 0; transition: 0.4s; }
-        .slide-in { animation: slideIn 0.4s forwards; }
-        @keyframes slideIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-        .shaking { animation: shake 0.2s ease-in-out 2; border-color: var(--red) !important; }
-        input { width: 100%; padding: 14px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; }
-        .row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(0,0,0,0.6); border-radius: 12px; margin-bottom: 4px; font-size: 12px; }
-        .rank-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; color: #000; min-width: 80px; font-weight: 900; }
-        .r-bronz { background: #cd7f32; color: #fff; } .r-demir { background: #bdc3c7; } .r-altin { background: #f1c40f; } .r-elmas { background: #3498db; color: #fff; } .r-elit { background: #e74c3c; color: #fff; }
-        .overlay { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .big-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); position: relative; }
+        .box-title { font-family: 'Orbitron'; color: var(--green); font-size: 18px; font-weight: 900; margin-bottom: 15px; }
+        #word { font-size: 30px; font-weight: 900; text-shadow: 0 0 20px var(--green); height: 45px; margin: 15px 0; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
+        .btn-1vs1 { background: #e67e22; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn:active { transform: scale(0.95); }
+        #jumpscare { position: fixed; inset: 0; background: #000; z-index: 1000; display: none; align-items: center; justify-content: center; }
+        .ghost { font-size: 200px; filter: grayscale(1) contrast(2); animation: ghostShake 0.1s infinite; }
+        @keyframes ghostShake { 0% { transform: translate(5px, 5px); } 50% { transform: translate(-5px, -5px); } 100% { transform: translate(5px, -5px); } }
+        .overlay { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
+        .sub-tag { font-size: 12px; font-style: italic; color: #888; }
     </style>
 </head>
 <body>
 
-<div id="main-menu" style="display: contents;">
-    <div class="dev-tag">Bu Oyun 9/N Seki Burak ve Harun tarafindan yapilmistir</div>
+<div id="scr-login" style="display: contents;">
     <div class="big-card" style="border-color: var(--green);">
-        <span style="font-size:40px; display:block;">🎮</span>
-        <div style="font-family:'Orbitron'; color:var(--green); font-weight:900; margin-bottom:15px;">İNGİLİZCE ETKİNLİĞİ</div>
-        <button class="btn" onclick="sys.start()">OYUNA GİR</button>
+        <div class="box-title">GİRİŞ YAP</div>
+        <input type="text" id="username" placeholder="ADINIZI YAZIN">
+        <button class="btn" onclick="sys.login()">OYUNA GİR</button>
+        <button class="btn btn-1vs1" onclick="alert('1 VS 1 MODU Yakında Geliyor!')">⚔️ 1 VS 1 MODU</button>
+    </div>
+    <div class="big-card" style="margin-top: 5px; padding: 15px; border-color: rgba(255,255,255,0.1);">
         <div class="sub-tag">YENİ OYUN BERKİ GELİR</div>
     </div>
 </div>
 
 <div id="scr-game" class="overlay">
     <div class="big-card" id="game-card" style="border-color: var(--green);">
-        <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); font-weight: 800;">
-            <span>SÜRE: <b id="timer">30</b></span>
+        <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); font-weight: 800; margin-bottom: 10px;">
+            <span id="display-name">...</span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
-        <div style="height:60px; display:flex; align-items:center; justify-content:center; margin:10px 0;">
-            <div id="word">BAŞLIYOR...</div>
-        </div>
-        <input type="text" id="answer" placeholder="CEVABI YAZIN" autocomplete="off">
+        <div id="word">YÜKLENİYOR...</div>
+        <input type="text" id="answer" placeholder="İNGİLİZCESİNİ YAZ" autocomplete="off">
+        <div style="font-size: 11px; color: #666; margin-top: 10px;">SÜRE: <span id="timer">30</span></div>
     </div>
 </div>
 
-<div id="scr-board" class="overlay" style="background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);">
-    <div class="big-card" id="save-box" style="border-color: var(--green);">
-        <div style="color:var(--green); font-weight:900; margin-bottom:5px;">OYUN BİTTİ</div>
-        <div style="font-size:24px; margin-bottom:15px;">SKOR: <b id="final-score">0</b></div>
-        <input type="text" id="p1" placeholder="ADINIZI YAZIN">
-        <button class="btn" id="save-btn" onclick="sys.save()">SKORU KAYDET</button>
-    </div>
-    <div class="big-card" id="table-box" style="display:none; border-color: var(--green);">
-        <div style="color:var(--green); font-weight:900; font-size:13px; margin-bottom:10px;">9/N GLOBAL LİDERLER</div>
-        <div id="list" style="max-height: 250px; overflow-y: auto; margin-bottom:15px;"></div>
-        <button class="btn" onclick="location.reload()">TEKRAR OYNA</button>
+<div id="scr-end" class="overlay">
+    <div class="big-card" style="border-color: var(--red);">
+        <div style="color:var(--red); font-weight:900; font-size: 20px;">OYUN BİTTİ!</div>
+        <div style="font-size:35px; margin: 20px 0;"><b id="final-score">0</b></div>
+        <button class="btn" onclick="location.reload()">YENİ OYUNU BAŞLAT</button>
     </div>
 </div>
+
+<div id="jumpscare"><div class="ghost">👻</div></div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://9n-english-game-default-rtdb.firebaseio.com" };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const sound = (f, t, d) => {
+    const sound = (f, t, d, g = 0.05) => {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const o = ctx.createOscillator(); const g = ctx.createGain();
+            const o = ctx.createOscillator(); const gain = ctx.createGain();
             o.type = t; o.frequency.setValueAtTime(f, ctx.currentTime);
-            g.gain.setValueAtTime(0.05, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + d);
-            o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + d);
+            gain.gain.setValueAtTime(g, ctx.currentTime);
+            o.connect(gain); gain.connect(ctx.destination);
+            o.start(); o.stop(ctx.currentTime + d);
         } catch(e){}
     };
 
     const WORDS = [{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Kalem",en:"pencil"},{tr:"Öğrenci",en:"student"},{tr:"Öğretmen",en:"teacher"},{tr:"Sınıf",en:"classroom"},{tr:"Masa",en:"table"},{tr:"Sandalye",en:"chair"},{tr:"Kütüphane",en:"library"},{tr:"Defter",en:"notebook"},{tr:"Gelecek",en:"future"},{tr:"Başarı",en:"success"},{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Yetenek",en:"ability"},{tr:"Bilim",en:"science"},{tr:"Eğitim",en:"education"},{tr:"Önemli",en:"important"},{tr:"Zeki",en:"intelligent"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},{tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"},{tr:"Sıcak",en:"hot"},{tr:"Soğuk",en:"cold"},{tr:"Güzel",en:"beautiful"},{tr:"Çirkin",en:"ugly"},{tr:"Genç",en:"young"},{tr:"Yaşlı",en:"old"},{tr:"Kolay",en:"easy"},{tr:"Zor",en:"difficult"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"},{tr:"Elma",en:"apple"},{tr:"Ekmek",en:"bread"},{tr:"Su",en:"water"},{tr:"Süt",en:"milk"},{tr:"Çay",en:"tea"},{tr:"Kahve",en:"coffee"},{tr:"Yemek",en:"food"},{tr:"Meyve",en:"fruit"},{tr:"Sebze",en:"vegetable"},{tr:"Şeker",en:"sugar"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Dünya",en:"world"},{tr:"Gökyüzü",en:"sky"},{tr:"Deniz",en:"sea"},{tr:"Dağ",en:"mountain"},{tr:"Ağaç",en:"tree"},{tr:"Çiçek",en:"flower"},{tr:"Yağmur",en:"rain"},{tr:"Kar",en:"snow"},{tr:"Kırmızı",en:"red"},{tr:"Mavi",en:"blue"},{tr:"Yeşil",en:"green"},{tr:"Sarı",en:"yellow"},{tr:"Siyah",en:"black"},{tr:"Beyaz",en:"white"},{tr:"Turuncu",en:"orange"},{tr:"Mor",en:"purple"},{tr:"Pembe",en:"pink"},{tr:"Kahverengi",en:"brown"},{tr:"Aslan",en:"lion"},{tr:"Kaplan",en:"tiger"},{tr:"Kedi",en:"cat"},{tr:"Köpek",en:"dog"},{tr:"Kuş",en:"bird"},{tr:"Balık",en:"fish"},{tr:"At",en:"horse"},{tr:"Fil",en:"elephant"},{tr:"Maymun",en:"monkey"},{tr:"Yılan",en:"snake"},{tr:"Sabah",en:"morning"},{tr:"Öğle",en:"afternoon"},{tr:"Akşam",en:"evening"},{tr:"Gece",en:"night"},{tr:"Bugün",en:"today"},{tr:"Yarın",en:"tomorrow"},{tr:"Dün",en:"yesterday"},{tr:"Hafta",en:"week"},{tr:"Ay",en:"month"},{tr:"Yıl",en:"year"},{tr:"Gülmek",en:"laugh"},{tr:"Ağlamak",en:"cry"},{tr:"Koşmak",en:"run"},{tr:"Yürümek",en:"walk"},{tr:"Uyumak",en:"sleep"},{tr:"Yazmak",en:"write"},{tr:"Okumak",en:"read"},{tr:"Konuşmak",en:"speak"},{tr:"Dinlemek",en:"listen"},{tr:"Anlamak",en:"understand"}];
 
     const sys = {
-        score: 0, time: 30, cur: null, active: false,
+        name: "", score: 0, time: 30, active: false,
+        login: () => {
+            const n = document.getElementById('username').value.trim();
+            if(!n) return alert("Lütfen ismini yaz!");
+            sys.name = n;
+            document.getElementById('scr-login').style.display = 'none';
+            document.getElementById('scr-game').style.display = 'flex';
+            document.getElementById('display-name').innerText = n.toUpperCase();
+            sys.start();
+        },
         start: () => {
-            document.getElementById('main-menu').style.display='none';
-            document.getElementById('scr-game').style.display='flex';
-            sys.score = 0; sys.time = 30; sys.active = true; sys.next();
+            sys.active = true; sys.next();
             let clock = setInterval(() => {
                 if(!sys.active) return clearInterval(clock);
                 sys.time--; document.getElementById('timer').innerText = sys.time;
-                if(sys.time <= 0) { sys.active = false; sys.end(); }
+                if(sys.time <= 0) sys.end();
             }, 1000);
         },
-        next: (effect) => {
-            const el = document.getElementById('word');
-            if(effect) el.className = effect;
-            setTimeout(() => {
-                sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
-                el.innerText = sys.cur.tr.toUpperCase(); el.className = 'slide-in';
-                document.getElementById('answer').value = ""; document.getElementById('answer').focus();
-            }, effect ? 400 : 0);
+        next: () => {
+            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
+            document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
+            document.getElementById('answer').value = ""; document.getElementById('answer').focus();
         },
         end: () => {
-            document.getElementById('scr-game').style.display='none';
-            document.getElementById('scr-board').style.display='flex';
+            sys.active = false;
+            document.getElementById('scr-game').style.display = 'none';
+            document.getElementById('scr-end').style.display = 'flex';
             document.getElementById('final-score').innerText = sys.score;
-        },
-        save: () => {
-            const n = document.getElementById('p1').value.trim(); if(!n) return alert("Adını gir!");
-            const btn = document.getElementById('save-btn');
-            btn.innerText = "İŞLENİYOR..."; btn.disabled = true;
-
-            let r="ÇAYLAK", c="r-bronz";
-            if(sys.score >= 2000) { r="ELİT"; c="r-elit"; }
-            else if(sys.score >= 1000) { r="ELMAS"; c="r-elmas"; }
-            else if(sys.score >= 500) { r="ALTIN"; c="r-altin"; } 
-            else if(sys.score >= 200) { r="DEMİR"; c="r-demir"; }
-
-            // Zaman aşımı koruması (5 saniye sonra hala işleniyorsa uyarı verir)
-            const timeout = setTimeout(() => {
-                alert("Bağlantı yavaş, Firebase Kurallarını 'true' yaptığından emin ol!");
-                btn.innerText = "TEKRAR DENE"; btn.disabled = false;
-            }, 5000);
-
-            db.ref('scores').push({ n: n, s: sys.score, r: r, c: c }, (err) => {
-                clearTimeout(timeout);
-                if(err) { alert("Hata: " + err); btn.disabled = false; return; }
-                document.getElementById('save-box').style.display='none';
-                document.getElementById('table-box').style.display='block';
-                sys.loadScores();
-            });
-        },
-        loadScores: () => {
-            db.ref('scores').orderByChild('s').limitToLast(10).once('value', (snap) => {
-                let all = []; snap.forEach(x => { all.push(x.val()); });
-                all.reverse(); let h = "";
-                all.forEach((p, i) => { h += `<div class="row"><span>${i+1}. ${p.n}</span><div><b>${p.s}</b> <span class="rank-tag ${p.c}">${p.r}</span></div></div>`; });
-                document.getElementById('list').innerHTML = h || "Henüz skor yok!";
-            });
         }
     };
 
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
-            const reply = document.getElementById('answer').value.toLowerCase().trim();
-            if(reply === sys.cur.en.toLowerCase()) {
-                sys.score += 50; sys.time += 2;
-                document.getElementById('score').innerText = sys.score;
-                sound(600, 'sine', 0.2);
-                confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
-                sys.next('slide-up');
+            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
+                sys.score += 50; document.getElementById('score').innerText = sys.score;
+                sound(600, 'sine', 0.2); confetti({ particleCount: 50, spread: 60 }); sys.next();
             } else {
-                const card = document.getElementById('game-card');
-                card.classList.add('shaking'); setTimeout(()=>card.classList.remove('shaking'), 400);
-                sound(100, 'square', 0.3);
-                sys.next('slide-down');
+                document.getElementById('jumpscare').style.display = 'flex';
+                sound(80, 'sawtooth', 0.4, 0.3);
+                setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 400);
+                sys.next();
             }
         }
     });

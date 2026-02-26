@@ -46,8 +46,14 @@
         
         <div id="login-inputs">
             <input type="text" id="username" placeholder="ADINIZI YAZIN">
-            <button class="btn" onclick="sys.showDifficulty()">OYUNA GİR</button>
-            <button class="btn btn-1vs1" onclick="alert('1 VS 1 MODU Yakında Geliyor!')">⚔️ 1 VS 1 MODU</button>
+            <button class="btn" onclick="sys.showDifficulty('single')">OYUNA GİR</button>
+            <button class="btn btn-1vs1" onclick="sys.show1vs1()">⚔️ 1 VS 1 MODU</button>
+        </div>
+
+        <div id="1vs1-inputs" style="display: none;">
+            <input type="text" id="p1-name" placeholder="1. OYUNCU ADI">
+            <input type="text" id="p2-name" placeholder="2. OYUNCU ADI">
+            <button class="btn" onclick="sys.showDifficulty('duel')">ZORLUK SEÇ VE BAŞLA</button>
         </div>
 
         <div id="difficulty-selection" style="display: none;">
@@ -64,6 +70,7 @@
 
 <div id="scr-game" class="overlay">
     <div class="big-card" id="game-card" style="border-color: var(--green);">
+        <div id="turn-notice" style="font-size: 10px; color: var(--orange); font-weight: 800; margin-bottom: 5px; display: none;">SIRADAKİ OYUNCU: <span id="current-player-turn"></span></div>
         <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); font-weight: 800; margin-bottom: 10px;">
             <span id="display-name">...</span>
             <span>SKOR: <b id="score">0</b></span>
@@ -76,7 +83,8 @@
 
 <div id="scr-end" class="overlay">
     <div class="big-card" style="border-color: var(--red);">
-        <div style="color:var(--red); font-weight:900; font-size: 20px;">OYUN BİTTİ!</div>
+        <div id="end-title" style="color:var(--red); font-weight:900; font-size: 20px;">OYUN BİTTİ!</div>
+        <div id="duel-result" style="display:none; font-family: 'Orbitron'; font-size: 24px; color: var(--green); margin: 15px 0;"></div>
         <div style="font-size:35px; margin: 20px 0;"><b id="final-score">0</b></div>
         <button class="btn" onclick="location.reload()">YENİ OYUNU BAŞLAT</button>
     </div>
@@ -96,7 +104,6 @@
         } catch(e){}
     };
 
-    // KELİME HAVUZLARI
     const POOLS = {
         easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kırmızı",en:"red"},{tr:"Mavi",en:"blue"},{tr:"Süt",en:"milk"},{tr:"Çay",en:"tea"},{tr:"Kedi",en:"cat"},{tr:"Köpek",en:"dog"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"}],
         medium: [{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Kalem",en:"pencil"},{tr:"Öğrenci",en:"student"},{tr:"Öğretmen",en:"teacher"},{tr:"Sınıf",en:"classroom"},{tr:"Masa",en:"table"},{tr:"Sandalye",en:"chair"},{tr:"Zeki",en:"intelligent"},{tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},{tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"}],
@@ -107,11 +114,25 @@
 
     const sys = {
         name: "", score: 0, time: 30, active: false,
-        showDifficulty: () => {
-            const n = document.getElementById('username').value.trim();
-            if(!n) return alert("Lütfen ismini yaz!");
-            sys.name = n;
+        isDuel: false, duelTurn: 1, p1Score: 0, p2Score: 0, p1Name: "", p2Name: "",
+        
+        show1vs1: () => {
             document.getElementById('login-inputs').style.display = 'none';
+            document.getElementById('1vs1-inputs').style.display = 'block';
+            sys.isDuel = true;
+        },
+        showDifficulty: (mode) => {
+            if(mode === 'single') {
+                const n = document.getElementById('username').value.trim();
+                if(!n) return alert("Lütfen ismini yaz!");
+                sys.name = n;
+            } else {
+                sys.p1Name = document.getElementById('p1-name').value.trim() || "OYUNCU 1";
+                sys.p2Name = document.getElementById('p2-name').value.trim() || "OYUNCU 2";
+                sys.name = sys.p1Name;
+            }
+            document.getElementById('login-inputs').style.display = 'none';
+            document.getElementById('1vs1-inputs').style.display = 'none';
             document.getElementById('difficulty-selection').style.display = 'block';
         },
         login: (level) => {
@@ -119,15 +140,41 @@
             document.getElementById('scr-login').style.display = 'none';
             document.getElementById('scr-game').style.display = 'flex';
             document.getElementById('display-name').innerText = sys.name.toUpperCase();
+            if(sys.isDuel) {
+                document.getElementById('turn-notice').style.display = 'block';
+                document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
+            }
             sys.start();
         },
         start: () => {
-            sys.active = true; sys.next();
+            sys.active = true; sys.score = 0; sys.time = 30;
+            document.getElementById('score').innerText = "0";
+            sys.next();
             let clock = setInterval(() => {
                 if(!sys.active) return clearInterval(clock);
                 sys.time--; document.getElementById('timer').innerText = sys.time;
-                if(sys.time <= 0) sys.end();
+                if(sys.time <= 0) {
+                    clearInterval(clock);
+                    sys.handleFinish();
+                }
             }, 1000);
+        },
+        handleFinish: () => {
+            sys.active = false;
+            if(sys.isDuel && sys.duelTurn === 1) {
+                sys.p1Score = sys.score;
+                sys.duelTurn = 2;
+                sys.name = sys.p2Name;
+                alert("Sıra " + sys.p2Name + " oyuncusunda! Hazır olunca Tamam'a bas.");
+                document.getElementById('display-name').innerText = sys.name.toUpperCase();
+                document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
+                sys.start();
+            } else if (sys.isDuel && sys.duelTurn === 2) {
+                sys.p2Score = sys.score;
+                sys.endDuel();
+            } else {
+                sys.end();
+            }
         },
         next: () => {
             sys.cur = activePool[Math.floor(Math.random()*activePool.length)];
@@ -135,10 +182,26 @@
             document.getElementById('answer').value = ""; document.getElementById('answer').focus();
         },
         end: () => {
-            sys.active = false;
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-end').style.display = 'flex';
             document.getElementById('final-score').innerText = sys.score;
+        },
+        endDuel: () => {
+            document.getElementById('scr-game').style.display = 'none';
+            document.getElementById('scr-end').style.display = 'flex';
+            document.getElementById('end-title').innerText = "DÜELLO BİTTİ!";
+            document.getElementById('duel-result').style.display = 'block';
+            
+            let winner = "";
+            if(sys.p1Score > sys.p2Score) winner = sys.p1Name;
+            else if(sys.p2Score > sys.p1Score) winner = sys.p2Name;
+            else winner = "DOSTLUK";
+
+            document.getElementById('duel-result').innerText = "KAZANAN: " + winner.toUpperCase();
+            document.getElementById('final-score').innerHTML = `<span style='font-size:14px'>${sys.p1Name}: ${sys.p1Score} | ${sys.p2Name}: ${sys.p2Score}</span>`;
+            
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            sound(800, 'sine', 0.5, 0.2);
         }
     };
 
@@ -151,7 +214,7 @@
                 document.getElementById('timer').classList.add('time-bonus');
                 setTimeout(()=>document.getElementById('timer').classList.remove('time-bonus'), 500);
                 sound(600, 'sine', 0.2, 0.1); 
-                confetti({ particleCount: 50, spread: 60 }); 
+                confetti({ particleCount: 30, spread: 50 }); 
                 sys.next();
             } else {
                 document.getElementById('jumpscare').style.display = 'flex';

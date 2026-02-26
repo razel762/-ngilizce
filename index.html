@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ingilizce | etkinlik</title>
+    <title>ingilizce | Pro Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     <style>
-        :root { --green: #2ecc71; --red: #ff4757; --orange: #e67e22; }
+        :root { --green: #2ecc71; --red: #ff4757; --orange: #e67e22; --blue: #3498db; --gold: #f1c40f; --iron: #95a5a6; --bronze: #cd7f32; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { 
             font-family: 'Poppins', sans-serif; 
@@ -22,6 +22,14 @@
         .btn-1vs1 { background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:active { transform: scale(0.95); }
         
+        /* RÜTBE RENKLERİ */
+        .rank-bronze { color: var(--bronze); text-shadow: 0 0 5px var(--bronze); }
+        .rank-iron { color: var(--iron); text-shadow: 0 0 5px var(--iron); }
+        .rank-gold { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+        .rank-diamond { color: var(--blue); text-shadow: 0 0 10px var(--blue); }
+        .rank-elit { color: var(--red); text-shadow: 0 0 15px var(--red); animation: burn 1s infinite alternate; }
+        @keyframes burn { from { opacity: 0.7; } to { opacity: 1; } }
+
         /* ZORLUK BUTONLARI */
         .btn-easy { background: var(--green); color: #000; }
         .btn-medium { background: var(--orange); color: #fff; }
@@ -36,17 +44,21 @@
         
         .time-bonus { color: var(--green); animation: pulse 0.5s; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+
+        /* PROFİL MODAL */
+        #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; width: 85%; max-width: 350px; }
     </style>
 </head>
 <body>
 
 <div id="scr-login" style="display: contents;">
     <div class="big-card" style="border-color: var(--green);">
-        <div class="box-title">GİRİŞ YAP</div>
+        <div class="box-title">GİRİŞ / KAYIT</div>
         
         <div id="login-inputs">
-            <input type="text" id="username" placeholder="ADINIZI YAZIN">
-            <button class="btn" onclick="sys.showDifficulty('single')">OYUNA GİR</button>
+            <input type="text" id="username" placeholder="KULLANICI ADI">
+            <input type="password" id="password" placeholder="ŞİFRE">
+            <button class="btn" onclick="sys.auth()">GİRİŞ YAP / KAYDOL</button>
             <button class="btn btn-1vs1" onclick="sys.show1vs1()">⚔️ 1 VS 1 MODU</button>
         </div>
 
@@ -64,7 +76,7 @@
         </div>
     </div>
     <div class="big-card" style="margin-top: 5px; padding: 15px; border-color: rgba(255,255,255,0.1);">
-        <div class="sub-tag">YENİ OYUN BERKİ GELİR</div>
+        <div class="sub-tag">DEVELOPER: BURAK</div>
     </div>
 </div>
 
@@ -72,7 +84,7 @@
     <div class="big-card" id="game-card" style="border-color: var(--green);">
         <div id="turn-notice" style="font-size: 10px; color: var(--orange); font-weight: 800; margin-bottom: 5px; display: none;">SIRADAKİ OYUNCU: <span id="current-player-turn"></span></div>
         <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); font-weight: 800; margin-bottom: 10px;">
-            <span id="display-name">...</span>
+            <span id="display-name" onclick="sys.showProfile()" style="cursor:pointer; text-decoration: underline;">...</span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
         <div id="word">YÜKLENİYOR...</div>
@@ -81,12 +93,22 @@
     </div>
 </div>
 
+<div id="profile-modal" class="big-card" style="border-color: var(--blue); display:none;">
+    <div class="box-title" style="color:var(--blue)">PROFİLİN</div>
+    <div style="margin: 10px 0;">
+        <p style="font-size: 14px;">OYUNCU: <b id="prof-name"></b></p>
+        <p style="font-size: 14px;">EN YÜKSEK SKOR: <b id="prof-highscore">0</b></p>
+        <p style="font-size: 18px; margin-top: 10px;">RÜTBE: <span id="prof-rank"></span></p>
+    </div>
+    <button class="btn" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
+</div>
+
 <div id="scr-end" class="overlay">
     <div class="big-card" style="border-color: var(--red);">
         <div id="end-title" style="color:var(--red); font-weight:900; font-size: 20px;">OYUN BİTTİ!</div>
         <div id="duel-result" style="display:none; font-family: 'Orbitron'; font-size: 24px; color: var(--green); margin: 15px 0;"></div>
         <div style="font-size:35px; margin: 20px 0;"><b id="final-score">0</b></div>
-        <button class="btn" onclick="location.reload()">YENİ OYUNU BAŞLAT</button>
+        <button class="btn" onclick="location.reload()">TEKRAR OYNA</button>
     </div>
 </div>
 
@@ -113,20 +135,42 @@
     let activePool = [];
 
     const sys = {
-        name: "", score: 0, time: 30, active: false,
+        name: "", pass: "", score: 0, time: 30, active: false,
         isDuel: false, duelTurn: 1, p1Score: 0, p2Score: 0, p1Name: "", p2Name: "",
-        
+
+        getRank: (p) => {
+            if(p < 200) return {name: "ÇAYLAK BRONZ", class: "rank-bronze"};
+            if(p < 500) return {name: "DEMİR GRİ", class: "rank-iron"};
+            if(p < 1000) return {name: "ALTIN SARI", class: "rank-gold"};
+            if(p < 2000) return {name: "ELMAS MAVİ", class: "rank-diamond"};
+            return {name: "ELİT KIRMIZI", class: "rank-elit"};
+        },
+
+        auth: () => {
+            const n = document.getElementById('username').value.trim().toLowerCase();
+            const p = document.getElementById('password').value.trim();
+            if(!n || !p) return alert("İsim ve şifre zorunlu!");
+
+            let user = JSON.parse(localStorage.getItem('u_' + n));
+            if(user) {
+                if(user.pass !== p) return alert("Yanlış şifre! Başkası girmesin diye koruyoruz.");
+                sys.name = n;
+            } else {
+                localStorage.setItem('u_' + n, JSON.stringify({pass: p, highscore: 0}));
+                sys.name = n;
+                alert("Yeni hesap oluşturuldu!");
+            }
+            sys.showDifficulty('single');
+        },
+
         show1vs1: () => {
             document.getElementById('login-inputs').style.display = 'none';
             document.getElementById('1vs1-inputs').style.display = 'block';
             sys.isDuel = true;
         },
+
         showDifficulty: (mode) => {
-            if(mode === 'single') {
-                const n = document.getElementById('username').value.trim();
-                if(!n) return alert("Lütfen ismini yaz!");
-                sys.name = n;
-            } else {
+            if(mode === 'duel') {
                 sys.p1Name = document.getElementById('p1-name').value.trim() || "OYUNCU 1";
                 sys.p2Name = document.getElementById('p2-name').value.trim() || "OYUNCU 2";
                 sys.name = sys.p1Name;
@@ -135,6 +179,7 @@
             document.getElementById('1vs1-inputs').style.display = 'none';
             document.getElementById('difficulty-selection').style.display = 'block';
         },
+
         login: (level) => {
             activePool = POOLS[level];
             document.getElementById('scr-login').style.display = 'none';
@@ -146,6 +191,18 @@
             }
             sys.start();
         },
+
+        showProfile: () => {
+            if(sys.isDuel) return;
+            let user = JSON.parse(localStorage.getItem('u_' + sys.name));
+            let rank = sys.getRank(user.highscore);
+            document.getElementById('prof-name').innerText = sys.name.toUpperCase();
+            document.getElementById('prof-highscore').innerText = user.highscore;
+            document.getElementById('prof-rank').innerText = rank.name;
+            document.getElementById('prof-rank').className = rank.class;
+            document.getElementById('profile-modal').style.display = 'block';
+        },
+
         start: () => {
             sys.active = true; sys.score = 0; sys.time = 30;
             document.getElementById('score').innerText = "0";
@@ -153,54 +210,55 @@
             let clock = setInterval(() => {
                 if(!sys.active) return clearInterval(clock);
                 sys.time--; document.getElementById('timer').innerText = sys.time;
-                if(sys.time <= 0) {
-                    clearInterval(clock);
-                    sys.handleFinish();
-                }
+                if(sys.time <= 0) { clearInterval(clock); sys.handleFinish(); }
             }, 1000);
         },
+
         handleFinish: () => {
             sys.active = false;
+            if(!sys.isDuel) {
+                let user = JSON.parse(localStorage.getItem('u_' + sys.name));
+                if(sys.score > user.highscore) {
+                    user.highscore = sys.score;
+                    localStorage.setItem('u_' + sys.name, JSON.stringify(user));
+                    alert("YENİ REKOR!");
+                }
+            }
+
             if(sys.isDuel && sys.duelTurn === 1) {
-                sys.p1Score = sys.score;
-                sys.duelTurn = 2;
-                sys.name = sys.p2Name;
-                alert("Sıra " + sys.p2Name + " oyuncusunda! Hazır olunca Tamam'a bas.");
+                sys.p1Score = sys.score; sys.duelTurn = 2; sys.name = sys.p2Name;
+                alert("Sıra " + sys.p2Name + " oyuncusunda!");
                 document.getElementById('display-name').innerText = sys.name.toUpperCase();
                 document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
                 sys.start();
             } else if (sys.isDuel && sys.duelTurn === 2) {
-                sys.p2Score = sys.score;
-                sys.endDuel();
+                sys.p2Score = sys.score; sys.endDuel();
             } else {
                 sys.end();
             }
         },
+
         next: () => {
             sys.cur = activePool[Math.floor(Math.random()*activePool.length)];
             document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
             document.getElementById('answer').value = ""; document.getElementById('answer').focus();
         },
+
         end: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-end').style.display = 'flex';
             document.getElementById('final-score').innerText = sys.score;
         },
+
         endDuel: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-end').style.display = 'flex';
             document.getElementById('end-title').innerText = "DÜELLO BİTTİ!";
             document.getElementById('duel-result').style.display = 'block';
-            
-            let winner = "";
-            if(sys.p1Score > sys.p2Score) winner = sys.p1Name;
-            else if(sys.p2Score > sys.p1Score) winner = sys.p2Name;
-            else winner = "DOSTLUK";
-
+            let winner = sys.p1Score > sys.p2Score ? sys.p1Name : (sys.p2Score > sys.p1Score ? sys.p2Name : "DOSTLUK");
             document.getElementById('duel-result').innerText = "KAZANAN: " + winner.toUpperCase();
-            document.getElementById('final-score').innerHTML = `<span style='font-size:14px'>${sys.p1Name}: ${sys.p1Score} | ${sys.p2Name}: ${sys.p2Score}</span>`;
-            
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            document.getElementById('final-score').innerHTML = `<span style='font-size:14px'>${sys.p1Name}:${sys.p1Score} | ${sys.p2Name}:${sys.p2Score}</span>`;
+            confetti({ particleCount: 150, spread: 70 });
             sound(800, 'sine', 0.5, 0.2);
         }
     };
@@ -208,18 +266,16 @@
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
-                sys.score += 50; 
-                sys.time += 3; 
+                sys.score += 50; sys.time += 3;
                 document.getElementById('score').innerText = sys.score;
                 document.getElementById('timer').classList.add('time-bonus');
                 setTimeout(()=>document.getElementById('timer').classList.remove('time-bonus'), 500);
                 sound(600, 'sine', 0.2, 0.1); 
-                confetti({ particleCount: 30, spread: 50 }); 
+                confetti({ particleCount: 30, spread: 50 });
                 sys.next();
             } else {
                 document.getElementById('jumpscare').style.display = 'flex';
                 sound(50, 'sawtooth', 0.6, 0.8);
-                sound(120, 'square', 0.6, 0.6);
                 setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 500);
                 sys.next();
             }

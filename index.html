@@ -22,7 +22,7 @@
         .btn-1vs1 { background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:active { transform: scale(0.95); }
         
-        /* RÜTBE RENKLERİ */
+        /* RÜTBE TASARIMLARI */
         .rank-bronze { color: var(--bronze); text-shadow: 0 0 5px var(--bronze); }
         .rank-iron { color: var(--iron); text-shadow: 0 0 5px var(--iron); }
         .rank-gold { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
@@ -30,14 +30,13 @@
         .rank-elit { color: var(--red); text-shadow: 0 0 15px var(--red); animation: burn 1s infinite alternate; }
         @keyframes burn { from { opacity: 0.7; } to { opacity: 1; } }
 
-        /* ZORLUK BUTONLARI */
-        .btn-easy { background: var(--green); color: #000; }
-        .btn-medium { background: var(--orange); color: #fff; }
-        .btn-hard { background: var(--red); color: #fff; }
+        /* PROFİL BUTONU */
+        .profile-btn { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 10px; font-size: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
+        .profile-btn:hover { background: rgba(255,255,255,0.2); }
 
         /* BİLDİRİM EFEKTİ */
-        #notify { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%) scale(0.5); background: var(--blue); padding: 20px 40px; border-radius: 20px; font-weight: 900; z-index: 1000; display: none; box-shadow: 0 0 30px var(--blue); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; }
-        #notify.show { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        #notify { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%) scale(0.5); background: var(--blue); padding: 20px 40px; border-radius: 20px; font-weight: 900; z-index: 1000; display: none; box-shadow: 0 0 30px var(--blue); transition: 0.3s; }
+        #notify.show { display: block; transform: translate(-50%, -50%) scale(1); }
 
         #jumpscare { position: fixed; inset: 0; background: #ff0000; z-index: 1000; display: none; align-items: center; justify-content: center; }
         .ghost { font-size: 250px; filter: contrast(2) brightness(0.5); animation: ghostShake 0.05s infinite; }
@@ -48,10 +47,6 @@
         
         .time-bonus { color: var(--green); animation: pulse 0.5s; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
-
-        /* PROFİL MODAL */
-        #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; width: 85%; max-width: 350px; }
-        .profile-btn { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 10px; font-size: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -60,7 +55,7 @@
 
 <div id="scr-login" style="display: contents;">
     <div class="big-card" style="border-color: var(--green);">
-        <div id="login-inputs">
+        <div id="login-form">
             <div class="box-title">GİRİŞ / KAYIT</div>
             <input type="text" id="username" placeholder="KULLANICI ADI">
             <input type="password" id="password" placeholder="ŞİFRE">
@@ -69,13 +64,13 @@
         </div>
 
         <div id="main-menu" style="display: none;">
-            <div class="box-title" id="welcome-msg" style="color: #fff; font-size: 14px; margin-bottom: 20px;">HOŞ GELDİN!</div>
+            <div class="box-title" id="welcome-msg" style="color: #fff; font-size: 14px;">HOŞ GELDİN!</div>
             <button class="btn" onclick="sys.openDifficulty()">OYUNA BAŞLA</button>
             <button class="btn btn-1vs1" style="background:#444" onclick="location.reload()">ÇIKIŞ YAP</button>
         </div>
 
         <div id="1vs1-inputs" style="display: none;">
-            <div class="box-title" style="color: var(--orange);">DÜELLO AYARI</div>
+            <div class="box-title" style="color: var(--orange);">DÜELLO</div>
             <input type="text" id="p1-name" placeholder="1. OYUNCU ADI">
             <input type="text" id="p2-name" placeholder="2. OYUNCU ADI">
             <button class="btn" onclick="sys.openDifficulty()">ZORLUK SEÇ VE BAŞLA</button>
@@ -94,7 +89,7 @@
 </div>
 
 <div id="scr-game" class="overlay">
-    <div class="profile-btn" onclick="sys.showProfile()">👤 PROFİL</div>
+    <div class="profile-btn" onclick="sys.showProfile()">👤 PROFİLİ GÖRÜNTÜLE</div>
     <div class="big-card" id="game-card" style="border-color: var(--green);">
         <div id="turn-notice" style="font-size: 10px; color: var(--orange); font-weight: 800; margin-bottom: 5px; display: none;">SIRADAKİ OYUNCU: <span id="current-player-turn"></span></div>
         <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); font-weight: 800; margin-bottom: 10px;">
@@ -107,14 +102,17 @@
     </div>
 </div>
 
-<div id="profile-modal" class="big-card" style="border-color: var(--blue); display:none;">
-    <div class="box-title" style="color:var(--blue)">PROFİLİN</div>
-    <div style="margin: 10px 0;">
-        <p style="font-size: 14px;">OYUNCU: <b id="prof-name"></b></p>
-        <p style="font-size: 14px;">EN YÜKSEK SKOR: <b id="prof-highscore">0</b></p>
-        <p style="font-size: 18px; margin-top: 10px;">RÜTBE: <span id="prof-rank"></span></p>
+<div id="profile-modal" class="overlay" onclick="this.style.display='none'">
+    <div class="big-card" style="border-color: var(--blue);" onclick="event.stopPropagation()">
+        <div class="box-title" style="color: var(--blue);">OYUNCU PROFİLİ</div>
+        <div style="text-align: left; margin: 15px 0; font-size: 14px;">
+            <p>İSİM: <b id="prof-name"></b></p>
+            <p>REKOR: <b id="prof-record">0</b></p>
+            <p style="margin-top: 10px;">RÜTBE:</p>
+            <h2 id="prof-rank" style="font-family: Orbitron; margin-top: 5px;"></h2>
+        </div>
+        <button class="btn" style="background: var(--blue); color:#fff" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
     </div>
-    <button class="btn" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
 </div>
 
 <div id="scr-end" class="overlay">
@@ -122,8 +120,8 @@
         <div id="end-title" style="color:var(--red); font-weight:900; font-size: 20px;">OYUN BİTTİ!</div>
         <div id="duel-result" style="display:none; font-family: 'Orbitron'; font-size: 24px; color: var(--green); margin: 15px 0;"></div>
         <div style="font-size:35px; margin: 20px 0;"><b id="final-score">0</b></div>
-        <button class="btn" onclick="sys.restart()">TEKRAR OYNA</button>
-        <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ANA MENÜ</button>
+        <button class="btn" onclick="sys.restart()">ANA MENÜYE DÖN</button>
+        <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ÇIKIŞ YAP</button>
     </div>
 </div>
 
@@ -153,21 +151,19 @@
         name: "", score: 0, time: 30, active: false,
         isDuel: false, duelTurn: 1, p1Score: 0, p2Score: 0, p1Name: "", p2Name: "",
 
-        msg: (text, color = "#3498db") => {
+        msg: (t, c="#3498db") => {
             const el = document.getElementById('notify');
-            el.innerText = text;
-            el.style.background = color;
-            el.style.boxShadow = `0 0 30px ${color}`;
+            el.innerText = t; el.style.background = c;
             el.classList.add('show');
             setTimeout(() => el.classList.remove('show'), 2000);
         },
 
-        getRank: (p) => {
-            if(p < 200) return {name: "ÇAYLAK BRONZ", class: "rank-bronze"};
-            if(p < 500) return {name: "DEMİR GRİ", class: "rank-iron"};
-            if(p < 1000) return {name: "ALTIN SARI", class: "rank-gold"};
-            if(p < 2000) return {name: "ELMAS MAVİ", class: "rank-diamond"};
-            return {name: "ELİT KIRMIZI", class: "rank-elit"};
+        getRank: (score) => {
+            if(score < 200) return {n: "ÇAYLAK BRONZ", c: "rank-bronze"};
+            if(score < 500) return {n: "DEMİR GRİ", c: "rank-iron"};
+            if(score < 1000) return {n: "ALTIN SARI", c: "rank-gold"};
+            if(score < 2000) return {n: "ELMAS MAVİ", c: "rank-diamond"};
+            return {n: "ELİT KIRMIZI", c: "rank-elit"};
         },
 
         auth: () => {
@@ -177,21 +173,21 @@
 
             let user = JSON.parse(localStorage.getItem('u_' + n));
             if(user) {
-                if(user.pass !== p) return sys.msg("YANLIŞ ŞİFRE!", "#ff4757");
-                sys.name = n;
-                sys.msg("HOŞ GELDİN DEVELOPER!");
+                if(user.pass !== p) return sys.msg("ŞİFRE YANLIŞ!", "#ff4757");
+                sys.msg("HOŞ GELDİN " + n.toUpperCase() + " developer");
             } else {
-                localStorage.setItem('u_' + n, JSON.stringify({pass: p, highscore: 0}));
-                sys.name = n;
-                sys.msg("HESAP OLUŞTURULDU!", "#2ecc71");
+                user = { pass: p, record: 0 };
+                localStorage.setItem('u_' + n, JSON.stringify(user));
+                sys.msg("YENİ HESAP OLUŞTURULDU!");
             }
-            document.getElementById('login-inputs').style.display = 'none';
+            sys.name = n;
+            document.getElementById('login-form').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
-            document.getElementById('welcome-msg').innerText = "HOŞ GELDİN " + sys.name.toUpperCase();
+            document.getElementById('welcome-msg').innerText = "GİRİŞ YAPILDI: " + n.toUpperCase();
         },
 
         show1vs1: () => {
-            document.getElementById('login-inputs').style.display = 'none';
+            document.getElementById('login-form').style.display = 'none';
             document.getElementById('1vs1-inputs').style.display = 'block';
             sys.isDuel = true;
         },
@@ -207,6 +203,17 @@
             document.getElementById('difficulty-selection').style.display = 'block';
         },
 
+        showProfile: () => {
+            if(sys.isDuel) return sys.msg("DÜELLODA PROFİL KAPALI");
+            let user = JSON.parse(localStorage.getItem('u_' + sys.name));
+            let rank = sys.getRank(user.record);
+            document.getElementById('prof-name').innerText = sys.name.toUpperCase();
+            document.getElementById('prof-record').innerText = user.record;
+            document.getElementById('prof-rank').innerText = rank.n;
+            document.getElementById('prof-rank').className = rank.c;
+            document.getElementById('profile-modal').style.display = 'flex';
+        },
+
         login: (level) => {
             activePool = POOLS[level];
             document.getElementById('scr-login').style.display = 'none';
@@ -217,17 +224,6 @@
                 document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
             }
             sys.start();
-        },
-
-        showProfile: () => {
-            if(sys.isDuel) return sys.msg("DÜELLO MODUNDA PROFİL KAPALI");
-            let user = JSON.parse(localStorage.getItem('u_' + sys.name));
-            let rank = sys.getRank(user.highscore);
-            document.getElementById('prof-name').innerText = sys.name.toUpperCase();
-            document.getElementById('prof-highscore').innerText = user.highscore;
-            document.getElementById('prof-rank').innerText = rank.name;
-            document.getElementById('prof-rank').className = rank.class;
-            document.getElementById('profile-modal').style.display = 'block';
         },
 
         start: () => {
@@ -243,24 +239,22 @@
 
         handleFinish: () => {
             sys.active = false;
+            // Rekor Kaydetme
             if(!sys.isDuel) {
                 let user = JSON.parse(localStorage.getItem('u_' + sys.name));
-                if(sys.score > user.highscore) {
-                    user.highscore = sys.score;
+                if(sys.score > user.record) {
+                    user.record = sys.score;
                     localStorage.setItem('u_' + sys.name, JSON.stringify(user));
                     sys.msg("YENİ REKOR! 🏆", "#f1c40f");
-                    confetti({ particleCount: 100, spread: 70 });
                 }
             }
 
             if(sys.isDuel && sys.duelTurn === 1) {
                 sys.p1Score = sys.score; sys.duelTurn = 2; sys.name = sys.p2Name;
-                sys.msg("SIRA " + sys.p2Name + " OYUNCUSUNDA!", "#e67e22");
-                setTimeout(() => {
-                    document.getElementById('display-name').innerText = sys.name.toUpperCase();
-                    document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
-                    sys.start();
-                }, 1500);
+                sys.msg("SIRA " + sys.p2Name.toUpperCase() + " OYUNCUSUNDA!", "#e67e22");
+                document.getElementById('display-name').innerText = sys.name.toUpperCase();
+                document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
+                sys.start();
             } else if (sys.isDuel && sys.duelTurn === 2) {
                 sys.p2Score = sys.score; sys.endDuel();
             } else {
@@ -281,20 +275,11 @@
         },
 
         restart: () => {
-            // "TEKRAR OYNA" dediğinde artık direkt zorluk değil, ana menüye (OYUNA GİR) atar
             document.getElementById('scr-end').style.display = 'none';
             document.getElementById('scr-login').style.display = 'contents';
-            
-            if(sys.isDuel) {
-                document.getElementById('1vs1-inputs').style.display = 'block';
-                document.getElementById('difficulty-selection').style.display = 'none';
-                document.getElementById('main-menu').style.display = 'none';
-                sys.duelTurn = 1;
-            } else {
-                document.getElementById('main-menu').style.display = 'block';
-                document.getElementById('difficulty-selection').style.display = 'none';
-                document.getElementById('login-inputs').style.display = 'none';
-            }
+            document.getElementById('main-menu').style.display = 'block';
+            document.getElementById('difficulty-selection').style.display = 'none';
+            sys.duelTurn = 1;
         },
 
         endDuel: () => {
@@ -304,7 +289,7 @@
             document.getElementById('duel-result').style.display = 'block';
             let winner = sys.p1Score > sys.p2Score ? sys.p1Name : (sys.p2Score > sys.p1Score ? sys.p2Name : "DOSTLUK");
             document.getElementById('duel-result').innerText = "KAZANAN: " + winner.toUpperCase();
-            document.getElementById('final-score').innerHTML = `<span style='font-size:14px'>${sys.p1Name}:${sys.p1Score} | ${sys.p2Name}:${sys.p2Score}</span>`;
+            document.getElementById('final-score').innerHTML = `<span style='font-size:14px'>${sys.p1Name}: ${sys.p1Score} | ${sys.p2Name}: ${sys.p2Score}</span>`;
             confetti({ particleCount: 150, spread: 70 });
             sound(800, 'sine', 0.5, 0.2);
         }
@@ -318,7 +303,7 @@
                 document.getElementById('timer').classList.add('time-bonus');
                 setTimeout(()=>document.getElementById('timer').classList.remove('time-bonus'), 500);
                 sound(600, 'sine', 0.2, 0.1); 
-                confetti({ particleCount: 30, spread: 50 });
+                confetti({ particleCount: 30, spread: 50 }); 
                 sys.next();
             } else {
                 document.getElementById('jumpscare').style.display = 'flex';

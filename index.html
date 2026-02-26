@@ -35,6 +35,10 @@
         .btn-medium { background: var(--orange); color: #fff; }
         .btn-hard { background: var(--red); color: #fff; }
 
+        /* BİLDİRİM EFEKTİ */
+        #notify { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%) scale(0.5); background: var(--blue); padding: 20px 40px; border-radius: 20px; font-weight: 900; z-index: 1000; display: none; box-shadow: 0 0 30px var(--blue); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; }
+        #notify.show { display: block; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
         #jumpscare { position: fixed; inset: 0; background: #ff0000; z-index: 1000; display: none; align-items: center; justify-content: center; }
         .ghost { font-size: 250px; filter: contrast(2) brightness(0.5); animation: ghostShake 0.05s infinite; }
         @keyframes ghostShake { 0% { transform: translate(10px, 10px); } 50% { transform: translate(-10px, -10px); } 100% { transform: translate(10px, -10px); } }
@@ -47,25 +51,34 @@
 
         /* PROFİL MODAL */
         #profile-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; width: 85%; max-width: 350px; }
+        .profile-btn { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 10px; font-size: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
+<div id="notify">MESAJ</div>
+
 <div id="scr-login" style="display: contents;">
     <div class="big-card" style="border-color: var(--green);">
-        <div class="box-title">GİRİŞ / KAYIT</div>
-        
         <div id="login-inputs">
+            <div class="box-title">GİRİŞ / KAYIT</div>
             <input type="text" id="username" placeholder="KULLANICI ADI">
             <input type="password" id="password" placeholder="ŞİFRE">
             <button class="btn" onclick="sys.auth()">GİRİŞ YAP / KAYDOL</button>
             <button class="btn btn-1vs1" onclick="sys.show1vs1()">⚔️ 1 VS 1 MODU</button>
         </div>
 
+        <div id="main-menu" style="display: none;">
+            <div class="box-title" id="welcome-msg" style="color: #fff; font-size: 14px; margin-bottom: 20px;">HOŞ GELDİN!</div>
+            <button class="btn" onclick="sys.openDifficulty()">OYUNA BAŞLA</button>
+            <button class="btn btn-1vs1" style="background:#444" onclick="location.reload()">ÇIKIŞ YAP</button>
+        </div>
+
         <div id="1vs1-inputs" style="display: none;">
+            <div class="box-title" style="color: var(--orange);">DÜELLO AYARI</div>
             <input type="text" id="p1-name" placeholder="1. OYUNCU ADI">
             <input type="text" id="p2-name" placeholder="2. OYUNCU ADI">
-            <button class="btn" onclick="sys.showDifficulty('duel')">ZORLUK SEÇ VE BAŞLA</button>
+            <button class="btn" onclick="sys.openDifficulty()">ZORLUK SEÇ VE BAŞLA</button>
         </div>
 
         <div id="difficulty-selection" style="display: none;">
@@ -81,10 +94,11 @@
 </div>
 
 <div id="scr-game" class="overlay">
+    <div class="profile-btn" onclick="sys.showProfile()">👤 PROFİL</div>
     <div class="big-card" id="game-card" style="border-color: var(--green);">
         <div id="turn-notice" style="font-size: 10px; color: var(--orange); font-weight: 800; margin-bottom: 5px; display: none;">SIRADAKİ OYUNCU: <span id="current-player-turn"></span></div>
         <div style="display:flex; justify-content: space-between; font-size: 12px; color: var(--green); font-weight: 800; margin-bottom: 10px;">
-            <span id="display-name" onclick="sys.showProfile()" style="cursor:pointer; text-decoration: underline;">...</span>
+            <span id="display-name" style="margin-left: 20px;">...</span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
         <div id="word">YÜKLENİYOR...</div>
@@ -108,7 +122,8 @@
         <div id="end-title" style="color:var(--red); font-weight:900; font-size: 20px;">OYUN BİTTİ!</div>
         <div id="duel-result" style="display:none; font-family: 'Orbitron'; font-size: 24px; color: var(--green); margin: 15px 0;"></div>
         <div style="font-size:35px; margin: 20px 0;"><b id="final-score">0</b></div>
-        <button class="btn" onclick="location.reload()">TEKRAR OYNA</button>
+        <button class="btn" onclick="sys.restart()">TEKRAR OYNA</button>
+        <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ANA MENÜ</button>
     </div>
 </div>
 
@@ -135,8 +150,17 @@
     let activePool = [];
 
     const sys = {
-        name: "", pass: "", score: 0, time: 30, active: false,
+        name: "", score: 0, time: 30, active: false,
         isDuel: false, duelTurn: 1, p1Score: 0, p2Score: 0, p1Name: "", p2Name: "",
+
+        msg: (text, color = "#3498db") => {
+            const el = document.getElementById('notify');
+            el.innerText = text;
+            el.style.background = color;
+            el.style.boxShadow = `0 0 30px ${color}`;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2000);
+        },
 
         getRank: (p) => {
             if(p < 200) return {name: "ÇAYLAK BRONZ", class: "rank-bronze"};
@@ -149,18 +173,21 @@
         auth: () => {
             const n = document.getElementById('username').value.trim().toLowerCase();
             const p = document.getElementById('password').value.trim();
-            if(!n || !p) return alert("İsim ve şifre zorunlu!");
+            if(!n || !p) return sys.msg("EKSİK BİLGİ!", "#ff4757");
 
             let user = JSON.parse(localStorage.getItem('u_' + n));
             if(user) {
-                if(user.pass !== p) return alert("Yanlış şifre! Başkası girmesin diye koruyoruz.");
+                if(user.pass !== p) return sys.msg("YANLIŞ ŞİFRE!", "#ff4757");
                 sys.name = n;
+                sys.msg("HOŞ GELDİN DEVELOPER!");
             } else {
                 localStorage.setItem('u_' + n, JSON.stringify({pass: p, highscore: 0}));
                 sys.name = n;
-                alert("Yeni hesap oluşturuldu!");
+                sys.msg("HESAP OLUŞTURULDU!", "#2ecc71");
             }
-            sys.showDifficulty('single');
+            document.getElementById('login-inputs').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
+            document.getElementById('welcome-msg').innerText = "HOŞ GELDİN " + sys.name.toUpperCase();
         },
 
         show1vs1: () => {
@@ -169,13 +196,13 @@
             sys.isDuel = true;
         },
 
-        showDifficulty: (mode) => {
-            if(mode === 'duel') {
+        openDifficulty: () => {
+            if(sys.isDuel) {
                 sys.p1Name = document.getElementById('p1-name').value.trim() || "OYUNCU 1";
                 sys.p2Name = document.getElementById('p2-name').value.trim() || "OYUNCU 2";
                 sys.name = sys.p1Name;
             }
-            document.getElementById('login-inputs').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'none';
             document.getElementById('1vs1-inputs').style.display = 'none';
             document.getElementById('difficulty-selection').style.display = 'block';
         },
@@ -193,7 +220,7 @@
         },
 
         showProfile: () => {
-            if(sys.isDuel) return;
+            if(sys.isDuel) return sys.msg("DÜELLO MODUNDA PROFİL KAPALI");
             let user = JSON.parse(localStorage.getItem('u_' + sys.name));
             let rank = sys.getRank(user.highscore);
             document.getElementById('prof-name').innerText = sys.name.toUpperCase();
@@ -221,16 +248,19 @@
                 if(sys.score > user.highscore) {
                     user.highscore = sys.score;
                     localStorage.setItem('u_' + sys.name, JSON.stringify(user));
-                    alert("YENİ REKOR!");
+                    sys.msg("YENİ REKOR! 🏆", "#f1c40f");
+                    confetti({ particleCount: 100, spread: 70 });
                 }
             }
 
             if(sys.isDuel && sys.duelTurn === 1) {
                 sys.p1Score = sys.score; sys.duelTurn = 2; sys.name = sys.p2Name;
-                alert("Sıra " + sys.p2Name + " oyuncusunda!");
-                document.getElementById('display-name').innerText = sys.name.toUpperCase();
-                document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
-                sys.start();
+                sys.msg("SIRA " + sys.p2Name + " OYUNCUSUNDA!", "#e67e22");
+                setTimeout(() => {
+                    document.getElementById('display-name').innerText = sys.name.toUpperCase();
+                    document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
+                    sys.start();
+                }, 1500);
             } else if (sys.isDuel && sys.duelTurn === 2) {
                 sys.p2Score = sys.score; sys.endDuel();
             } else {
@@ -248,6 +278,23 @@
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-end').style.display = 'flex';
             document.getElementById('final-score').innerText = sys.score;
+        },
+
+        restart: () => {
+            // "TEKRAR OYNA" dediğinde artık direkt zorluk değil, ana menüye (OYUNA GİR) atar
+            document.getElementById('scr-end').style.display = 'none';
+            document.getElementById('scr-login').style.display = 'contents';
+            
+            if(sys.isDuel) {
+                document.getElementById('1vs1-inputs').style.display = 'block';
+                document.getElementById('difficulty-selection').style.display = 'none';
+                document.getElementById('main-menu').style.display = 'none';
+                sys.duelTurn = 1;
+            } else {
+                document.getElementById('main-menu').style.display = 'block';
+                document.getElementById('difficulty-selection').style.display = 'none';
+                document.getElementById('login-inputs').style.display = 'none';
+            }
         },
 
         endDuel: () => {

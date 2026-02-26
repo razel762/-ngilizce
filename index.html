@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@400;800&display=swap" rel="stylesheet">
     <style>
-        :root { --green: #2ecc71; --red: #ff4757; }
+        :root { --green: #2ecc71; --red: #ff4757; --orange: #e67e22; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { 
             font-family: 'Poppins', sans-serif; 
@@ -19,10 +19,14 @@
         #word { font-size: 30px; font-weight: 900; text-shadow: 0 0 20px var(--green); height: 45px; margin: 15px 0; }
         input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
         .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
-        .btn-1vs1 { background: #e67e22; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-1vs1 { background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:active { transform: scale(0.95); }
         
-        /* KIRMIZI JUMPSCARE AYARI */
+        /* ZORLUK BUTONLARI */
+        .btn-easy { background: var(--green); color: #000; }
+        .btn-medium { background: var(--orange); color: #fff; }
+        .btn-hard { background: var(--red); color: #fff; }
+
         #jumpscare { position: fixed; inset: 0; background: #ff0000; z-index: 1000; display: none; align-items: center; justify-content: center; }
         .ghost { font-size: 250px; filter: contrast(2) brightness(0.5); animation: ghostShake 0.05s infinite; }
         @keyframes ghostShake { 0% { transform: translate(10px, 10px); } 50% { transform: translate(-10px, -10px); } 100% { transform: translate(10px, -10px); } }
@@ -30,7 +34,6 @@
         .overlay { position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
         .sub-tag { font-size: 12px; font-style: italic; color: #888; }
         
-        /* Süre artış efekti */
         .time-bonus { color: var(--green); animation: pulse 0.5s; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
     </style>
@@ -40,9 +43,19 @@
 <div id="scr-login" style="display: contents;">
     <div class="big-card" style="border-color: var(--green);">
         <div class="box-title">GİRİŞ YAP</div>
-        <input type="text" id="username" placeholder="ADINIZI YAZIN">
-        <button class="btn" onclick="sys.login()">OYUNA GİR</button>
-        <button class="btn btn-1vs1" onclick="alert('1 VS 1 MODU Yakında Geliyor!')">⚔️ 1 VS 1 MODU</button>
+        
+        <div id="login-inputs">
+            <input type="text" id="username" placeholder="ADINIZI YAZIN">
+            <button class="btn" onclick="sys.showDifficulty()">OYUNA GİR</button>
+            <button class="btn btn-1vs1" onclick="alert('1 VS 1 MODU Yakında Geliyor!')">⚔️ 1 VS 1 MODU</button>
+        </div>
+
+        <div id="difficulty-selection" style="display: none;">
+            <p style="font-size: 12px; margin-bottom: 10px; color: #aaa;">ZORLUK SEÇİN</p>
+            <button class="btn btn-easy" onclick="sys.login('easy')">EASY</button>
+            <button class="btn btn-medium" onclick="sys.login('medium')">MEDIUM</button>
+            <button class="btn btn-hard" onclick="sys.login('hard')">HARD</button>
+        </div>
     </div>
     <div class="big-card" style="margin-top: 5px; padding: 15px; border-color: rgba(255,255,255,0.1);">
         <div class="sub-tag">YENİ OYUN BERKİ GELİR</div>
@@ -83,17 +96,29 @@
         } catch(e){}
     };
 
-    const WORDS = [{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Kalem",en:"pencil"},{tr:"Öğrenci",en:"student"},{tr:"Öğretmen",en:"teacher"},{tr:"Sınıf",en:"classroom"},{tr:"Masa",en:"table"},{tr:"Sandalye",en:"chair"},{tr:"Kütüphane",en:"library"},{tr:"Defter",en:"notebook"},{tr:"Gelecek",en:"future"},{tr:"Başarı",en:"success"},{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Yetenek",en:"ability"},{tr:"Bilim",en:"science"},{tr:"Eğitim",en:"education"},{tr:"Önemli",en:"important"},{tr:"Zeki",en:"intelligent"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},{tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},{tr:"Zengin",en:"rich"},{tr:"Fakir",en:"poor"},{tr:"Sıcak",en:"hot"},{tr:"Soğuk",en:"cold"},{tr:"Güzel",en:"beautiful"},{tr:"Çirkin",en:"ugly"},{tr:"Genç",en:"young"},{tr:"Yaşlı",en:"old"},{tr:"Kolay",en:"easy"},{tr:"Zor",en:"difficult"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"},{tr:"Elma",en:"apple"},{tr:"Ekmek",en:"bread"},{tr:"Su",en:"water"},{tr:"Süt",en:"milk"},{tr:"Çay",en:"tea"},{tr:"Kahve",en:"coffee"},{tr:"Yemek",en:"food"},{tr:"Meyve",en:"fruit"},{tr:"Sebze",en:"vegetable"},{tr:"Şeker",en:"sugar"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Dünya",en:"world"},{tr:"Gökyüzü",en:"sky"},{tr:"Deniz",en:"sea"},{tr:"Dağ",en:"mountain"},{tr:"Ağaç",en:"tree"},{tr:"Çiçek",en:"flower"},{tr:"Yağmur",en:"rain"},{tr:"Kar",en:"snow"},{tr:"Kırmızı",en:"red"},{tr:"Mavi",en:"blue"},{tr:"Yeşil",en:"green"},{tr:"Sarı",en:"yellow"},{tr:"Siyah",en:"black"},{tr:"Beyaz",en:"white"},{tr:"Turuncu",en:"orange"},{tr:"Mor",en:"purple"},{tr:"Pembe",en:"pink"},{tr:"Kahverengi",en:"brown"},{tr:"Aslan",en:"lion"},{tr:"Kaplan",en:"tiger"},{tr:"Kedi",en:"cat"},{tr:"Köpek",en:"dog"},{tr:"Kuş",en:"bird"},{tr:"Balık",en:"fish"},{tr:"At",en:"horse"},{tr:"Fil",en:"elephant"},{tr:"Maymun",en:"monkey"},{tr:"Yılan",en:"snake"},{tr:"Sabah",en:"morning"},{tr:"Öğle",en:"afternoon"},{tr:"Akşam",en:"evening"},{tr:"Gece",en:"night"},{tr:"Bugün",en:"today"},{tr:"Yarın",en:"tomorrow"},{tr:"Dün",en:"yesterday"},{tr:"Hafta",en:"week"},{tr:"Ay",en:"month"},{tr:"Yıl",en:"year"},{tr:"Gülmek",en:"laugh"},{tr:"Ağlamak",en:"cry"},{tr:"Koşmak",en:"run"},{tr:"Yürümek",en:"walk"},{tr:"Uyumak",en:"sleep"},{tr:"Yazmak",en:"write"},{tr:"Okumak",en:"read"},{tr:"Konuşmak",en:"speak"},{tr:"Dinlemek",en:"listen"},{tr:"Anlamak",en:"understand"}];
+    // KELİME HAVUZLARI
+    const POOLS = {
+        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kırmızı",en:"red"},{tr:"Mavi",en:"blue"},{tr:"Süt",en:"milk"},{tr:"Çay",en:"tea"},{tr:"Kedi",en:"cat"},{tr:"Köpek",en:"dog"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Yeni",en:"new"},{tr:"Eski",en:"old"},{tr:"Hızlı",en:"fast"},{tr:"Yavaş",en:"slow"}],
+        medium: [{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Kalem",en:"pencil"},{tr:"Öğrenci",en:"student"},{tr:"Öğretmen",en:"teacher"},{tr:"Sınıf",en:"classroom"},{tr:"Masa",en:"table"},{tr:"Sandalye",en:"chair"},{tr:"Zeki",en:"intelligent"},{tr:"Mutlu",en:"happy"},{tr:"Üzgün",en:"sad"},{tr:"Büyük",en:"big"},{tr:"Küçük",en:"small"},{tr:"Doğru",en:"true"},{tr:"Yanlış",en:"false"}],
+        hard: [{tr:"Gelecek",en:"future"},{tr:"Başarı",en:"success"},{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelenek",en:"tradition"},{tr:"Yetenek",en:"ability"},{tr:"Bilim",en:"science"},{tr:"Eğitim",en:"education"},{tr:"Tehlikeli",en:"dangerous"},{tr:"Kütüphane",en:"library"},{tr:"Defter",en:"notebook"},{tr:"Önemli",en:"important"}]
+    };
+
+    let activePool = [];
 
     const sys = {
         name: "", score: 0, time: 30, active: false,
-        login: () => {
+        showDifficulty: () => {
             const n = document.getElementById('username').value.trim();
             if(!n) return alert("Lütfen ismini yaz!");
             sys.name = n;
+            document.getElementById('login-inputs').style.display = 'none';
+            document.getElementById('difficulty-selection').style.display = 'block';
+        },
+        login: (level) => {
+            activePool = POOLS[level];
             document.getElementById('scr-login').style.display = 'none';
             document.getElementById('scr-game').style.display = 'flex';
-            document.getElementById('display-name').innerText = n.toUpperCase();
+            document.getElementById('display-name').innerText = sys.name.toUpperCase();
             sys.start();
         },
         start: () => {
@@ -105,7 +130,7 @@
             }, 1000);
         },
         next: () => {
-            sys.cur = WORDS[Math.floor(Math.random()*WORDS.length)];
+            sys.cur = activePool[Math.floor(Math.random()*activePool.length)];
             document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
             document.getElementById('answer').value = ""; document.getElementById('answer').focus();
         },
@@ -121,18 +146,16 @@
         if(e.key === 'Enter' && sys.active) {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
                 sys.score += 50; 
-                sys.time += 3; // SURE ARTIŞI EKLEDİM
+                sys.time += 3; 
                 document.getElementById('score').innerText = sys.score;
                 document.getElementById('timer').classList.add('time-bonus');
                 setTimeout(()=>document.getElementById('timer').classList.remove('time-bonus'), 500);
-                
                 sound(600, 'sine', 0.2, 0.1); 
                 confetti({ particleCount: 50, spread: 60 }); 
                 sys.next();
             } else {
-                // KIRMIZI VE YÜKSEK SESLİ JUMPSCARE
                 document.getElementById('jumpscare').style.display = 'flex';
-                sound(50, 'sawtooth', 0.6, 0.8); // Daha bas ve yüksek ses
+                sound(50, 'sawtooth', 0.6, 0.8);
                 sound(120, 'square', 0.6, 0.6);
                 setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 500);
                 sys.next();

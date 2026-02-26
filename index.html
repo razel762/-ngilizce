@@ -9,45 +9,34 @@
     <style>
         :root { --green: #2ecc71; --red: #ff4757; --orange: #e67e22; --blue: #3498db; --gold: #f1c40f; --iron: #95a5a6; --bronze: #cd7f32; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: radial-gradient(circle, #2c3e50, #000); 
-            color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; overflow: hidden; 
-        }
+        body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle, #2c3e50, #000); color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; overflow: hidden; }
         .big-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); position: relative; }
         .box-title { font-family: 'Orbitron'; color: var(--green); font-size: 18px; font-weight: 900; margin-bottom: 15px; }
-        #word { font-size: 30px; font-weight: 900; text-shadow: 0 0 20px var(--green); height: 45px; margin: 15px 0; }
         input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 16px; margin-bottom: 10px; text-align: center; outline: none; }
         .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
-        .btn-1vs1 { background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn:active { transform: scale(0.95); }
         
-        /* RÜTBE RENKLERİ */
+        /* ZORLUK RENKLERİ */
+        .btn-easy { background: var(--green); color: #000; }
+        .btn-medium { background: var(--orange); color: #fff; }
+        .btn-hard { background: var(--red); color: #fff; }
+
+        /* DEVELOPER ETİKETİ */
+        .dev-tag { color: var(--red); font-weight: 900; text-shadow: 0 0 10px var(--red); font-size: 11px; text-transform: uppercase; margin-left: 5px; }
+
+        /* RÜTBE TASARIMLARI */
         .rank-bronze { color: var(--bronze); text-shadow: 0 0 5px var(--bronze); }
         .rank-iron { color: var(--iron); text-shadow: 0 0 5px var(--iron); }
         .rank-gold { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
         .rank-diamond { color: var(--blue); text-shadow: 0 0 10px var(--blue); }
-        .rank-elit { color: var(--red); text-shadow: 0 0 15px var(--red); animation: burn 1s infinite alternate; }
-        @keyframes burn { from { opacity: 0.7; } to { opacity: 1; } }
+        .rank-elit { color: var(--red); text-shadow: 0 0 15px var(--red); animation: burn 0.8s infinite alternate; }
+        @keyframes burn { from { opacity: 0.6; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
 
-        /* PROFİL BUTONU - HER ZAMAN ÜSTTE */
-        #profile-trigger { 
-            position: fixed; top: 20px; left: 20px; 
-            background: rgba(255,255,255,0.1); padding: 10px 20px; 
-            border-radius: 15px; font-size: 12px; font-weight: 800;
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.2); 
-            display: none; z-index: 5000; backdrop-filter: blur(10px);
-            transition: 0.3s;
-        }
-        #profile-trigger:hover { background: var(--blue); color: #fff; }
-
-        #notify { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%) scale(0.5); background: var(--blue); padding: 20px 40px; border-radius: 20px; font-weight: 900; z-index: 6000; display: none; transition: 0.3s; }
+        #profile-trigger { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 15px; font-size: 12px; font-weight: 800; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); display: none; z-index: 5000; backdrop-filter: blur(10px); }
+        .overlay { position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.92); }
+        #word { font-size: 32px; font-weight: 900; text-shadow: 0 0 20px var(--green); height: 50px; margin: 15px 0; display: flex; align-items: center; justify-content: center; }
+        #jumpscare { position: fixed; inset: 0; background: #000; z-index: 7000; display: none; align-items: center; justify-content: center; border: 20px solid red; }
+        #notify { position: fixed; top: 10%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: var(--blue); padding: 15px 30px; border-radius: 15px; font-weight: 900; z-index: 6000; display: none; transition: 0.3s; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         #notify.show { display: block; transform: translate(-50%, -50%) scale(1); }
-        
-        .overlay { position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.9); }
-        #jumpscare { position: fixed; inset: 0; background: #ff0000; z-index: 7000; display: none; align-items: center; justify-content: center; }
-        .ghost { font-size: 250px; animation: ghostShake 0.05s infinite; }
-        @keyframes ghostShake { 0% { transform: translate(5px, 5px); } 50% { transform: translate(-5px, -5px); } }
     </style>
 </head>
 <body>
@@ -63,14 +52,19 @@
             <input type="password" id="password" placeholder="ŞİFRE">
             <button class="btn" onclick="sys.auth()">DEVAM ET</button>
         </div>
-
         <div id="main-menu" style="display: none;">
             <div class="box-title" id="welcome-msg" style="color: #fff; font-size: 14px;"></div>
             <button class="btn" onclick="sys.openDifficulty()">OYUNA BAŞLA</button>
-            <button class="btn btn-1vs1" onclick="sys.show1vs1()">⚔️ 1 VS 1 MODU</button>
-            <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">HESAPTAN ÇIK</button>
+            <button class="btn" style="background:var(--orange); color:#fff" onclick="sys.show1vs1()">⚔️ 1 VS 1 MODU</button>
+            <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ÇIKIŞ YAP</button>
         </div>
-
+        <div id="difficulty-selection" style="display: none;">
+            <div class="box-title" style="font-size: 14px;">ZORLUK SEÇ</div>
+            <button class="btn btn-easy" onclick="sys.login('easy')">EASY</button>
+            <button class="btn btn-medium" onclick="sys.login('medium')">MEDIUM</button>
+            <button class="btn btn-hard" onclick="sys.login('hard')">HARD</button>
+            <button class="btn" style="background:#333; color:#fff" onclick="sys.backToMenu()">GERİ</button>
+        </div>
         <div id="1vs1-inputs" style="display: none;">
             <div class="box-title" style="color: var(--orange);">DÜELLO KUR</div>
             <input type="text" id="p1-name" placeholder="1. OYUNCU ADI">
@@ -78,37 +72,30 @@
             <button class="btn" onclick="sys.startDuelPrep()">BAŞLA</button>
             <button class="btn" style="background:#333; color:#fff" onclick="sys.backToMenu()">GERİ</button>
         </div>
-
-        <div id="difficulty-selection" style="display: none;">
-            <div class="box-title" style="font-size: 14px;">ZORLUK SEÇ</div>
-            <button class="btn btn-easy" onclick="sys.login('easy')">EASY</button>
-            <button class="btn btn-medium" onclick="sys.login('medium')">MEDIUM</button>
-            <button class="btn btn-hard" onclick="sys.login('hard')">HARD</button>
-        </div>
     </div>
 </div>
 
 <div id="scr-game" class="overlay">
     <div class="big-card" style="border-color: var(--green);">
-        <div id="turn-notice" style="font-size: 10px; color: var(--orange); font-weight: 800; margin-bottom: 5px; display: none;">SIRADAKİ: <span id="current-player-turn"></span></div>
-        <div style="display:flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px;">
-            <span id="display-name" style="color: var(--green);">...</span>
+        <div id="turn-notice" style="font-size: 12px; color: var(--orange); font-weight: 800; margin-bottom: 5px; display: none;">SIRADAKİ: <span id="current-player-turn"></span></div>
+        <div style="display:flex; justify-content: space-between; font-size: 13px; margin-bottom: 15px;">
+            <span id="display-name" style="color: var(--green); font-weight: 800;">...</span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
         <div id="word">...</div>
-        <input type="text" id="answer" placeholder="CEVABI YAZ" autocomplete="off">
-        <div style="font-size: 11px; color: #666;">SÜRE: <span id="timer">30</span></div>
+        <input type="text" id="answer" placeholder="İngilizcesini Yaz..." autocomplete="off">
+        <div style="font-size: 12px; color: #aaa; margin-top: 10px;">KALAN SÜRE: <span id="timer" style="color:var(--red); font-weight:bold;">30</span>s</div>
     </div>
 </div>
 
 <div id="profile-modal" class="overlay" onclick="this.style.display='none'">
     <div class="big-card" style="border-color: var(--blue);" onclick="event.stopPropagation()">
-        <div class="box-title" style="color: var(--blue);">PROFİLİM</div>
-        <div style="text-align: left; font-size: 14px; line-height: 2;">
-            <p>OYUNCU: <b id="prof-name"></b> <span style="color:var(--green); font-size:10px">developer</span></p>
+        <div class="box-title" style="color: var(--blue);">PROFİL BİLGİLERİ</div>
+        <div style="text-align: left; font-size: 15px; line-height: 2.2;">
+            <p>OYUNCU: <b id="prof-name"></b> <span class="dev-tag" id="prof-dev-tag">developer</span></p>
             <p>EN YÜKSEK SKOR: <b id="prof-record">0</b></p>
-            <p>RÜTBE:</p>
-            <h2 id="prof-rank" style="font-family: Orbitron; margin-bottom: 20px;"></h2>
+            <p style="margin-top:5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">MEVCUT RÜTBE:</p>
+            <h2 id="prof-rank" style="font-family: Orbitron; margin-bottom: 15px; text-align: center;"></h2>
         </div>
         <button class="btn" style="background: var(--blue); color: #fff;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
     </div>
@@ -116,20 +103,40 @@
 
 <div id="scr-end" class="overlay">
     <div class="big-card" style="border-color: var(--red);">
-        <div id="end-title" style="color:var(--red); font-weight:900;">OYUN BİTTİ!</div>
-        <div id="duel-result" style="display:none; font-family: Orbitron; margin: 10px 0;"></div>
-        <div style="font-size:40px; margin: 15px 0;"><b id="final-score">0</b></div>
-        <button class="btn" onclick="sys.restart()">MENÜYE DÖN</button>
+        <div id="end-title" style="color:var(--red); font-size: 24px; font-weight:900;">OYUN BİTTİ!</div>
+        <div id="duel-result" style="display:none; font-family: Orbitron; margin: 15px 0; color: var(--gold);"></div>
+        <div style="font-size:50px; margin: 20px 0;"><b id="final-score">0</b></div>
+        <button class="btn" onclick="sys.restart()">ANA MENÜYE DÖN</button>
     </div>
 </div>
 
-<div id="jumpscare"><div class="ghost">👻</div></div>
+<div id="jumpscare"><div style="font-size: 250px;">👻</div></div>
 
 <script>
+    // SES MOTORU (Daha net sesler için geliştirildi)
+    const playSound = (type) => {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        
+        if(type === 'correct') {
+            o.type = 'sine'; o.frequency.setValueAtTime(587.33, ctx.currentTime);
+            o.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
+            g.gain.setValueAtTime(0.1, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+            o.start(); o.stop(ctx.currentTime + 0.2);
+        } else if(type === 'wrong') {
+            o.type = 'sawtooth'; o.frequency.setValueAtTime(110, ctx.currentTime);
+            g.gain.setValueAtTime(0.2, ctx.currentTime);
+            o.start(); o.stop(ctx.currentTime + 0.5);
+        }
+    };
+
     const POOLS = {
-        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Mavi",en:"blue"}],
-        medium: [{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Öğretmen",en:"teacher"}],
-        hard: [{tr:"Başarı",en:"success"},{tr:"Gelecek",en:"future"},{tr:"Sorumluluk",en:"responsibility"}]
+        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Mavi",en:"blue"},{tr:"Ev",en:"house"}],
+        medium: [{tr:"Kitap",en:"book"},{tr:"Okul",en:"school"},{tr:"Araba",en:"car"},{tr:"Öğretmen",en:"teacher"}],
+        hard: [{tr:"Gelecek",en:"future"},{tr:"Kütüphane",en:"library"},{tr:"Sorumluluk",en:"responsibility"}]
     };
 
     let activePool = [];
@@ -146,11 +153,12 @@
         },
 
         getRank: (s) => {
-            if(s < 200) return {n: "ÇAYLAK BRONZ", c: "rank-bronze"};
-            if(s < 500) return {n: "DEMİR GRİ", c: "rank-iron"};
-            if(s < 1000) return {n: "ALTIN SARI", c: "rank-gold"};
-            if(s < 2000) return {n: "ELMAS MAVİ", c: "rank-diamond"};
-            return {n: "ELİT KIRMIZI", c: "rank-elit"};
+            // SIRA DÜZELTİLDİ: En yüksekten aşağı doğru kontrol
+            if(s >= 2000) return {n: "ELİT KIRMIZI", c: "rank-elit"};
+            if(s >= 1000) return {n: "ELMAS MAVİ", c: "rank-diamond"};
+            if(s >= 500) return {n: "ALTIN SARI", c: "rank-gold"};
+            if(s >= 200) return {n: "DEMİR GRİ", c: "rank-iron"};
+            return {n: "ÇAYLAK BRONZ", c: "rank-bronze"};
         },
 
         auth: () => {
@@ -158,20 +166,24 @@
             const p = document.getElementById('password').value.trim();
             if(!n || !p) return sys.msg("EKSİK BİLGİ", "#ff4757");
 
-            let user = JSON.parse(localStorage.getItem('u_' + n)) || { pass: p, record: 0 };
-            if(user.pass !== p) return sys.msg("ŞİFRE HATALI", "#ff4757");
-            
-            localStorage.setItem('u_' + n, JSON.stringify(user));
+            let user = JSON.parse(localStorage.getItem('u_' + n));
+            if(!user) {
+                user = { pass: p, record: 0 }; // Kesinlikle 0'dan başlar (Undefined Fix)
+                localStorage.setItem('u_' + n, JSON.stringify(user));
+            } else if(user.pass !== p) {
+                return sys.msg("ŞİFRE HATALI", "#ff4757");
+            }
+
             sys.name = n;
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
-            document.getElementById('profile-trigger').style.display = 'block'; // Girişten sonra göster
+            document.getElementById('profile-trigger').style.display = 'block';
             document.getElementById('welcome-msg').innerText = "HOŞ GELDİN " + n.toUpperCase();
-            sys.msg("GİRİŞ BAŞARILI");
+            sys.msg("BAŞARIYLA GİRİLDİ");
         },
 
         showProfile: () => {
-            let user = JSON.parse(localStorage.getItem('u_' + sys.name));
+            let user = JSON.parse(localStorage.getItem('u_' + sys.name)) || {record: 0};
             let r = sys.getRank(user.record);
             document.getElementById('prof-name').innerText = sys.name.toUpperCase();
             document.getElementById('prof-record').innerText = user.record;
@@ -188,13 +200,14 @@
 
         backToMenu: () => {
             document.getElementById('1vs1-inputs').style.display = 'none';
+            document.getElementById('difficulty-selection').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
             sys.isDuel = false;
         },
 
         startDuelPrep: () => {
-            sys.p1Name = document.getElementById('p1-name').value || "P1";
-            sys.p2Name = document.getElementById('p2-name').value || "P2";
+            sys.p1Name = document.getElementById('p1-name').value || "OYUNCU 1";
+            sys.p2Name = document.getElementById('p2-name').value || "OYUNCU 2";
             sys.name = sys.p1Name;
             document.getElementById('1vs1-inputs').style.display = 'none';
             document.getElementById('difficulty-selection').style.display = 'block';
@@ -207,7 +220,7 @@
 
         login: (l) => {
             activePool = POOLS[l];
-            document.getElementById('scr-login').style.display = 'none';
+            document.getElementById('difficulty-selection').style.display = 'none';
             document.getElementById('scr-game').style.display = 'flex';
             document.getElementById('display-name').innerText = sys.name.toUpperCase();
             if(sys.isDuel) {
@@ -231,17 +244,18 @@
         handleFinish: () => {
             sys.active = false;
             if(!sys.isDuel) {
-                let u = JSON.parse(localStorage.getItem('u_' + sys.name));
+                let u = JSON.parse(localStorage.getItem('u_' + sys.name)) || {record: 0};
                 if(sys.score > u.record) {
                     u.record = sys.score;
                     localStorage.setItem('u_' + sys.name, JSON.stringify(u));
                     sys.msg("YENİ REKOR!", "#f1c40f");
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 }
             }
 
             if(sys.isDuel && sys.duelTurn === 1) {
                 sys.p1Score = sys.score; sys.duelTurn = 2; sys.name = sys.p2Name;
-                sys.msg("SIRA " + sys.p2Name.toUpperCase());
+                sys.msg("SIRA " + sys.p2Name.toUpperCase(), "#e67e22");
                 document.getElementById('display-name').innerText = sys.name.toUpperCase();
                 document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
                 sys.start();
@@ -268,31 +282,34 @@
             document.getElementById('scr-end').style.display = 'none';
             document.getElementById('scr-login').style.display = 'contents';
             document.getElementById('main-menu').style.display = 'block';
-            document.getElementById('difficulty-selection').style.display = 'none';
             sys.isDuel = false; sys.duelTurn = 1;
         },
 
         endDuel: () => {
             document.getElementById('scr-game').style.display = 'none';
             document.getElementById('scr-end').style.display = 'flex';
-            document.getElementById('end-title').innerText = "DÜELLO BİTTİ!";
+            document.getElementById('end-title').innerText = "DÜELLO SONUCU";
             document.getElementById('duel-result').style.display = 'block';
-            let w = sys.p1Score > sys.p2Score ? sys.p1Name : (sys.p2Score > sys.p1Score ? sys.p2Name : "BERABERE");
+            let w = sys.p1Score > sys.p2Score ? sys.p1Name : (sys.p2Score > sys.p1Score ? sys.p2Name : "DOSTLUK KAZANDI (BERABERE)");
             document.getElementById('duel-result').innerText = "KAZANAN: " + w.toUpperCase();
             document.getElementById('final-score').innerText = sys.p1Score + " - " + sys.p2Score;
-            confetti({ particleCount: 100 });
+            confetti({ particleCount: 200, spread: 100 });
         }
     };
 
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
-            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()){
-                sys.score += 50; sys.time += 2;
+            let userAns = document.getElementById('answer').value.toLowerCase().trim();
+            if(userAns === sys.cur.en.toLowerCase()){
+                sys.score += 50; sys.time += 3;
                 document.getElementById('score').innerText = sys.score;
+                playSound('correct');
+                confetti({ particleCount: 30, spread: 40, origin: { y: 0.7 } });
                 sys.next();
             } else {
+                playSound('wrong');
                 document.getElementById('jumpscare').style.display = 'flex';
-                setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 400);
+                setTimeout(() => { document.getElementById('jumpscare').style.display = 'none'; }, 500);
                 sys.next();
             }
         }

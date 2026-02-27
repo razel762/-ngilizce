@@ -15,81 +15,83 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle, #2c3e50, #000); color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; overflow: hidden; }
         
-        .big-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); position: relative; }
+        .big-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; }
         .box-title { font-family: 'Orbitron'; color: var(--green); font-size: 18px; font-weight: 900; margin-bottom: 15px; }
         
-        input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 14px; margin-bottom: 10px; text-align: center; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--green); box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+        input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 14px; margin-bottom: 10px; text-align: center; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
         .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
         .btn:active { transform: scale(0.95); }
 
-        /* RÜTBE STİLLERİ VE RENKLERİ */
+        /* RÜTBE STİLLERİ */
+        .rank-DEVELOPER { color: var(--red); text-shadow: 0 0 15px var(--red); font-weight: 900; animation: glow 1s infinite alternate; }
         .rank-BRONZ { color: var(--bronze); text-shadow: 0 0 8px var(--bronze); }
         .rank-DEMİR { color: var(--iron); text-shadow: 0 0 8px var(--iron); }
         .rank-ALTIN { color: var(--gold); text-shadow: 0 0 12px var(--gold); }
         .rank-ELMAS { color: var(--diamond); text-shadow: 0 0 15px var(--diamond); }
-        .rank-ELİT { color: var(--red); text-shadow: 0 0 18px var(--red); animation: glow 1s infinite alternate; }
-        .rank-MİTİK { color: var(--mythic); text-shadow: 0 0 25px var(--mythic); font-style: italic; }
-        .rank-EFSANEVİ { color: #000; background: #fff; padding: 2px 8px; border-radius: 6px; box-shadow: 0 0 30px #fff; font-weight: 900; }
+        .rank-ELİT { color: var(--red); text-shadow: 0 0 18px var(--red); }
 
-        @keyframes glow { from { opacity: 0.8; } to { opacity: 1; } }
+        @keyframes glow { from { opacity: 0.7; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
 
-        /* GİRİŞ EKRANI LOGO VE BAŞLIK */
         #studio-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        #studio-logo { width: 40px; height: 40px; }
-        #studio-title { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        #studio-logo { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); }
+        #studio-title { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; color: #fff; }
 
-        .dev-badge { background: var(--red); color: white; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-left: 5px; box-shadow: 0 0 15px var(--red); font-weight: 900; }
+        .dev-badge { background: var(--red); color: white; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-left: 5px; box-shadow: 0 0 10px var(--red); }
 
-        /* JUMPSCARE VE GHOST */
         #jumpscare { position: fixed; inset: 0; background: rgba(255, 0, 0, 0); z-index: 8000; display: none; align-items: center; justify-content: center; transition: background 0.3s; pointer-events: none; }
-        .ghost-img { font-size: 180px; opacity: 0; transform: scale(0.5); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .ghost-img { font-size: 180px; opacity: 0; transform: scale(0.5); transition: 0.4s; }
         #jumpscare.active { display: flex; background: rgba(255, 0, 0, 0.9); }
         #jumpscare.active .ghost-img { opacity: 1; transform: scale(1.2); }
 
         .overlay { position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        #profile-trigger { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 15px; font-size: 13px; font-weight: 900; cursor: pointer; display: none; z-index: 5000; border: 1px solid rgba(255,255,255,0.3); }
-        #notify { position: fixed; top: 10%; left: 50%; transform: translateX(-50%); background: var(--blue); padding: 15px 35px; border-radius: 15px; font-weight: 900; z-index: 6000; display: none; box-shadow: 0 0 20px rgba(52, 152, 219, 0.5); }
+        
+        #top-bar { position: fixed; top: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; z-index: 5000; }
+        .top-btn { background: rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 15px; font-size: 12px; font-weight: 900; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
 
-        /* PROFİL MODAL VE RÜTBE BİLGİSİ */
-        #profile-content { display: flex; flex-direction: column; gap: 20px; text-align: left; line-height: 1.8; font-size: 14px; }
-        #rank-how-to { border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; padding: 15px; background: rgba(255,255,255,0.03); }
-        #rank-how-to-title { font-family: 'Orbitron'; font-weight: 900; color: var(--gold); font-size: 13px; margin-bottom: 10px; text-align: center; }
-        .rank-step { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+        .admin-list { text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .admin-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); line-height: 1.4; }
     </style>
 </head>
 <body>
 
-<div id="notify">MESAJ</div>
-<div id="profile-trigger" onclick="sys.showProfile()">👤 PROFİLİM</div>
+<div id="notify" style="position: fixed; top: 10%; left: 50%; transform: translateX(-50%); background: var(--blue); padding: 15px 35px; border-radius: 15px; font-weight: 900; z-index: 6000; display: none;">MESAJ</div>
+
+<div id="top-bar">
+    <div id="profile-trigger" class="top-btn" onclick="sys.showProfile()" style="display:none;">👤 PROFİLİM</div>
+    <div id="suggest-trigger" class="top-btn" onclick="sys.showSuggest()" style="color:var(--gold); display:none;">💡 ÖNERİLER</div>
+</div>
 
 <div id="scr-login" style="display: contents;">
-    <div class="big-card" style="border-color: var(--green);">
-        
+    <div class="big-card">
         <div id="studio-header">
-            <img src="https://lh3.googleusercontent.com/d/1tLh_n-976.github.io" alt="B & H STUDIOS LOGO" id="studio-logo">
+            <img src="https://ibb.co/gZgzD7yq" alt="LOGO" id="studio-logo">
             <div id="studio-title">B & H | STUDIOS</div>
         </div>
 
         <div id="login-form">
-            <div class="box-title" style="font-size:16px;">KAYIT OL/ GİRİŞ YAP</div>
+            <div class="box-title" style="font-size:16px;">GİRİŞ YAP</div>
             <input type="text" id="username" placeholder="KULLANICI ADI">
             <input type="password" id="password" placeholder="ŞİFRE">
-            <button class="btn" onclick="sys.auth()">GİR</button>
+            <button class="btn" onclick="sys.auth()">SİSTEME GİR</button>
         </div>
+
         <div id="main-menu" style="display: none;">
             <div class="box-title" id="welcome-msg"></div>
             <button class="btn" onclick="sys.openDifficulty()">TEKLİ OYNA</button>
             <button class="btn" style="background:var(--orange); color:#fff" onclick="sys.show1vs1()">⚔️ DÜELLO (1 VS 1)</button>
+            <button id="admin-btn" class="btn" style="background:var(--red); color:#fff; display:none;" onclick="sys.showAdminPanel()">🛠️ SİSTEME GİRİŞ YAPANLAR</button>
             <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ÇIKIŞ YAP</button>
         </div>
+
         <div id="difficulty-selection" style="display: none;">
             <div class="box-title">ZORLUK SEÇ</div>
-            <button class="btn" style="background:var(--green)" onclick="sys.login('easy')">KOLAY (EASY)</button>
-            <button class="btn" style="background:var(--orange); color:white" onclick="sys.login('medium')">ORTA (MEDIUM)</button>
-            <button class="btn" style="background:var(--red); color:white" onclick="sys.login('hard')">ZOR (HARD)</button>
-            <button class="btn" style="background:#333; color:#fff" onclick="sys.backToMenu()">GERİ DÖN</button>
+            <button class="btn" style="background:var(--green)" onclick="sys.login('easy')">KOLAY</button>
+            <button class="btn" style="background:var(--orange); color:white" onclick="sys.login('medium')">ORTA</button>
+            <button class="btn" style="background:var(--red); color:white" onclick="sys.login('hard')">ZOR</button>
+            <button class="btn" style="background:#333; color:#fff" onclick="sys.backToMenu()">GERİ</button>
         </div>
+
         <div id="1vs1-inputs" style="display: none;">
             <div class="box-title" style="color:var(--orange)">DÜELLO KUR</div>
             <input type="text" id="p1-name" placeholder="1. Oyuncu">
@@ -108,36 +110,51 @@
             <span>SKOR: <b id="score">0</b></span>
         </div>
         <div id="word" style="font-size: 34px; font-weight: 900; margin: 20px 0;">...</div>
-        <input type="text" id="answer" placeholder="İngilizcesini yaz..." autocomplete="off">
+        <input type="text" id="answer" placeholder="Cevabı yaz..." autocomplete="off">
         <div style="font-size: 13px;">SÜRE: <span id="timer" style="color:var(--red); font-weight: 900;">30</span>s</div>
     </div>
 </div>
 
 <div id="profile-modal" class="overlay" onclick="this.style.display='none'">
     <div class="big-card" style="border-color: var(--blue);" onclick="event.stopPropagation()">
-        
-        <div id="profile-content">
-            
-            <div id="profile-info">
-                <div class="box-title" style="color:var(--blue); font-size:16px;">PROFİLİM</div>
-                <p>OYUNCU: <b id="prof-name"></b> <span id="prof-dev"></span></p>
-                <p>EN YÜKSEK SKOR: <b id="prof-record">0</b></p>
-                <p>RÜTBE: <b id="prof-rank" style="font-family: Orbitron;"></b></p>
-            </div>
-
-            <div id="rank-how-to">
-                <div id="rank-how-to-title">RÜTBELER NASIL ALINIR?</div>
-                <div class="rank-step"><span class="rank-BRONZ">BRONZ</span> <span>0 - 200</span></div>
-                <div class="rank-step"><span class="rank-DEMİR">DEMİR</span> <span>200 - 500</span></div>
-                <div class="rank-step"><span class="rank-ALTIN">ALTIN</span> <span>500 - 1000</span></div>
-                <div class="rank-step"><span class="rank-ELMAS">ELMAS</span> <span>1000 - 2000</span></div>
-                <div class="rank-step"><span class="rank-ELİT">ELİT</span> <span>2000 - 3500</span></div>
-                <div class="rank-step"><span class="rank-MİTİK">MİTİK</span> <span>3500 - 5000</span></div>
-                <div class="rank-step"><span class="rank-EFSANEVİ">EFSANEVİ</span> <span>5000+</span></div>
-            </div>
+        <div class="box-title" style="color:var(--blue); font-size:16px;">OYUNCU PROFİLİ</div>
+        <div style="text-align:left; font-size:14px; margin-bottom:15px; line-height:2;">
+            <p>OYUNCU: <b id="prof-name"></b> <span id="prof-dev"></span></p>
+            <p>EN YÜKSEK SKOR: <b id="prof-record">0</b></p>
+            <p>RÜTBE: <b id="prof-rank" style="font-family: Orbitron;"></b></p>
         </div>
+        <div style="border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; padding: 15px; background: rgba(255,255,255,0.03);">
+            <div style="font-family:'Orbitron'; font-weight:900; color:var(--gold); font-size:12px; margin-bottom:10px;">RÜTBELER</div>
+            <div class="rank-step"><span class="rank-DEVELOPER">DEVELOPER</span> <span style="font-size:9px;">B & H KURUCUSU</span></div>
+            <div class="rank-step"><span class="rank-ELİT">ELİT</span> <span>2000-3000</span></div>
+            <div class="rank-step"><span class="rank-ELMAS">ELMAS</span> <span>1000-2000</span></div>
+            <div class="rank-step"><span class="rank-ALTIN">ALTIN</span> <span>500-1000</span></div>
+            <div class="rank-step"><span class="rank-DEMİR">DEMİR</span> <span>200-500</span></div>
+            <div class="rank-step"><span class="rank-BRONZ">BRONZ</span> <span>0-200</span></div>
+        </div>
+        <button class="btn" style="background:var(--blue); color:#fff; margin-top:20px;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
+    </div>
+</div>
 
-        <button class="btn" style="background: var(--blue); color: #fff; margin-top: 20px;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
+<div id="suggest-modal" class="overlay" onclick="this.style.display='none'">
+    <div class="big-card" style="border-color: var(--gold); max-height: 80vh;" onclick="event.stopPropagation()">
+        <div class="box-title" style="color:var(--gold);">BİZE ÖNERİ YAZIN</div>
+        <p style="font-size:11px; margin-bottom:10px; color:gray;">Fikirleriniz stüdyomuz için değerlidir.</p>
+        <textarea id="suggest-text" rows="3" placeholder="Mesajınızı buraya yazın..."></textarea>
+        <button class="btn" style="background:var(--gold);" onclick="sys.sendSuggest()">GÖNDER</button>
+        <hr style="opacity:0.2; margin: 15px 0;">
+        <div style="font-family:'Orbitron'; font-size:12px; color:var(--gold); margin-bottom:10px;">TÜM ÖNERİLER</div>
+        <div id="public-suggest-list" class="admin-list"></div>
+        <button class="btn" style="background:#333; color:#fff; margin-top:10px;" onclick="document.getElementById('suggest-modal').style.display='none'">KAPAT</button>
+    </div>
+</div>
+
+<div id="admin-modal" class="overlay" onclick="this.style.display='none'">
+    <div class="big-card" style="border-color: var(--red);" onclick="event.stopPropagation()">
+        <div class="box-title" style="color:var(--red);">DEVELOPER PANELİ</div>
+        <div style="text-align:left; font-size:11px; color:gray;">KAYITLI OYUNCULAR:</div>
+        <div id="user-list" class="admin-list"></div>
+        <button class="btn" style="background:#333; color:#fff; margin-top:15px;" onclick="document.getElementById('admin-modal').style.display='none'">KAPAT</button>
     </div>
 </div>
 
@@ -153,89 +170,49 @@
 <div id="jumpscare"><div class="ghost-img">👻</div></div>
 
 <script>
-    // KELİME HAVUZU (DEVASA GENİŞLETİLDİ)
     const POOLS = {
-        easy: [
-            {tr:"Elma",en:"apple"},{tr:"Kedi",en:"cat"},{tr:"Su",en:"water"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Süt",en:"milk"},
-            {tr:"Ekmek",en:"bread"},{tr:"Mavi",en:"blue"},{tr:"Kırmızı",en:"red"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},
-            {tr:"Ağaç",en:"tree"},{tr:"Kuş",en:"bird"},{tr:"Balık",en:"fish"},{tr:"Sarı",en:"yellow"},{tr:"Masa",en:"table"},{tr:"Göz",en:"eye"},
-            {tr:"Yeşil",en:"green"},{tr:"Siyah",en:"black"},{tr:"Beyaz",en:"white"},{tr:"Araba",en:"car"},{tr:"Otobüs",en:"bus"},{tr:"Uçak",en:"plane"},
-            {tr:"Gemi",en:"ship"},{tr:"Yemek",en:"food"},{tr:"İçecek",en:"drink"},{tr:"Baba",en:"father"},{tr:"Anne",en:"mother"},{tr:"Erkek kardeş",en:"brother"},
-            {tr:"Kız kardeş",en:"sister"},{tr:"Oğul",en:"son"},{tr:"Kız evlat",en:"daughter"},{tr:"Çocuk",en:"child"},{tr:"Bebek",en:"baby"},
-            {tr:"Gün",en:"day"},{tr:"Gece",en:"night"},{tr:"Sabah",en:"morning"},{tr:"Akşam",en:"evening"},{tr:"Öğle",en:"noon"},
-            {tr:"Saat",en:"hour"},{tr:"Dakika",en:"minute"},{tr:"Saniye",en:"second"},{tr:"Hafta",en:"week"},{tr:"Ay",en:"month"},
-            {tr:"Yıl",en:"year"},{tr:"Bugün",en:"today"},{tr:"Dün",en:"yesterday"},{tr:"Yarın",en:"tomorrow"},{tr:"Hava",en:"weather"}
-        ],
-        medium: [
-            {tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Kütüphane",en:"library"},{tr:"Bilgisayar",en:"computer"},
-            {tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"},{tr:"Gözlük",en:"glasses"},
-            {tr:"Telefon",en:"phone"},{tr:"Zaman",en:"time"},{tr:"Arkadaş",en:"friend"},{tr:"Şehir",en:"city"},
-            {tr:"Hayvan",en:"animal"},{tr:"Gökkuşağı",en:"rainbow"},{tr:"Havaalanı",en:"airport"},{tr:"Eczane",en:"pharmacy"},
-            {tr:"Buzdolabı",en:"fridge"},{tr:"Klavye",en:"keyboard"},{tr:"Matematik",en:"math"},{tr:"Tarih",en:"history"},
-            {tr:"Coğrafya",en:"geography"},{tr:"Biyoloji",en:"biology"},{tr:"Kimya",en:"chemistry"},{tr:"Fizik",en:"physics"},
-            {tr:"Üniversite",en:"university"},{tr:"Meslek",en:"job"},{tr:"Doktor",en:"doctor"},{tr:"Hemşire",en:"nurse"},
-            {tr:"Mühendis",en:"engineer"},{tr:"Avukat",en:"lawyer"},{tr:"Polis",en:"police"},{tr:"Asker",en:"soldier"},
-            {tr:"Müzik",en:"music"},{tr:"Resim",en:"painting"},{tr:"Sinema",en:"cinema"},{tr:"Tiyatro",en:"theater"},
-            {tr:"Futbol",en:"football"},{tr:"Basketbol",en:"basketball"},{tr:"Voleybol",en:"volleyball"},{tr:"Yüzme",en:"swimming"}
-        ],
-        hard: [
-            {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},
-            {tr:"Özgürlük",en:"freedom"},{tr:"Hükümet",en:"government"},{tr:"Bilim",en:"science"},{tr:"Fırsat",en:"opportunity"},
-            {tr:"Gelenek",en:"tradition"},{tr:"Karakter",en:"character"},{tr:"Yetenek",en:"ability"},{tr:"Bağımsızlık",en:"independence"},
-            {tr:"Demokrasi",en:"democracy"},{tr:"Ekonomi",en:"economy"},{tr:"Adalet",en:"justice"},{tr:"Eşitlik",en:"equality"},
-            {tr:"Çevre",en:"environment"},{tr:"Teknoloji",en:"technology"},{tr:"İletişim",en:"communication"},{tr:"Eğitim",en:"education"},
-            {tr:"Kültür",en:"culture"},{tr:"Miras",en:"heritage"},{tr:"Felsefe",en:"philosophy"},{tr:"Edebiyat",en:"literature"},
-            {tr:"Sanat",en:"art"},{tr:"Hayal gücü",en:"imagination"},{tr:"Yaratıcılık",en:"creativity"},{tr:"Zeka",en:"intelligence"},
-            {tr:"Vicdan",en:"conscience"},{tr:"Onur",en:"honor"},{tr:"Cesaret",en:"courage"},{tr:"Bilgelik",en:"wisdom"},
-            {tr:"Umut",en:"hope"},{tr:"Sevgi",en:"love"},{tr:"Barış",en:"peace"}
-        ]
+        easy: [{tr:"Elma",en:"apple"},{tr:"Kedi",en:"cat"},{tr:"Su",en:"water"},{tr:"Güneş",en:"sun"},{tr:"Ay",en:"moon"},{tr:"Süt",en:"milk"},{tr:"Mavi",en:"blue"},{tr:"Kırmızı",en:"red"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},{tr:"Kuş",en:"bird"}],
+        medium: [{tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Kütüphane",en:"library"},{tr:"Bilgisayar",en:"computer"},{tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"}],
+        hard: [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},{tr:"Özgürlük",en:"freedom"},{tr:"Bağımsızlık",en:"independence"}]
     };
 
     const playSound = (t) => {
         const c = new (window.AudioContext || window.webkitAudioContext)();
         const o = c.createOscillator(); const g = c.createGain();
         o.connect(g); g.connect(c.destination);
-        if(t==='ok'){ 
-            o.type='sine'; o.frequency.setValueAtTime(523.25, c.currentTime); 
-            o.frequency.exponentialRampToValueAtTime(1046.50, c.currentTime+0.1);
-            g.gain.setValueAtTime(0.1, c.currentTime); o.start(); o.stop(c.currentTime+0.2);
-        } else {
-            o.type='sawtooth'; o.frequency.setValueAtTime(110, c.currentTime);
-            g.gain.setValueAtTime(0.1, c.currentTime); o.start(); o.stop(c.currentTime+0.4);
-        }
+        if(t==='ok'){ o.type='sine'; o.frequency.setValueAtTime(523, c.currentTime); g.gain.setValueAtTime(0.1, c.currentTime); o.start(); o.stop(c.currentTime+0.2); }
+        else { o.type='sawtooth'; o.frequency.setValueAtTime(110, c.currentTime); g.gain.setValueAtTime(0.1, c.currentTime); o.start(); o.stop(c.currentTime+0.4); }
     };
 
     const sys = {
-        name: "", score: 0, time: 30, active: false, isDuel: false, duelTurn: 1, p1S: 0, p2S: 0, p1N: "", p2N: "", cur: null, curIdx: -1,
+        name: "", score: 0, time: 30, active: false, isDuel: false, duelTurn: 1, p1S: 0, p2S: 0, p1N: "", p2N: "", cur: null,
         
         getRank: (s) => {
-            if(s >= 5000) return "EFSANEVİ";
-            if(s >= 3500) return "MİTİK";
             if(s >= 2000) return "ELİT";
             if(s >= 1000) return "ELMAS";
             if(s >= 500) return "ALTIN";
             if(s >= 200) return "DEMİR";
             return "BRONZ";
         },
-        
-        msg: (t) => {
-            const el = document.getElementById('notify');
-            el.innerText = t; el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 2000);
-        },
 
         auth: () => {
             const n = document.getElementById('username').value.trim().toLowerCase();
             const p = document.getElementById('password').value.trim();
-            if(!n || !p) return sys.msg("ALANLARI DOLDURUN!");
+            if(!n || !p) return;
             let u = JSON.parse(localStorage.getItem('u_'+n)) || {pass:p, record:0};
-            if(u.pass !== p) return sys.msg("ŞİFRE YANLIŞ!");
+            if(u.pass !== p) return;
             localStorage.setItem('u_'+n, JSON.stringify(u));
+            
+            let all = JSON.parse(localStorage.getItem('all_users')) || [];
+            if(!all.includes(n)) { all.push(n); localStorage.setItem('all_users', JSON.stringify(all)); }
+
             sys.name = n;
             document.getElementById('login-form').style.display='none';
             document.getElementById('main-menu').style.display='block';
             document.getElementById('profile-trigger').style.display='block';
+            document.getElementById('suggest-trigger').style.display='block';
             document.getElementById('welcome-msg').innerText = "HOŞ GELDİN, " + n.toUpperCase();
+            if(n === 'burak') document.getElementById('admin-btn').style.display = 'block';
         },
 
         showProfile: () => {
@@ -244,9 +221,48 @@
             document.getElementById('prof-record').innerText = u.record;
             let r = sys.getRank(u.record);
             document.getElementById('prof-rank').innerText = r;
-            document.getElementById('prof-rank').className = 'rank-'+r;
-            document.getElementById('prof-dev').innerHTML = (sys.name==='burak')?'<span class="dev-badge">DEVELOPER</span>':'';
+            document.getElementById('prof-rank').className = 'rank-' + r;
+            document.getElementById('prof-dev').innerHTML = (sys.name==='burak') ? '<span class="dev-badge">DEVELOPER</span>' : '';
             document.getElementById('profile-modal').style.display='flex';
+        },
+
+        showSuggest: () => {
+            document.getElementById('suggest-modal').style.display = 'flex';
+            sys.refreshPublicSuggests();
+        },
+
+        refreshPublicSuggests: () => {
+            const pubList = document.getElementById('public-suggest-list');
+            pubList.innerHTML = "";
+            let sugs = JSON.parse(localStorage.getItem('all_sugs')) || [];
+            [...sugs].reverse().forEach(s => {
+                pubList.innerHTML += `<div class="admin-item">${s}</div>`;
+            });
+        },
+
+        sendSuggest: () => {
+            const txt = document.getElementById('suggest-text').value.trim();
+            if(!txt) return;
+            let u = JSON.parse(localStorage.getItem('u_'+sys.name));
+            let r = sys.getRank(u.record);
+            let devTag = (sys.name === 'burak') ? '<span style="color:red">[DEVELOPER]</span> ' : '';
+            
+            let fullMsg = `[${r}] ${devTag}${sys.name.toUpperCase()}: ${txt}`;
+            let sugs = JSON.parse(localStorage.getItem('all_sugs')) || [];
+            sugs.push(fullMsg);
+            localStorage.setItem('all_sugs', JSON.stringify(sugs));
+            
+            document.getElementById('suggest-text').value = "";
+            sys.refreshPublicSuggests();
+            alert("Öneriniz paylaşıldı!");
+        },
+
+        showAdminPanel: () => {
+            const uDiv = document.getElementById('user-list');
+            uDiv.innerHTML = "";
+            let users = JSON.parse(localStorage.getItem('all_users')) || [];
+            users.forEach(u => uDiv.innerHTML += `<div class="admin-item">• ${u.toUpperCase()}</div>`);
+            document.getElementById('admin-modal').style.display='flex';
         },
 
         openDifficulty: () => {
@@ -268,14 +284,13 @@
         },
 
         startDuelPrep: () => {
-            sys.p1N = document.getElementById('p1-name').value.trim() || "OYUNCU 1";
-            sys.p2N = document.getElementById('p2-name').value.trim() || "OYUNCU 2";
+            sys.p1N = document.getElementById('p1-name').value.trim() || "P1";
+            sys.p2N = document.getElementById('p2-name').value.trim() || "P2";
             sys.name = sys.p1N;
             sys.openDifficulty();
         },
 
         login: (l) => {
-            currentLevel = l;
             sessionPool = [...POOLS[l]];
             document.getElementById('difficulty-selection').style.display='none';
             document.getElementById('scr-game').style.display='flex';
@@ -288,9 +303,7 @@
         },
 
         start: () => {
-            sys.active = true; sys.score = 0; sys.time = 30;
-            document.getElementById('score').innerText = "0";
-            sys.next();
+            sys.active = true; sys.score = 0; sys.time = 30; sys.next();
             let clock = setInterval(() => {
                 if(!sys.active) return clearInterval(clock);
                 sys.time--; document.getElementById('timer').innerText = sys.time;
@@ -302,15 +315,10 @@
             sys.active = false;
             if(!sys.isDuel) {
                 let u = JSON.parse(localStorage.getItem('u_'+sys.name));
-                if(sys.score > u.record) {
-                    u.record = sys.score;
-                    localStorage.setItem('u_'+sys.name, JSON.stringify(u));
-                    confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-                }
+                if(sys.score > u.record) { u.record = sys.score; localStorage.setItem('u_'+sys.name, JSON.stringify(u)); }
             }
             if(sys.isDuel && sys.duelTurn === 1) {
                 sys.p1S = sys.score; sys.duelTurn = 2; sys.name = sys.p2N;
-                sys.msg("HAZIRLAN: " + sys.p2N.toUpperCase());
                 document.getElementById('display-name').innerText = sys.name.toUpperCase();
                 document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
                 sys.start();
@@ -320,65 +328,35 @@
         },
 
         next: () => {
-            sys.curIdx = Math.floor(Math.random() * sessionPool.length);
-            sys.cur = sessionPool[sys.curIdx];
+            let idx = Math.floor(Math.random() * sessionPool.length);
+            sys.cur = sessionPool[idx];
             document.getElementById('word').innerText = sys.cur.tr.toUpperCase();
             document.getElementById('answer').value = ""; document.getElementById('answer').focus();
         },
 
-        end: () => {
-            document.getElementById('scr-game').style.display='none';
-            document.getElementById('scr-end').style.display='flex';
-            document.getElementById('final-score').innerText = sys.score;
-        },
-
-        restart: () => {
-            document.getElementById('scr-end').style.display='none';
-            document.getElementById('scr-login').style.display='contents';
-            document.getElementById('main-menu').style.display='block';
-            sys.isDuel = false; sys.duelTurn = 1;
-        },
-
+        end: () => { document.getElementById('scr-game').style.display='none'; document.getElementById('scr-end').style.display='flex'; document.getElementById('final-score').innerText = sys.score; },
+        restart: () => location.reload(),
+        
         endDuel: () => {
             document.getElementById('scr-game').style.display='none';
             document.getElementById('scr-end').style.display='flex';
-            document.getElementById('end-title').innerText = "KAZANAN KİM?";
             document.getElementById('duel-result').style.display='block';
             let winner = sys.p1S > sys.p2S ? sys.p1N : (sys.p2S > sys.p1S ? sys.p2N : "BERABERE");
-            document.getElementById('duel-result').innerHTML = winner !== "BERABERE" ? winner.toUpperCase() + " KAZANDI! 👑" : "BERABERLİK!";
+            document.getElementById('duel-result').innerHTML = winner.toUpperCase() + " KAZANDI! 👑";
             document.getElementById('final-score').innerText = sys.p1S + " - " + sys.p2S;
-            
-            // 1 VS 1 KAZANANI GELİNCE COŞKULU KONFETİ
-            confetti({ particleCount: 300, spread: 120, origin: { y: 0.7 } });
+            confetti({ particleCount: 300, spread: 100 });
         }
     };
 
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
-            let ans = document.getElementById('answer').value.toLowerCase().trim();
-            if(ans === sys.cur.en.toLowerCase()){
-                sys.score += 50; sys.time += 3;
-                document.getElementById('score').innerText = sys.score;
-                playSound('ok');
-                
-                // DOĞRU BİLİNCE COŞKULU KONFETİ
-                confetti({
-                    particleCount: 80,
-                    spread: 60,
-                    origin: { y: 0.9 },
-                    colors: ['#2ecc71', '#ffffff', '#f1c40f']
-                });
-
-                sys.next();
+            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
+                sys.score += 50; sys.time += 2; document.getElementById('score').innerText = sys.score; playSound('ok');
+                confetti({ particleCount: 50, spread: 50, origin: { y: 0.9 } }); sys.next();
             } else {
-                playSound('no');
-                const js = document.getElementById('jumpscare');
-                js.style.display = 'flex';
+                playSound('no'); const js = document.getElementById('jumpscare'); js.style.display='flex';
                 setTimeout(() => js.classList.add('active'), 10);
-                setTimeout(() => {
-                    js.classList.remove('active');
-                    setTimeout(() => js.style.display = 'none', 400);
-                }, 700);
+                setTimeout(() => { js.classList.remove('active'); setTimeout(() => js.style.display='none', 400); }, 700);
                 sys.next();
             }
         }

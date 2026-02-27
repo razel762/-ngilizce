@@ -18,33 +18,36 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body { font-family: 'Poppins', sans-serif; background: radial-gradient(circle, #2c3e50, #000); color: #fff; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; overflow: hidden; }
         
-        .big-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; }
+        .big-card { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; width: 92%; max-width: 400px; padding: 25px; text-align: center; backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.7); position: relative; max-height: 90vh; overflow-y: auto; transition: 0.3s; }
         .box-title { font-family: 'Orbitron'; color: var(--green); font-size: 18px; font-weight: 900; margin-bottom: 15px; }
         
         input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 14px; margin-bottom: 10px; text-align: center; outline: none; transition: 0.3s; }
         .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
         
-        /* RÜTBE STİLLERİ */
+        /* RÜTBE RENKLERİ */
         .rank-DEVELOPER { color: var(--red); text-shadow: 0 0 15px var(--red); font-weight: 900; animation: glow 1s infinite alternate; }
-        .rank-BRONZ { color: var(--bronze); }
-        .rank-DEMİR { color: var(--iron); }
-        .rank-ALTIN { color: var(--gold); }
-        .rank-ELMAS { color: var(--diamond); }
-        .rank-ELİT { color: var(--red); text-shadow: 0 0 10px var(--red); }
+        .rank-BRONZ { color: var(--bronze); font-weight: bold; }
+        .rank-DEMİR { color: var(--iron); font-weight: bold; }
+        .rank-ALTIN { color: var(--gold); font-weight: bold; }
+        .rank-ELMAS { color: var(--diamond); font-weight: bold; }
+        .rank-ELİT { color: var(--red); font-weight: bold; text-shadow: 0 0 5px var(--red); }
 
-        @keyframes glow { from { opacity: 0.7; } to { opacity: 1; transform: scale(1.02); } }
+        @keyframes glow { from { opacity: 0.7; } to { opacity: 1; transform: scale(1.05); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
         #studio-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
         #studio-logo { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--gold); }
-        #studio-title { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; color: #fff; }
-
+        
         .overlay { position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
-        .admin-list { text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .admin-list { text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-top: 10px; max-height: 250px; overflow-y: auto; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); }
         .admin-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        #jumpscare { position: fixed; inset: 0; z-index: 8000; display: none; align-items: center; justify-content: center; pointer-events: none; }
-        .ghost-img { font-size: 180px; transition: 0.4s; }
-        #jumpscare.active { display: flex; background: rgba(255, 0, 0, 0.9); }
+        #jumpscare { position: fixed; inset: 0; z-index: 8000; display: none; align-items: center; justify-content: center; pointer-events: none; transition: 0.5s; }
+        .ghost-img { font-size: 150px; opacity: 0; transition: 0.7s ease-in-out; transform: scale(0.1); }
+        #jumpscare.active { display: flex; background: rgba(255, 0, 0, 0.4); }
+        #jumpscare.active .ghost-img { opacity: 1; transform: scale(1.3); }
+        
+        .dev-badge { background: var(--red); color: white; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-left: 5px; box-shadow: 0 0 10px var(--red); }
     </style>
 </head>
 <body>
@@ -55,26 +58,26 @@
 </div>
 
 <div id="scr-login" style="display: contents;">
-    <div class="big-card">
+    <div class="big-card" id="login-card">
         <div id="studio-header">
-            <img src="https://i.ibb.co/gZgzD7yq/logo.png" alt="LOGO" id="studio-logo">
-            <div id="studio-title">B & H | STUDIOS</div>
+            <img src="https://i.ibb.co/6R8mD1Xp/logo-color-7204986-640.png" alt="LOGO" id="studio-logo">
+            <div style="font-family:'Orbitron'; font-weight:900; font-size:20px;">B & H STUDIOS</div>
         </div>
 
         <div id="login-form">
-            <div class="box-title" style="font-size:16px;">GİRİŞ YAP</div>
+            <div class="box-title" id="login-status" style="font-size:14px;">SİSTEME GİRİŞ YAP</div>
             <input type="text" id="username" placeholder="KULLANICI ADI">
             <input type="password" id="password" placeholder="ŞİFRE">
-            <button class="btn" onclick="sys.auth()">SİSTEME GİR</button>
+            <button class="btn" id="auth-btn" onclick="sys.auth()">GİRİŞ YAP</button>
         </div>
 
         <div id="main-menu" style="display: none;">
-            <div class="box-title" id="welcome-msg"></div>
+            <div class="box-title" id="welcome-msg" style="color:var(--gold)"></div>
             <button class="btn" onclick="sys.openDifficulty()">TEKLİ OYNA</button>
             <button class="btn" style="background:var(--orange); color:#fff" onclick="sys.show1vs1()">⚔️ DÜELLO (1 VS 1)</button>
-            <button class="btn" style="background:var(--blue); color:#fff" onclick="sys.showLeaderboard()">🏆 DÜNYA SIRALAMASI</button>
+            <button class="btn" style="background:var(--blue); color:#fff" onclick="sys.showLeaderboard()">🏆 SIRALAMA</button>
             <button id="admin-btn" class="btn" style="background:var(--red); color:#fff; display:none;" onclick="sys.showAdminPanel()">🛠️ PANEL</button>
-            <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ÇIKIŞ YAP</button>
+            <button class="btn" style="background:#444; color:#fff" onclick="location.reload()">ÇIKIŞ</button>
         </div>
 
         <div id="difficulty-selection" style="display: none;">
@@ -86,7 +89,7 @@
         </div>
 
         <div id="1vs1-inputs" style="display: none;">
-            <div class="box-title" style="color:var(--orange)">DÜELLO KUR</div>
+            <div class="box-title" style="color:var(--orange)">DÜELLO</div>
             <input type="text" id="p1-name" placeholder="1. Oyuncu">
             <input type="text" id="p2-name" placeholder="2. Oyuncu">
             <button class="btn" onclick="sys.startDuelPrep()">BAŞLAT</button>
@@ -97,57 +100,57 @@
 
 <div id="scr-game" class="overlay">
     <div class="big-card" style="border-color: var(--green);">
-        <div id="turn-notice" style="font-size: 12px; color: var(--orange); font-weight: 800; margin-bottom: 10px; display: none;">SIRA: <span id="current-player-turn"></span></div>
+        <div id="turn-notice" style="font-size: 14px; color: var(--orange); font-weight: 800; margin-bottom: 10px; display: none;">SIRA: <span id="current-player-turn"></span></div>
         <div style="display:flex; justify-content: space-between; font-size: 14px; margin-bottom: 15px;">
             <span id="display-name" style="color: var(--green); font-weight: 900;">...</span>
             <span>SKOR: <b id="score">0</b></span>
         </div>
-        <div id="word" style="font-size: 34px; font-weight: 900; margin: 20px 0;">...</div>
-        <input type="text" id="answer" placeholder="Cevabı yaz..." autocomplete="off">
-        <div style="font-size: 13px;">SÜRE: <span id="timer" style="color:var(--red); font-weight: 900;">30</span>s</div>
+        <div id="word" style="font-size: 38px; font-weight: 900; margin: 25px 0; letter-spacing: 2px;">...</div>
+        <input type="text" id="answer" placeholder="Cevabı buraya yaz..." autocomplete="off">
+        <div style="font-size: 14px;">SÜRE: <span id="timer" style="color:var(--red); font-weight: 900;">30</span>s</div>
     </div>
 </div>
 
 <div id="leaderboard-modal" class="overlay" onclick="this.style.display='none'">
     <div class="big-card" style="border-color: var(--blue);" onclick="event.stopPropagation()">
-        <div class="box-title" style="color:var(--blue);">🏆 TOP 10 DÜNYA</div>
-        <div id="leader-list" class="admin-list" style="max-height: 400px;">Yükleniyor...</div>
-        <button class="btn" style="background:#333; color:#fff; margin-top:10px;" onclick="document.getElementById('leaderboard-modal').style.display='none'">KAPAT</button>
+        <div class="box-title" style="color:var(--blue);">🏆 DÜNYA SIRALAMASI</div>
+        <div id="leader-list" class="admin-list">...</div>
+        <button class="btn" style="background:#333; color:#fff; margin-top:15px;" onclick="sys.backToMenu()">MENÜYE DÖN</button>
     </div>
 </div>
 
 <div id="suggest-modal" class="overlay" onclick="this.style.display='none'">
     <div class="big-card" style="border-color: var(--gold);" onclick="event.stopPropagation()">
         <div class="box-title" style="color:var(--gold);">GLOBAL ÖNERİLER</div>
-        <textarea id="suggest-text" rows="3" placeholder="Herkesin göreceği bir mesaj yazın..."></textarea>
+        <textarea id="suggest-text" rows="3" placeholder="Mesajınızı yazın..."></textarea>
         <button class="btn" style="background:var(--gold);" onclick="sys.sendSuggest()">PAYLAŞ</button>
-        <div id="public-suggest-list" class="admin-list">Bağlanıyor...</div>
+        <div id="public-suggest-list" class="admin-list"></div>
     </div>
 </div>
 
 <div id="profile-modal" class="overlay" onclick="this.style.display='none'">
     <div class="big-card" style="border-color: var(--blue);" onclick="event.stopPropagation()">
         <div class="box-title" style="color:var(--blue);">PROFİL</div>
-        <p>OYUNCU: <b id="prof-name"></b> <span id="prof-dev"></span></p>
-        <p>REKOR: <b id="prof-record">0</b></p>
-        <p>RÜTBE: <b id="prof-rank"></b></p>
+        <div style="text-align:left; margin-bottom:15px;">
+            <p>OYUNCU: <b id="prof-name"></b> <span id="prof-dev"></span></p>
+            <p>REKOR: <b id="prof-record">0</b></p>
+            <p>RÜTBE: <b id="prof-rank"></b></p>
+        </div>
+        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:15px; font-size:11px;">
+            <div style="color:var(--gold); font-weight:900; margin-bottom:5px;">RÜTBE GEREKSİNİMLERİ</div>
+            <div>🔴 <span class="rank-ELİT">ELİT</span>: 2000-3000</div>
+            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 1000-2000</div>
+            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 500-1000</div>
+            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 200-500</div>
+            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0-200</div>
+        </div>
         <button class="btn" style="margin-top:20px;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
-    </div>
-</div>
-
-<div id="scr-end" class="overlay">
-    <div class="big-card">
-        <div style="font-size: 28px; font-weight:900;">OYUN BİTTİ</div>
-        <div id="duel-result" style="display:none; color: var(--gold); font-size: 22px; margin:10px 0;"></div>
-        <div style="font-size:60px; margin: 20px 0;"><b id="final-score">0</b></div>
-        <button class="btn" onclick="sys.restart()">ANA MENÜ</button>
     </div>
 </div>
 
 <div id="jumpscare"><div class="ghost-img">👻</div></div>
 
 <script>
-    // FIREBASE CONFIG (SENİN BİLGİLERİN)
     const firebaseConfig = {
       apiKey: "AIzaSyBDQARwl0Dtelk1GBEC3HEyuPWNTPPc4Ks",
       authDomain: "bh-studios.firebaseapp.com",
@@ -161,25 +164,27 @@
     const db = firebase.database();
 
     const POOLS = {
-        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Güneş",en:"sun"},{tr:"Ekmek",en:"bread"},{tr:"Süt",en:"milk"},{tr:"Çay",en:"tea"},{tr:"Okul",en:"school"},{tr:"Kalem",en:"pencil"},{tr:"Masa",en:"table"},{tr:"Sandalye",en:"chair"},{tr:"Kırmızı",en:"red"},{tr:"Mavi",en:"blue"},{tr:"Yeşil",en:"green"},{tr:"Sarı",en:"yellow"},{tr:"Beyaz",en:"white"},{tr:"Siyah",en:"black"},{tr:"Araba",en:"car"},{tr:"Otobüs",en:"bus"},{tr:"Uçak",en:"plane"}],
-        medium: [{tr:"Öğretmen",en:"teacher"},{tr:"Bilgisayar",en:"computer"},{tr:"Pencere",en:"window"},{tr:"Kütüphane",en:"library"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"},{tr:"Yemek",en:"dinner"},{tr:"Kahvaltı",en:"breakfast"},{tr:"Öğrenci",en:"student"},{tr:"Ayakkabı",en:"shoes"},{tr:"Gömlek",en:"shirt"},{tr:"Pantolon",en:"pants"},{tr:"Gözlük",en:"glasses"},{tr:"Telefon",en:"phone"},{tr:"Gazete",en:"newspaper"}],
-        hard: [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Tecrübe",en:"experience"},{tr:"Mükemmel",en:"perfect"},{tr:"Bağımsızlık",en:"independence"},{tr:"Gelenek",en:"tradition"},{tr:"Karakter",en:"character"},{tr:"Kütüphane",en:"library"},{tr:"Yetenek",en:"ability"},{tr:"Fırsat",en:"opportunity"},{tr:"Mücadele",en:"challenge"}]
+        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Güneş",en:"sun"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},{tr:"Kuş",en:"bird"},{tr:"Süt",en:"milk"},{tr:"Ekmek",en:"bread"},{tr:"Mavi",en:"blue"},{tr:"Sarı",en:"yellow"},{tr:"Masa",en:"table"},{tr:"Kalem",en:"pencil"}],
+        medium: [{tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Bilgisayar",en:"computer"},{tr:"Kütüphane",en:"library"},{tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"},{tr:"Ayakkabı",en:"shoes"},{tr:"Gözlük",en:"glasses"},{tr:"Telefon",en:"phone"}],
+        hard: [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},{tr:"Özgürlük",en:"freedom"},{tr:"Bağımsızlık",en:"independence"},{tr:"Karakter",en:"character"},{tr:"Fırsat",en:"opportunity"}]
     };
 
     let sessionPool = [];
     let usedWords = [];
 
     const playSound = (t) => {
-        const c = new AudioContext(); const o = c.createOscillator(); const g = c.createGain();
+        const c = new (window.AudioContext || window.webkitAudioContext)();
+        const o = c.createOscillator(); const g = c.createGain();
         o.connect(g); g.connect(c.destination);
-        o.frequency.value = t === 'ok' ? 523 : 110;
-        g.gain.value = 0.1; o.start(); o.stop(c.currentTime + 0.2);
+        o.frequency.value = t === 'ok' ? 523.25 : 110;
+        g.gain.value = 0.1; o.start(); o.stop(c.currentTime + 0.3);
     };
 
     const sys = {
         name: "", score: 0, time: 30, active: false, isDuel: false, duelTurn: 1, p1S: 0, p2S: 0, p1N: "", p2N: "", cur: null,
 
-        getRank: (s) => {
+        getRank: (s, name) => {
+            if(name === 'burak') return "DEVELOPER";
             if(s >= 2000) return "ELİT";
             if(s >= 1000) return "ELMAS";
             if(s >= 500) return "ALTIN";
@@ -190,13 +195,22 @@
         auth: () => {
             const n = document.getElementById('username').value.trim().toLowerCase();
             const p = document.getElementById('password').value.trim();
+            const card = document.getElementById('login-card');
             if(!n || !p) return;
-            sys.name = n;
+
             db.ref('users/' + n).once('value', (snap) => {
-                let u = snap.val() || { pass: p, record: 0 };
-                if(u.pass !== p) return alert("Hatalı Şifre!");
-                db.ref('users/' + n).update({ lastLogin: Date.now(), pass: p });
-                localStorage.setItem('u_active', JSON.stringify({name: n, record: u.record}));
+                let u = snap.val();
+                if(u && u.pass !== p) {
+                    playSound('no');
+                    card.style.animation = "shake 0.4s";
+                    document.getElementById('login-status').innerText = "❌ HATALI ŞİFRE!";
+                    document.getElementById('login-status').style.color = "var(--red)";
+                    setTimeout(() => { card.style.animation = ""; }, 400);
+                    return;
+                }
+                
+                sys.name = n;
+                if(!u) db.ref('users/' + n).set({ pass: p, record: 0 });
                 
                 document.getElementById('login-form').style.display='none';
                 document.getElementById('main-menu').style.display='block';
@@ -209,21 +223,22 @@
 
         showLeaderboard: () => {
             document.getElementById('leaderboard-modal').style.display = 'flex';
-            db.ref('users').orderByChild('record').limitToLast(10).on('value', (snap) => {
+            db.ref('users').orderByChild('record').limitToLast(10).once('value', (snap) => {
                 const list = document.getElementById('leader-list');
                 list.innerHTML = "";
-                let arr = [];
-                snap.forEach(u => arr.push({name: u.key, score: u.val().record}));
-                arr.reverse().forEach((u, i) => {
-                    let rank = sys.getRank(u.score);
-                    list.innerHTML += `<div class="admin-item">#${i+1} <b>${u.name.toUpperCase()}</b> - ${u.score} [${rank}]</div>`;
+                let players = [];
+                snap.forEach(u => { if(u.val().record > 0) players.push({name: u.key, score: u.val().record}); });
+                players.reverse().forEach((u, i) => {
+                    let r = sys.getRank(u.score, u.name);
+                    list.innerHTML += `<div class="admin-item">#${i+1} <b>${u.name.toUpperCase()}</b> - <span class="rank-${r}">${r}</span> - <b style="color:white">${u.score}</b></div>`;
                 });
+                if(players.length === 0) list.innerHTML = "Henüz kayıtlı skor yok.";
             });
         },
 
         showSuggest: () => {
             document.getElementById('suggest-modal').style.display = 'flex';
-            db.ref('suggestions').limitToLast(20).on('value', (snap) => {
+            db.ref('suggestions').limitToLast(15).on('value', (snap) => {
                 const list = document.getElementById('public-suggest-list');
                 list.innerHTML = "";
                 snap.forEach(s => list.innerHTML = `<div class="admin-item">${s.val().msg}</div>` + list.innerHTML);
@@ -234,9 +249,9 @@
             const txt = document.getElementById('suggest-text').value.trim();
             if(!txt) return;
             db.ref('users/' + sys.name).once('value', (snap) => {
-                let r = sys.getRank(snap.val().record || 0);
-                let dev = (sys.name === 'burak') ? '<b style="color:red">[DEV]</b> ' : '';
-                db.ref('suggestions').push({ msg: `[${r}] ${dev}${sys.name.toUpperCase()}: ${txt}` });
+                let r = sys.getRank(snap.val().record || 0, sys.name);
+                let devStr = (sys.name === 'burak') ? '<b class="rank-DEVELOPER">[DEVELOPER]</b> ' : `[${r}] `;
+                db.ref('suggestions').push({ msg: `${devStr}${sys.name.toUpperCase()}: ${txt}` });
                 document.getElementById('suggest-text').value = "";
             });
         },
@@ -246,7 +261,7 @@
                 let u = snap.val();
                 document.getElementById('prof-name').innerText = sys.name.toUpperCase();
                 document.getElementById('prof-record').innerText = u.record;
-                let r = sys.getRank(u.record);
+                let r = sys.getRank(u.record, sys.name);
                 document.getElementById('prof-rank').innerText = r;
                 document.getElementById('prof-rank').className = 'rank-' + r;
                 document.getElementById('prof-dev').innerHTML = (sys.name==='burak') ? '<span class="dev-badge">DEVELOPER</span>' : '';
@@ -254,10 +269,31 @@
             });
         },
 
-        openDifficulty: () => { document.getElementById('main-menu').style.display='none'; document.getElementById('difficulty-selection').style.display='block'; },
-        show1vs1: () => { document.getElementById('main-menu').style.display='none'; document.getElementById('1vs1-inputs').style.display='block'; sys.isDuel = true; },
-        backToMenu: () => { document.getElementById('1vs1-inputs').style.display='none'; document.getElementById('difficulty-selection').style.display='none'; document.getElementById('main-menu').style.display='block'; sys.isDuel = false; },
-        startDuelPrep: () => { sys.p1N = document.getElementById('p1-name').value || "P1"; sys.p2N = document.getElementById('p2-name').value || "P2"; sys.name = sys.p1N; sys.openDifficulty(); },
+        openDifficulty: () => { 
+            document.getElementById('main-menu').style.display='none'; 
+            document.getElementById('difficulty-selection').style.display='block'; 
+        },
+
+        show1vs1: () => { 
+            document.getElementById('main-menu').style.display='none'; 
+            document.getElementById('1vs1-inputs').style.display='block'; 
+            sys.isDuel = true; 
+        },
+
+        backToMenu: () => {
+            document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none');
+            document.getElementById('1vs1-inputs').style.display='none';
+            document.getElementById('difficulty-selection').style.display='none';
+            document.getElementById('main-menu').style.display='block';
+            sys.isDuel = false;
+        },
+
+        startDuelPrep: () => {
+            sys.p1N = document.getElementById('p1-name').value || "OYUNCU 1";
+            sys.p2N = document.getElementById('p2-name').value || "OYUNCU 2";
+            sys.name = sys.p1N;
+            sys.openDifficulty();
+        },
 
         login: (l) => {
             sessionPool = [...POOLS[l]];
@@ -287,16 +323,18 @@
                 db.ref('users/' + sys.name).once('value', (snap) => {
                     let rec = snap.val().record || 0;
                     if(sys.score > rec) db.ref('users/' + sys.name).update({ record: sys.score });
+                    sys.showLeaderboard();
                 });
+            } else {
+                if(sys.duelTurn === 1) {
+                    sys.p1S = sys.score; sys.duelTurn = 2; sys.name = sys.p2N;
+                    document.getElementById('display-name').innerText = sys.name.toUpperCase();
+                    document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
+                    sys.start();
+                } else {
+                    sys.p2S = sys.score; sys.endDuel();
+                }
             }
-            if(sys.isDuel && sys.duelTurn === 1) {
-                sys.p1S = sys.score; sys.duelTurn = 2; sys.name = sys.p2N;
-                document.getElementById('display-name').innerText = sys.name.toUpperCase();
-                document.getElementById('current-player-turn').innerText = sys.name.toUpperCase();
-                sys.start();
-            } else if (sys.isDuel && sys.duelTurn === 2) {
-                sys.p2S = sys.score; sys.endDuel();
-            } else { sys.end(); }
         },
 
         next: () => {
@@ -308,33 +346,45 @@
             document.getElementById('answer').value = ""; document.getElementById('answer').focus();
         },
 
-        end: () => { document.getElementById('scr-game').style.display='none'; document.getElementById('scr-end').style.display='flex'; document.getElementById('final-score').innerText = sys.score; },
-        restart: () => location.reload(),
-
         endDuel: () => {
             document.getElementById('scr-game').style.display='none';
             document.getElementById('scr-end').style.display='flex';
-            document.getElementById('duel-result').style.display='block';
             let winner = sys.p1S > sys.p2S ? sys.p1N : (sys.p2S > sys.p1S ? sys.p2N : "BERABERE");
-            document.getElementById('duel-result').innerHTML = winner.toUpperCase() + " KAZANDI! 👑";
+            let winText = winner === "BERABERE" ? "BERABERE! 🤝" : winner.toUpperCase() + " KAZANDI! 👑";
+            document.getElementById('duel-result').style.display = "block";
+            document.getElementById('duel-result').innerHTML = winText;
             document.getElementById('final-score').innerText = sys.p1S + " - " + sys.p2S;
-            confetti({ particleCount: 300 });
+            confetti({ particleCount: 300, spread: 100 });
         }
     };
 
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
-                sys.score += 50; sys.time += 2; document.getElementById('score').innerText = sys.score; playSound('ok');
-                confetti({ particleCount: 40, origin: { y: 0.9 } }); sys.next();
+                sys.score += 50; sys.time += 2; document.getElementById('score').innerText = sys.score; 
+                playSound('ok');
+                confetti({ particleCount: 50, origin: { y: 0.9 } }); 
+                sys.next();
             } else {
-                playSound('no'); const js = document.getElementById('jumpscare'); js.style.display='flex';
+                playSound('no');
+                const js = document.getElementById('jumpscare');
+                js.style.display='flex';
                 setTimeout(() => js.classList.add('active'), 10);
-                setTimeout(() => { js.classList.remove('active'); js.style.display='none'; }, 700);
+                setTimeout(() => { js.classList.remove('active'); setTimeout(()=>js.style.display='none', 700); }, 800);
                 sys.next();
             }
         }
     });
 </script>
+
+<div id="scr-end" class="overlay">
+    <div class="big-card" style="border-color: var(--gold);">
+        <div style="font-size: 24px; font-weight:900; color:var(--red);">OYUN SONUCU</div>
+        <div id="duel-result" style="display:none; font-size: 22px; margin: 15px 0; color:var(--gold);"></div>
+        <div style="font-size: 60px; margin: 20px 0;"><b id="final-score">0</b></div>
+        <button class="btn" onclick="sys.backToMenu()">MENÜYE DÖN</button>
+    </div>
+</div>
+
 </body>
 </html>

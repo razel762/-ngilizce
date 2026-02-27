@@ -24,22 +24,22 @@
         input, textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.6); color: #fff; font-size: 14px; margin-bottom: 10px; text-align: center; outline: none; transition: 0.3s; }
         .btn { width: 100%; padding: 15px; border-radius: 15px; border: none; font-size: 14px; font-weight: 900; cursor: pointer; background: var(--green); color: #000; text-transform: uppercase; margin-bottom: 10px; transition: 0.3s; }
         
-        /* RÜTBE RENKLERİ */
+        /* RÜTBE RENKLERİ VE PARLAMA EFEKTLERİ */
         .rank-DEVELOPER { color: var(--red); text-shadow: 0 0 15px var(--red); font-weight: 900; animation: glow 1s infinite alternate; }
-        .rank-BRONZ { color: var(--bronze); font-weight: bold; }
+        .rank-ELİT { color: #ff0000; text-shadow: 0 0 12px #ff0000; font-weight: 900; animation: glow 1.5s infinite alternate; }
+        .rank-ELMAS { color: var(--diamond); text-shadow: 0 0 10px var(--diamond); font-weight: 800; animation: glow 2s infinite alternate; }
+        .rank-ALTIN { color: var(--gold); text-shadow: 0 0 8px var(--gold); font-weight: 800; animation: glow 2.5s infinite alternate; }
         .rank-DEMİR { color: var(--iron); font-weight: bold; }
-        .rank-ALTIN { color: var(--gold); font-weight: bold; }
-        .rank-ELMAS { color: var(--diamond); font-weight: bold; }
-        .rank-ELİT { color: var(--red); font-weight: bold; text-shadow: 0 0 5px var(--red); }
+        .rank-BRONZ { color: var(--bronze); font-weight: bold; }
 
-        @keyframes glow { from { opacity: 0.7; } to { opacity: 1; transform: scale(1.05); } }
+        @keyframes glow { from { opacity: 0.8; } to { opacity: 1; transform: scale(1.02); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
         #studio-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
         
         .overlay { position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .admin-list { text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-top: 10px; max-height: 250px; overflow-y: auto; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .admin-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); word-wrap: break-word; }
+        .admin-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); word-wrap: break-word; line-height: 1.6; }
 
         #jumpscare { position: fixed; inset: 0; z-index: 8000; display: none; align-items: center; justify-content: center; pointer-events: none; transition: 0.5s; }
         .ghost-img { font-size: 150px; opacity: 0; transition: 0.7s ease-in-out; transform: scale(0.1); }
@@ -50,6 +50,9 @@
     </style>
 </head>
 <body>
+
+<audio id="snd-success" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="snd-error" src="https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3"></audio>
 
 <div id="top-bar" style="position: fixed; top: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; z-index: 5000;">
     <div id="profile-trigger" class="btn" style="width: auto; padding: 10px 15px; display:none; background: rgba(255,255,255,0.1); color:white;" onclick="sys.showProfile()">👤 PROFİLİM</div>
@@ -136,11 +139,11 @@
         </div>
         <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:15px; font-size:11px;">
             <div style="color:var(--gold); font-weight:900; margin-bottom:5px;">RÜTBE GEREKSİNİMLERİ</div>
-            <div>🔴 <span class="rank-ELİT">ELİT</span>: 10.000 - 20.000</div>
-            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 5.000 - 10.000</div>
-            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 2.000 - 5.000</div>
-            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 500 - 2.000</div>
-            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0 - 500</div>
+            <div>🔴 <span class="rank-ELİT">ELİT</span>: 2000 - 3000</div>
+            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 1000 - 2000</div>
+            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 500 - 1000</div>
+            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 200 - 500</div>
+            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0 - 200</div>
         </div>
         <button class="btn" style="margin-top:20px;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
     </div>
@@ -162,9 +165,23 @@
     const db = firebase.database();
 
     const POOLS = {
-        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Güneş",en:"sun"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},{tr:"Kuş",en:"bird"},{tr:"Süt",en:"milk"},{tr:"Ekmek",en:"bread"},{tr:"Mavi",en:"blue"},{tr:"Sarı",en:"yellow"}],
-        medium: [{tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Bilgisayar",en:"computer"},{tr:"Kütüphane",en:"library"},{tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"}],
-        hard: [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},{tr:"Özgürlük",en:"freedom"}]
+        easy: [
+            {tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Güneş",en:"sun"},{tr:"Okul",en:"school"},
+            {tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},{tr:"Kuş",en:"bird"},{tr:"Süt",en:"milk"},{tr:"Ekmek",en:"bread"},
+            {tr:"Mavi",en:"blue"},{tr:"Sarı",en:"yellow"},{tr:"Kırmızı",en:"red"},{tr:"Yeşil",en:"green"},{tr:"Siyah",en:"black"},
+            {tr:"Beyaz",en:"white"},{tr:"Köpek",en:"dog"},{tr:"Balık",en:"fish"},{tr:"Ağaç",en:"tree"},{tr:"Çiçek",en:"flower"}
+        ],
+        medium: [
+            {tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Bilgisayar",en:"computer"},{tr:"Kütüphane",en:"library"},
+            {tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"},{tr:"Portakal",en:"orange"},
+            {tr:"Pantolon",en:"trousers"},{tr:"Gömlek",en:"shirt"},{tr:"Ayakkabı",en:"shoe"},{tr:"Arkadaş",en:"friend"},
+            {tr:"Aile",en:"family"},{tr:"Doktor",en:"doctor"},{tr:"Mühendis",en:"engineer"},{tr:"Otobüs",en:"bus"}
+        ],
+        hard: [
+            {tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},
+            {tr:"Özgürlük",en:"freedom"},{tr:"Kütüphane",en:"library"},{tr:"Geleneksel",en:"traditional"},{tr:"Muhteşem",en:"magnificent"},
+            {tr:"Yetenek",en:"ability"},{tr:"Karakter",en:"character"},{tr:"Hükümet",en:"government"},{tr:"Fırsat",en:"opportunity"}
+        ]
     };
 
     let sessionPool = [];
@@ -175,10 +192,10 @@
 
         getRank: (s, name) => {
             if(name === 'burak') return "DEVELOPER";
-            if(s >= 10000) return "ELİT";
-            if(s >= 5000) return "ELMAS";
-            if(s >= 2000) return "ALTIN";
-            if(s >= 500) return "DEMİR";
+            if(s >= 2000) return "ELİT";
+            if(s >= 1000) return "ELMAS";
+            if(s >= 500) return "ALTIN";
+            if(s >= 200) return "DEMİR";
             return "BRONZ";
         },
 
@@ -217,7 +234,7 @@
                 snap.forEach(u => { if(u.val().record > 0) players.push({name: u.key, score: u.val().record}); });
                 players.reverse().forEach((u, i) => {
                     let r = sys.getRank(u.score, u.name);
-                    let displayRank = (u.name === 'burak') ? '<span class="rank-DEVELOPER">DEVELOPER</span>' : `<span class="rank-${r}">${r}</span>`;
+                    let displayRank = `<span class="rank-${r}">${r}</span>`;
                     list.innerHTML += `<div class="admin-item">#${i+1} <b>${u.name.toUpperCase()}</b> - ${displayRank} - <b style="color:white">${u.score}</b></div>`;
                 });
             });
@@ -225,8 +242,7 @@
 
         showSuggest: () => {
             document.getElementById('suggest-modal').style.display = 'flex';
-            // LIVE UPDATE: Mesajlar her zaman güncellenir
-            db.ref('suggestions').off(); // Eski dinleyiciyi temizle
+            db.ref('suggestions').off();
             db.ref('suggestions').limitToLast(20).on('value', (snap) => {
                 const list = document.getElementById('public-suggest-list');
                 list.innerHTML = "";
@@ -241,7 +257,8 @@
             if(!txt) return;
             db.ref('users/' + sys.name).once('value', (snap) => {
                 let r = sys.getRank(snap.val().record || 0, sys.name);
-                let devStr = (sys.name === 'burak') ? '<b class="rank-DEVELOPER">[DEVELOPER]</b> ' : `[${r}] `;
+                let rankClass = "rank-" + r;
+                let devStr = `<b class="${rankClass}">[${r}]</b> `;
                 db.ref('suggestions').push({ msg: `${devStr}${sys.name.toUpperCase()}: ${txt}` });
                 document.getElementById('suggest-text').value = "";
             });
@@ -301,6 +318,7 @@
 
         start: () => {
             sys.active = true; sys.score = 0; sys.time = 30; sys.next();
+            document.getElementById('score').innerText = "0";
             let clock = setInterval(() => {
                 if(!sys.active) return clearInterval(clock);
                 sys.time--; document.getElementById('timer').innerText = sys.time;
@@ -315,6 +333,10 @@
                     let rec = snap.val().record || 0;
                     if(sys.score > rec) db.ref('users/' + sys.name).update({ record: sys.score });
                     sys.showLeaderboard();
+                    document.getElementById('final-score').innerText = sys.score;
+                    document.getElementById('scr-game').style.display='none';
+                    document.getElementById('scr-end').style.display='flex';
+                    document.getElementById('duel-result').style.display = "none";
                 });
             } else {
                 if(sys.duelTurn === 1) {
@@ -329,7 +351,7 @@
         },
 
         next: () => {
-            if(usedWords.length === sessionPool.length) usedWords = [];
+            if(usedWords.length >= sessionPool.length) usedWords = [];
             let available = sessionPool.filter(w => !usedWords.includes(w.en));
             sys.cur = available[Math.floor(Math.random() * available.length)];
             usedWords.push(sys.cur.en);
@@ -351,15 +373,25 @@
 
     document.getElementById('answer').addEventListener('keypress', e => {
         if(e.key === 'Enter' && sys.active) {
-            if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
-                sys.score += 50; sys.time += 2; document.getElementById('score').innerText = sys.score; 
+            let userAns = document.getElementById('answer').value.toLowerCase().trim();
+            if(userAns === sys.cur.en.toLowerCase()) {
+                // DOĞRU CEVAP
+                sys.score += 50; 
+                sys.time += 3; // +3 Saniye bonus
+                document.getElementById('score').innerText = sys.score; 
+                document.getElementById('snd-success').play(); // Başarı sesi
                 confetti({ particleCount: 40, origin: { y: 0.8 } }); 
                 sys.next();
             } else {
+                // YANLIŞ CEVAP
+                document.getElementById('snd-error').play(); // Hata sesi
                 const js = document.getElementById('jumpscare');
                 js.style.display='flex';
                 setTimeout(() => js.classList.add('active'), 10);
-                setTimeout(() => { js.classList.remove('active'); setTimeout(()=>js.style.display='none', 700); }, 800);
+                setTimeout(() => { 
+                    js.classList.remove('active'); 
+                    setTimeout(()=>js.style.display='none', 700); 
+                }, 800);
                 sys.next();
             }
         }

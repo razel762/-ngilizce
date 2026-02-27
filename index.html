@@ -140,10 +140,10 @@
         <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:15px; font-size:11px;">
             <div style="color:var(--gold); font-weight:900; margin-bottom:5px;">RÜTBE GEREKSİNİMLERİ</div>
             <div>🔴 <span class="rank-ELİT">ELİT</span>: 20000+</div>
-            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 15000 - 20000</div>
-            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 10000 - 15000</div>
-            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 5000 - 10000</div>
-            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0 - 5000</div>
+            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 10000 - 20000</div>
+            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 5000 - 10000</div>
+            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 2000 - 5000</div>
+            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0 - 2000</div>
         </div>
         <button class="btn" style="margin-top:20px;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
     </div>
@@ -193,9 +193,9 @@
         getRank: (s, name) => {
             if(name === 'burak') return "DEVELOPER";
             if(s >= 20000) return "ELİT";
-            if(s >= 15000) return "ELMAS";
-            if(s >= 10000) return "ALTIN";
-            if(s >= 5000) return "DEMİR";
+            if(s >= 10000) return "ELMAS";
+            if(s >= 5000) return "ALTIN";
+            if(s >= 2000) return "DEMİR";
             return "BRONZ";
         },
 

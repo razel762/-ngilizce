@@ -36,11 +36,10 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
         #studio-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        #studio-logo { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--gold); }
         
         .overlay { position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); }
         .admin-list { text-align: left; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-top: 10px; max-height: 250px; overflow-y: auto; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .admin-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .admin-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); word-wrap: break-word; }
 
         #jumpscare { position: fixed; inset: 0; z-index: 8000; display: none; align-items: center; justify-content: center; pointer-events: none; transition: 0.5s; }
         .ghost-img { font-size: 150px; opacity: 0; transition: 0.7s ease-in-out; transform: scale(0.1); }
@@ -60,8 +59,7 @@
 <div id="scr-login" style="display: contents;">
     <div class="big-card" id="login-card">
         <div id="studio-header">
-            <img src="https://i.ibb.co/6R8mD1Xp/logo-color-7204986-640.png" alt="LOGO" id="studio-logo">
-            <div style="font-family:'Orbitron'; font-weight:900; font-size:20px;">B & H STUDIOS</div>
+            <div style="font-family:'Orbitron'; font-weight:900; font-size:26px; letter-spacing: 2px;">B & H STUDIOS</div>
         </div>
 
         <div id="login-form">
@@ -122,8 +120,8 @@
 <div id="suggest-modal" class="overlay" onclick="this.style.display='none'">
     <div class="big-card" style="border-color: var(--gold);" onclick="event.stopPropagation()">
         <div class="box-title" style="color:var(--gold);">GLOBAL ÖNERİLER</div>
-        <textarea id="suggest-text" rows="3" placeholder="Mesajınızı yazın..."></textarea>
-        <button class="btn" style="background:var(--gold);" onclick="sys.sendSuggest()">PAYLAŞ</button>
+        <textarea id="suggest-text" rows="2" placeholder="Mesajınızı yazın..."></textarea>
+        <button class="btn" style="background:var(--gold); padding: 10px;" onclick="sys.sendSuggest()">GÖNDER</button>
         <div id="public-suggest-list" class="admin-list"></div>
     </div>
 </div>
@@ -138,11 +136,11 @@
         </div>
         <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:15px; font-size:11px;">
             <div style="color:var(--gold); font-weight:900; margin-bottom:5px;">RÜTBE GEREKSİNİMLERİ</div>
-            <div>🔴 <span class="rank-ELİT">ELİT</span>: 2000-3000</div>
-            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 1000-2000</div>
-            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 500-1000</div>
-            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 200-500</div>
-            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0-200</div>
+            <div>🔴 <span class="rank-ELİT">ELİT</span>: 10.000 - 20.000</div>
+            <div>🔵 <span class="rank-ELMAS">ELMAS</span>: 5.000 - 10.000</div>
+            <div>🟡 <span class="rank-ALTIN">ALTIN</span>: 2.000 - 5.000</div>
+            <div>⚪ <span class="rank-DEMİR">DEMİR</span>: 500 - 2.000</div>
+            <div>🟤 <span class="rank-BRONZ">BRONZ</span>: 0 - 500</div>
         </div>
         <button class="btn" style="margin-top:20px;" onclick="document.getElementById('profile-modal').style.display='none'">KAPAT</button>
     </div>
@@ -164,31 +162,23 @@
     const db = firebase.database();
 
     const POOLS = {
-        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Güneş",en:"sun"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},{tr:"Kuş",en:"bird"},{tr:"Süt",en:"milk"},{tr:"Ekmek",en:"bread"},{tr:"Mavi",en:"blue"},{tr:"Sarı",en:"yellow"},{tr:"Masa",en:"table"},{tr:"Kalem",en:"pencil"}],
-        medium: [{tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Bilgisayar",en:"computer"},{tr:"Kütüphane",en:"library"},{tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"},{tr:"Ayakkabı",en:"shoes"},{tr:"Gözlük",en:"glasses"},{tr:"Telefon",en:"phone"}],
-        hard: [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},{tr:"Özgürlük",en:"freedom"},{tr:"Bağımsızlık",en:"independence"},{tr:"Karakter",en:"character"},{tr:"Fırsat",en:"opportunity"}]
+        easy: [{tr:"Elma",en:"apple"},{tr:"Su",en:"water"},{tr:"Kedi",en:"cat"},{tr:"Güneş",en:"sun"},{tr:"Okul",en:"school"},{tr:"Kitap",en:"book"},{tr:"Ev",en:"house"},{tr:"Kuş",en:"bird"},{tr:"Süt",en:"milk"},{tr:"Ekmek",en:"bread"},{tr:"Mavi",en:"blue"},{tr:"Sarı",en:"yellow"}],
+        medium: [{tr:"Öğretmen",en:"teacher"},{tr:"Öğrenci",en:"student"},{tr:"Bilgisayar",en:"computer"},{tr:"Kütüphane",en:"library"},{tr:"Pencere",en:"window"},{tr:"Mutfak",en:"kitchen"},{tr:"Bahçe",en:"garden"}],
+        hard: [{tr:"Sorumluluk",en:"responsibility"},{tr:"Gelecek",en:"future"},{tr:"Mükemmel",en:"perfect"},{tr:"Tecrübe",en:"experience"},{tr:"Özgürlük",en:"freedom"}]
     };
 
     let sessionPool = [];
     let usedWords = [];
-
-    const playSound = (t) => {
-        const c = new (window.AudioContext || window.webkitAudioContext)();
-        const o = c.createOscillator(); const g = c.createGain();
-        o.connect(g); g.connect(c.destination);
-        o.frequency.value = t === 'ok' ? 523.25 : 110;
-        g.gain.value = 0.1; o.start(); o.stop(c.currentTime + 0.3);
-    };
 
     const sys = {
         name: "", score: 0, time: 30, active: false, isDuel: false, duelTurn: 1, p1S: 0, p2S: 0, p1N: "", p2N: "", cur: null,
 
         getRank: (s, name) => {
             if(name === 'burak') return "DEVELOPER";
-            if(s >= 2000) return "ELİT";
-            if(s >= 1000) return "ELMAS";
-            if(s >= 500) return "ALTIN";
-            if(s >= 200) return "DEMİR";
+            if(s >= 10000) return "ELİT";
+            if(s >= 5000) return "ELMAS";
+            if(s >= 2000) return "ALTIN";
+            if(s >= 500) return "DEMİR";
             return "BRONZ";
         },
 
@@ -201,17 +191,14 @@
             db.ref('users/' + n).once('value', (snap) => {
                 let u = snap.val();
                 if(u && u.pass !== p) {
-                    playSound('no');
                     card.style.animation = "shake 0.4s";
                     document.getElementById('login-status').innerText = "❌ HATALI ŞİFRE!";
                     document.getElementById('login-status').style.color = "var(--red)";
                     setTimeout(() => { card.style.animation = ""; }, 400);
                     return;
                 }
-                
                 sys.name = n;
                 if(!u) db.ref('users/' + n).set({ pass: p, record: 0 });
-                
                 document.getElementById('login-form').style.display='none';
                 document.getElementById('main-menu').style.display='block';
                 document.getElementById('profile-trigger').style.display='block';
@@ -223,25 +210,29 @@
 
         showLeaderboard: () => {
             document.getElementById('leaderboard-modal').style.display = 'flex';
-            db.ref('users').orderByChild('record').limitToLast(10).once('value', (snap) => {
+            db.ref('users').orderByChild('record').limitToLast(15).once('value', (snap) => {
                 const list = document.getElementById('leader-list');
                 list.innerHTML = "";
                 let players = [];
                 snap.forEach(u => { if(u.val().record > 0) players.push({name: u.key, score: u.val().record}); });
                 players.reverse().forEach((u, i) => {
                     let r = sys.getRank(u.score, u.name);
-                    list.innerHTML += `<div class="admin-item">#${i+1} <b>${u.name.toUpperCase()}</b> - <span class="rank-${r}">${r}</span> - <b style="color:white">${u.score}</b></div>`;
+                    let displayRank = (u.name === 'burak') ? '<span class="rank-DEVELOPER">DEVELOPER</span>' : `<span class="rank-${r}">${r}</span>`;
+                    list.innerHTML += `<div class="admin-item">#${i+1} <b>${u.name.toUpperCase()}</b> - ${displayRank} - <b style="color:white">${u.score}</b></div>`;
                 });
-                if(players.length === 0) list.innerHTML = "Henüz kayıtlı skor yok.";
             });
         },
 
         showSuggest: () => {
             document.getElementById('suggest-modal').style.display = 'flex';
-            db.ref('suggestions').limitToLast(15).on('value', (snap) => {
+            // LIVE UPDATE: Mesajlar her zaman güncellenir
+            db.ref('suggestions').off(); // Eski dinleyiciyi temizle
+            db.ref('suggestions').limitToLast(20).on('value', (snap) => {
                 const list = document.getElementById('public-suggest-list');
                 list.innerHTML = "";
-                snap.forEach(s => list.innerHTML = `<div class="admin-item">${s.val().msg}</div>` + list.innerHTML);
+                snap.forEach(s => {
+                    list.innerHTML = `<div class="admin-item">${s.val().msg}</div>` + list.innerHTML;
+                });
             });
         },
 
@@ -362,11 +353,9 @@
         if(e.key === 'Enter' && sys.active) {
             if(document.getElementById('answer').value.toLowerCase().trim() === sys.cur.en.toLowerCase()) {
                 sys.score += 50; sys.time += 2; document.getElementById('score').innerText = sys.score; 
-                playSound('ok');
-                confetti({ particleCount: 50, origin: { y: 0.9 } }); 
+                confetti({ particleCount: 40, origin: { y: 0.8 } }); 
                 sys.next();
             } else {
-                playSound('no');
                 const js = document.getElementById('jumpscare');
                 js.style.display='flex';
                 setTimeout(() => js.classList.add('active'), 10);
